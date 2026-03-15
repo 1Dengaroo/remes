@@ -1,0 +1,91 @@
+/*
+ * THEME TOKEN CONTRACT
+ * ====================
+ * Every theme MUST implement all tokens listed below.
+ * Missing tokens will cause components to inherit incorrect values.
+ *
+ * TWO TOKEN LAYERS:
+ *
+ * 1. SEMANTIC TOKENS (oklch L C H components)
+ *    Used via: oklch(var(--token-name))
+ *    Alpha:    oklch(var(--token-name) / 0.5)
+ *
+ * 2. SHADCN BRIDGE TOKENS (full oklch values)
+ *    Used via: var(--token-name)
+ *    These power all shadcn/ui components through Tailwind's @theme inline bridge.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+ * SEMANTIC TOKENS (oklch L C H — three space-separated numbers)
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * ACCENTS — the personality of the theme
+ * --accent-primary        Primary accent (links, highlights, brand)
+ * --accent-secondary      Secondary accent (badges, tags, secondary CTAs)
+ *
+ * SURFACES — the bones of the layout
+ * --surface-primary       Main content area background
+ * --surface-secondary     Grouped/nested content background
+ * --surface-elevated      Elevated elements (modals, dropdowns, cards)
+ * --surface-overlay       Overlay backdrop (semi-transparent)
+ *
+ * BORDERS — three tiers of visual weight
+ * --border-default        Standard component borders
+ * --border-subtle         Barely-there dividers, section separators
+ * --border-strong         Emphasized borders, active states
+ *
+ * TEXT — contrast hierarchy
+ * --text-primary          Main body text (highest contrast)
+ * --text-secondary        Labels, descriptions, supporting text
+ * --text-muted            Placeholders, disabled, hint text
+ * --text-inverse          Text on inverse/accent surfaces
+ *
+ * SHADOWS — full CSS shadow values (not oklch components)
+ * --shadow-sm             Subtle lift (buttons, inputs)
+ * --shadow-md             Medium elevation (cards, dropdowns)
+ * --shadow-lg             High elevation (modals, popovers)
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+ * SHADCN BRIDGE TOKENS (full oklch values)
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * PAGE
+ * --background            Page background
+ * --foreground            Page foreground text
+ *
+ * COMPONENTS
+ * --card                  Card surface
+ * --card-foreground       Card text
+ * --popover               Popover surface
+ * --popover-foreground    Popover text
+ * --primary               Primary action color
+ * --primary-foreground    Text on primary
+ * --secondary             Secondary action color
+ * --secondary-foreground  Text on secondary
+ * --muted                 Muted/disabled surface
+ * --muted-foreground      Muted text
+ * --accent                Accent highlight surface
+ * --accent-foreground     Text on accent surface
+ * --destructive           Error/destructive color
+ * --destructive-foreground Text on destructive
+ *
+ * UI ELEMENTS
+ * --border                Default border color
+ * --input                 Input border color
+ * --ring                  Focus ring color
+ * --radius                Base border radius (e.g. 0.625rem)
+ *
+ * DATA VISUALIZATION
+ * --chart-1 through --chart-5
+ *
+ * SIDEBAR
+ * --sidebar               Sidebar background
+ * --sidebar-foreground    Sidebar text
+ * --sidebar-primary       Sidebar primary action
+ * --sidebar-primary-foreground  Text on sidebar primary
+ * --sidebar-accent        Sidebar hover/active state
+ * --sidebar-accent-foreground   Text on sidebar accent
+ * --sidebar-border        Sidebar borders
+ * --sidebar-ring          Sidebar focus ring
+ */

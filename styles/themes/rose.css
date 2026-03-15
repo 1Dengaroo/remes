@@ -1,0 +1,74 @@
+/*
+ * ROSE THEME — Soft & Elegant (Light)
+ * Blush pink accent on warm rose-tinted surfaces.
+ * A refined, approachable aesthetic.
+ */
+
+[data-theme='rose'] {
+  /* SEMANTIC TOKENS (oklch L C H) */
+
+  /* Accents — dusty rose primary, muted plum secondary */
+  --accent-primary: 0.58 0.12 350;
+  --accent-secondary: 0.52 0.1 310;
+
+  /* Surfaces — very light blush tint */
+  --surface-primary: 0.97 0.008 350;
+  --surface-secondary: 0.94 0.012 345;
+  --surface-elevated: 0.99 0.004 355;
+  --surface-overlay: 0.25 0.02 340;
+
+  /* Borders — rose-tinted */
+  --border-default: 0.88 0.02 345;
+  --border-subtle: 0.92 0.012 350;
+  --border-strong: 0.72 0.04 340;
+
+  /* Text — warm near-black */
+  --text-primary: 0.2 0.015 340;
+  --text-secondary: 0.42 0.02 345;
+  --text-muted: 0.58 0.018 348;
+  --text-inverse: 0.96 0.006 350;
+
+  /* Shadows — rose-tinted warmth */
+  --shadow-sm: 0 1px 2px oklch(0.3 0.03 340 / 0.08);
+  --shadow-md: 0 4px 6px oklch(0.3 0.03 340 / 0.1);
+  --shadow-lg: 0 10px 15px oklch(0.3 0.03 340 / 0.14);
+
+  /* SHADCN BRIDGE TOKENS */
+  --background: oklch(0.97 0.008 350);
+  --foreground: oklch(0.2 0.015 340);
+  --card: oklch(0.99 0.004 355);
+  --card-foreground: oklch(0.2 0.015 340);
+  --popover: oklch(0.99 0.004 355);
+  --popover-foreground: oklch(0.2 0.015 340);
+  --primary: oklch(0.58 0.12 350);
+  --primary-foreground: oklch(0.98 0.006 350);
+  --secondary: oklch(0.93 0.015 345);
+  --secondary-foreground: oklch(0.3 0.015 340);
+  --muted: oklch(0.94 0.012 345);
+  --muted-foreground: oklch(0.5 0.02 348);
+  --accent: oklch(0.94 0.012 345);
+  --accent-foreground: oklch(0.2 0.015 340);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0.006 350);
+  --border: oklch(0.88 0.02 345);
+  --input: oklch(0.88 0.02 345);
+  --ring: oklch(0.58 0.12 350);
+  --radius: 0.625rem;
+
+  /* Chart palette */
+  --chart-1: oklch(0.58 0.12 350);
+  --chart-2: oklch(0.52 0.1 310);
+  --chart-3: oklch(0.6 0.1 25);
+  --chart-4: oklch(0.55 0.12 280);
+  --chart-5: oklch(0.58 0.08 155);
+
+  /* Sidebar */
+  --sidebar: oklch(0.95 0.01 348);
+  --sidebar-foreground: oklch(0.42 0.02 345);
+  --sidebar-primary: oklch(0.58 0.12 350);
+  --sidebar-primary-foreground: oklch(0.98 0.006 350);
+  --sidebar-accent: oklch(0.92 0.015 345);
+  --sidebar-accent-foreground: oklch(0.2 0.015 340);
+  --sidebar-border: oklch(0.86 0.02 345);
+  --sidebar-ring: oklch(0.58 0.12 350);
+}

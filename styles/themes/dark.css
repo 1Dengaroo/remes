@@ -1,0 +1,74 @@
+/*
+ * DARK THEME — Rich & Elegant
+ * Not an inversion — surfaces lift from near-black,
+ * borders get brighter, shadows get heavier, accents bump lightness.
+ */
+
+[data-theme='dark'] {
+  /* SEMANTIC TOKENS (oklch L C H) */
+
+  /* Accents — lightness bumped from 0.55→0.65 for contrast on dark bg */
+  --accent-primary: 0.65 0.12 65;
+  --accent-secondary: 0.62 0.1 25;
+
+  /* Surfaces — L steps up: overlay(0.08) → primary(0.18) → secondary(0.21) → elevated(0.24) */
+  --surface-primary: 0.18 0.012 50;
+  --surface-secondary: 0.21 0.015 50;
+  --surface-elevated: 0.24 0.018 50;
+  --surface-overlay: 0.08 0.008 50;
+
+  /* Borders — need L 0.25-0.35 to be visible on dark backgrounds */
+  --border-default: 0.32 0.025 50;
+  --border-subtle: 0.26 0.02 50;
+  --border-strong: 0.42 0.035 55;
+
+  /* Text — inverted: primary is now near-white */
+  --text-primary: 0.92 0.02 65;
+  --text-secondary: 0.72 0.025 60;
+  --text-muted: 0.55 0.025 55;
+  --text-inverse: 0.16 0.012 50;
+
+  /* Shadows — 3-4x opacity of light mode */
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.35);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.4);
+
+  /* SHADCN BRIDGE TOKENS */
+  --background: oklch(0.18 0.012 50);
+  --foreground: oklch(0.92 0.02 65);
+  --card: oklch(0.21 0.015 50);
+  --card-foreground: oklch(0.92 0.02 65);
+  --popover: oklch(0.21 0.015 50);
+  --popover-foreground: oklch(0.92 0.02 65);
+  --primary: oklch(0.65 0.12 65);
+  --primary-foreground: oklch(0.98 0.006 65);
+  --secondary: oklch(0.26 0.02 50);
+  --secondary-foreground: oklch(0.85 0.02 60);
+  --muted: oklch(0.24 0.015 50);
+  --muted-foreground: oklch(0.6 0.025 55);
+  --accent: oklch(0.24 0.015 50);
+  --accent-foreground: oklch(0.92 0.02 65);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.98 0.006 65);
+  --border: oklch(0.32 0.025 50);
+  --input: oklch(0.32 0.025 50);
+  --ring: oklch(0.65 0.12 65);
+  --radius: 0.625rem;
+
+  /* Chart palette */
+  --chart-1: oklch(0.65 0.12 65);
+  --chart-2: oklch(0.62 0.1 25);
+  --chart-3: oklch(0.65 0.1 145);
+  --chart-4: oklch(0.6 0.12 250);
+  --chart-5: oklch(0.62 0.1 310);
+
+  /* Sidebar */
+  --sidebar: oklch(0.14 0.01 50);
+  --sidebar-foreground: oklch(0.65 0.02 55);
+  --sidebar-primary: oklch(0.65 0.12 65);
+  --sidebar-primary-foreground: oklch(0.98 0.006 65);
+  --sidebar-accent: oklch(0.2 0.012 50);
+  --sidebar-accent-foreground: oklch(0.92 0.02 65);
+  --sidebar-border: oklch(0.28 0.02 50);
+  --sidebar-ring: oklch(0.65 0.12 65);
+}

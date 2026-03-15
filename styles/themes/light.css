@@ -1,0 +1,77 @@
+/*
+ * LIGHT THEME — Warm & Refined
+ * Warm amber accent on cream surfaces.
+ * Hue angle 50-75 gives the warm character.
+ */
+
+[data-theme='light'] {
+  /* SEMANTIC TOKENS (oklch L C H)
+   * Used via: oklch(var(--surface-primary))
+   * Alpha:    oklch(var(--accent-primary) / 0.1)
+   */
+
+  /* Accents — warm amber primary, warm red secondary */
+  --accent-primary: 0.55 0.12 55;
+  --accent-secondary: 0.58 0.1 15;
+
+  /* Surfaces — cream page bg (L 0.97), near-white cards (L 0.99) */
+  --surface-primary: 0.97 0.008 75;
+  --surface-secondary: 0.94 0.012 70;
+  --surface-elevated: 0.99 0.004 75;
+  --surface-overlay: 0.25 0.015 50;
+
+  /* Borders — warm undertone matches the surfaces */
+  --border-default: 0.88 0.018 65;
+  --border-subtle: 0.92 0.01 70;
+  --border-strong: 0.72 0.035 55;
+
+  /* Text — warm charcoal, not pure black */
+  --text-primary: 0.2 0.02 50;
+  --text-secondary: 0.42 0.02 50;
+  --text-muted: 0.58 0.015 55;
+  --text-inverse: 0.96 0.006 75;
+
+  /* Shadows — warm-tinted for cohesion */
+  --shadow-sm: 0 1px 2px oklch(0.25 0.02 50 / 0.08);
+  --shadow-md: 0 4px 6px oklch(0.25 0.02 50 / 0.1);
+  --shadow-lg: 0 10px 15px oklch(0.25 0.02 50 / 0.14);
+
+  /* SHADCN BRIDGE TOKENS (full oklch values) */
+  --background: oklch(0.97 0.008 75);
+  --foreground: oklch(0.2 0.02 50);
+  --card: oklch(0.99 0.004 75);
+  --card-foreground: oklch(0.2 0.02 50);
+  --popover: oklch(0.99 0.004 75);
+  --popover-foreground: oklch(0.2 0.02 50);
+  --primary: oklch(0.55 0.12 55);
+  --primary-foreground: oklch(0.98 0.008 75);
+  --secondary: oklch(0.93 0.015 65);
+  --secondary-foreground: oklch(0.3 0.02 50);
+  --muted: oklch(0.94 0.012 70);
+  --muted-foreground: oklch(0.5 0.02 55);
+  --accent: oklch(0.94 0.012 70);
+  --accent-foreground: oklch(0.2 0.02 50);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0.008 75);
+  --border: oklch(0.88 0.018 65);
+  --input: oklch(0.88 0.018 65);
+  --ring: oklch(0.55 0.12 55);
+  --radius: 0.625rem;
+
+  /* Chart palette — spread across hue wheel */
+  --chart-1: oklch(0.55 0.12 55);
+  --chart-2: oklch(0.58 0.1 15);
+  --chart-3: oklch(0.6 0.1 145);
+  --chart-4: oklch(0.55 0.12 250);
+  --chart-5: oklch(0.58 0.1 310);
+
+  /* Sidebar */
+  --sidebar: oklch(0.95 0.01 70);
+  --sidebar-foreground: oklch(0.42 0.02 50);
+  --sidebar-primary: oklch(0.55 0.12 55);
+  --sidebar-primary-foreground: oklch(0.98 0.008 75);
+  --sidebar-accent: oklch(0.92 0.015 65);
+  --sidebar-accent-foreground: oklch(0.2 0.02 50);
+  --sidebar-border: oklch(0.86 0.02 65);
+  --sidebar-ring: oklch(0.55 0.12 55);
+}
