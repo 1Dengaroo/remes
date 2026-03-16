@@ -18,7 +18,7 @@ function DarkClassManager() {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'light'
+  defaultTheme = 'system'
 }: {
   children: React.ReactNode;
   defaultTheme?: string;
@@ -28,7 +28,7 @@ export function ThemeProvider({
       attribute="data-theme"
       defaultTheme={defaultTheme}
       themes={themeIds}
-      enableSystem={false}
+      enableSystem
       disableTransitionOnChange
     >
       <DarkClassManager />

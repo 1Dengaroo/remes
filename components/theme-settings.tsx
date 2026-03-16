@@ -31,6 +31,7 @@ export function ThemeSettings() {
         <Button
           variant="ghost"
           size="icon-sm"
+          label="Settings"
           className="text-muted-foreground hover:text-foreground hover:bg-accent/60"
         >
           <Settings className="size-[15px]" />

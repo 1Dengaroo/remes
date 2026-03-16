@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { FontProvider } from '@/lib/theme/font-provider';
 import { Header } from '@/components/header';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -37,8 +38,10 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           <FontProvider>
-            <Header />
-            {children}
+            <TooltipProvider>
+              <Header />
+              {children}
+            </TooltipProvider>
           </FontProvider>
         </ThemeProvider>
       </body>

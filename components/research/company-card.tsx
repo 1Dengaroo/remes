@@ -194,7 +194,7 @@ export function CompanyRow({
               variant="ghost"
               size="icon-xs"
               onClick={() => composeFor(firstContact)}
-              title="Compose email"
+              label="Compose email"
               className="text-muted-foreground hover:text-primary shrink-0"
             >
               <PenSquare className="size-3.5" />

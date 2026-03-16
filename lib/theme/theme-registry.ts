@@ -14,23 +14,23 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'light',
     name: 'Light',
-    description: 'Paper and ink',
+    description: 'Coral and teal on cream',
     isDark: false,
     previewColors: {
-      bg: '#f2efea',
-      primary: 'hsl(218, 55%, 48%)',
-      accent: 'hsl(200, 40%, 42%)'
+      bg: '#faf6f1',
+      primary: 'hsl(12, 75%, 55%)',
+      accent: 'hsl(175, 45%, 42%)'
     }
   },
   {
     id: 'dark',
     name: 'Dark',
-    description: 'Paper and ink (dark)',
+    description: 'Coral and teal on midnight',
     isDark: true,
     previewColors: {
-      bg: '#1c1a17',
-      primary: 'hsl(218, 55%, 58%)',
-      accent: 'hsl(200, 40%, 52%)'
+      bg: '#101114',
+      primary: 'hsl(12, 75%, 58%)',
+      accent: 'hsl(175, 50%, 50%)'
     }
   },
   {
@@ -45,14 +45,14 @@ export const themes: ThemeDefinition[] = [
     }
   },
   {
-    id: 'spotify',
-    name: 'Spotify',
-    description: 'Electric green on black',
-    isDark: true,
+    id: 'print',
+    name: 'Print',
+    description: 'Paper and ink',
+    isDark: false,
     previewColors: {
-      bg: '#121212',
-      primary: 'hsl(141, 73%, 42%)',
-      accent: 'hsl(160, 55%, 40%)'
+      bg: '#f2efea',
+      primary: 'hsl(218, 55%, 48%)',
+      accent: 'hsl(200, 40%, 42%)'
     }
   }
 ];

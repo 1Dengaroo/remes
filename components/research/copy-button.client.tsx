@@ -14,7 +14,7 @@ export function CopyButton({ text }: { text: string }) {
   }, [text]);
 
   return (
-    <Button variant="ghost" size="icon-xs" onClick={handleCopy} title="Copy to clipboard">
+    <Button variant="ghost" size="icon-xs" onClick={handleCopy} label="Copy to clipboard">
       {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
     </Button>
   );

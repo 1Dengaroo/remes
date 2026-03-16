@@ -1,82 +1,92 @@
 /*
- * LIGHT THEME — Paper & Ink
- * Warm parchment surfaces with blue-ink accents.
- * Minimal card chrome, sharp corners — editorial feel.
+ * SUNRISE — Colorful Light Theme
+ * Warm coral primary, teal secondary, soft cream surfaces.
+ * Vibrant but professional — more personality than the default light theme.
  */
 
 [data-theme='light'] body {
-  background-color: #f2efea;
+  background-color: #faf6f1;
   background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
-    linear-gradient(170deg, #f2efea 0%, #ede8e1 40%, #f0ece6 100%);
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E"),
+    linear-gradient(170deg, #faf6f1 0%, #f7f0e8 40%, #faf5ef 100%);
   background-attachment: fixed;
 }
 
 [data-theme='light'] {
   /* Semantic tokens (oklch L C H) */
-  --accent-primary: 0.52 0.12 240;
-  --accent-secondary: 0.45 0.1 230;
 
-  --surface-primary: 0.97 0.005 80;
-  --surface-secondary: 0.95 0.008 75;
-  --surface-elevated: 0.99 0.003 90;
-  --surface-overlay: 0.18 0.01 50;
+  /* Coral-orange primary, teal-green secondary */
+  --accent-primary: 0.62 0.18 25;
+  --accent-secondary: 0.58 0.1 185;
 
-  --border-default: 0.9 0.01 70;
-  --border-subtle: 0.93 0.008 75;
-  --border-strong: 0.8 0.02 60;
+  /* Warm cream surfaces */
+  --surface-primary: 0.97 0.01 70;
+  --surface-secondary: 0.95 0.012 65;
+  --surface-elevated: 0.99 0.005 80;
+  --surface-overlay: 0.18 0.015 40;
 
-  --text-primary: 0.15 0.01 50;
-  --text-secondary: 0.38 0.01 50;
-  --text-muted: 0.52 0.01 55;
+  /* Warm-tinted borders */
+  --border-default: 0.89 0.015 60;
+  --border-subtle: 0.93 0.01 65;
+  --border-strong: 0.78 0.025 50;
+
+  /* Warm charcoal text */
+  --text-primary: 0.18 0.015 40;
+  --text-secondary: 0.4 0.015 45;
+  --text-muted: 0.55 0.012 50;
   --text-inverse: 0.97 0.005 80;
 
-  --shadow-sm: 0 1px 2px oklch(0.3 0.01 50 / 0.06);
-  --shadow-md: 0 2px 8px oklch(0.3 0.01 50 / 0.06);
-  --shadow-lg: 0 8px 24px oklch(0.3 0.01 50 / 0.08);
+  /* Warm shadows */
+  --shadow-sm: 0 1px 2px oklch(0.3 0.02 40 / 0.06);
+  --shadow-md: 0 2px 8px oklch(0.3 0.02 40 / 0.08);
+  --shadow-lg: 0 8px 24px oklch(0.3 0.02 40 / 0.1);
 
   /* Card style tokens */
-  --card-radius: 2px;
+  --card-radius: 12px;
   --card-border-width: 1px;
-  --card-border-opacity: 0.4;
-  --card-shadow: none;
+  --card-border-opacity: 0.5;
+  --card-shadow: var(--shadow-sm);
   --card-hover-shadow: var(--shadow-md);
   --card-hover-y: -2px;
   --card-accent-bar-height: 0px;
   --card-accent-bar-scale: 0;
 
   /* shadcn bridge tokens (full color values) */
-  --background: hsl(36 20% 93%);
-  --foreground: hsl(30 6% 10%);
-  --card: hsl(40 20% 98%);
-  --card-foreground: hsl(30 6% 10%);
-  --popover: hsl(40 20% 98%);
-  --popover-foreground: hsl(30 6% 10%);
-  --primary: hsl(218 55% 48%);
+  --background: hsl(32 40% 96%);
+  --foreground: hsl(20 15% 12%);
+  --card: hsl(34 30% 98%);
+  --card-foreground: hsl(20 15% 12%);
+  --popover: hsl(34 30% 98%);
+  --popover-foreground: hsl(20 15% 12%);
+  --primary: hsl(12 75% 55%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(36 12% 91%);
-  --secondary-foreground: hsl(30 6% 18%);
-  --muted: hsl(36 10% 93%);
-  --muted-foreground: hsl(30 4% 40%);
-  --accent: hsl(36 10% 93%);
-  --accent-foreground: hsl(30 6% 10%);
+  --secondary: hsl(180 25% 92%);
+  --secondary-foreground: hsl(180 20% 25%);
+  --muted: hsl(30 15% 93%);
+  --muted-foreground: hsl(20 8% 42%);
+  --accent: hsl(30 20% 93%);
+  --accent-foreground: hsl(20 15% 12%);
   --destructive: hsl(0 72% 50%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(36 12% 88%);
-  --input: hsl(36 12% 88%);
-  --ring: hsl(218 55% 48%);
-  --radius: 0.125rem;
-  --chart-1: hsl(218 55% 48%);
-  --chart-2: hsl(200 40% 42%);
-  --chart-3: hsl(160 40% 45%);
-  --chart-4: hsl(240 35% 48%);
-  --chart-5: hsl(180 35% 40%);
-  --sidebar-background: hsl(36 18% 95%);
-  --sidebar-foreground: hsl(30 4% 40%);
-  --sidebar-primary: hsl(218 55% 45%);
+  --border: hsl(30 18% 87%);
+  --input: hsl(30 18% 87%);
+  --ring: hsl(12 75% 55%);
+  --radius: 0.75rem;
+
+  /* Chart palette — warm-to-cool spread */
+  --chart-1: hsl(12 70% 52%);
+  --chart-2: hsl(175 45% 42%);
+  --chart-3: hsl(45 65% 50%);
+  --chart-4: hsl(260 40% 55%);
+  --chart-5: hsl(330 45% 52%);
+
+  /* Sidebar */
+  --sidebar-background: hsl(32 35% 95%);
+  --sidebar-foreground: hsl(20 8% 42%);
+  --sidebar-primary: hsl(12 75% 50%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(36 10% 91%);
-  --sidebar-accent-foreground: hsl(30 6% 10%);
-  --sidebar-border: hsl(36 12% 86%);
-  --sidebar-ring: hsl(218 55% 45%);
+  --sidebar-accent: hsl(30 15% 91%);
+  --sidebar-accent-foreground: hsl(20 15% 12%);
+  --sidebar-border: hsl(30 18% 85%);
+  --sidebar-ring: hsl(12 75% 50%);
 }
