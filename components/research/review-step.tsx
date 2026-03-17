@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { TagEditor } from './tag-editor';
 import { parseICP } from '@/lib/api';
+import { useResearchStore } from '@/lib/store/research-store';
 import type { ICPCriteria } from '@/lib/types';
 
 const EXAMPLE_PROMPTS = [
@@ -16,17 +17,12 @@ const EXAMPLE_PROMPTS = [
   'Companies similar to Modal — AI-intensive, scaling compute, posting about distributed training'
 ];
 
-export function ReviewStep({
-  icp,
-  setIcp,
-  error,
-  setError
-}: {
-  icp: ICPCriteria;
-  setIcp: (icp: ICPCriteria) => void;
-  error: string | null;
-  setError: (e: string | null) => void;
-}) {
+export function ReviewStep() {
+  const icp = useResearchStore((s) => s.icp)!;
+  const setIcp = useResearchStore((s) => s.setIcp);
+  const error = useResearchStore((s) => s.error);
+  const setError = useResearchStore((s) => s.setError);
+
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -62,7 +58,6 @@ export function ReviewStep({
 
       {error && <p className="text-destructive mb-4 text-sm">{error}</p>}
 
-      {/* Example prompts — show when ICP is empty */}
       {!icp.description && !aiPrompt && (
         <div className="mb-4 flex flex-wrap gap-1.5">
           {EXAMPLE_PROMPTS.map((ep, i) => (
@@ -78,7 +73,6 @@ export function ReviewStep({
       )}
 
       <div className="border-border bg-card overflow-hidden rounded-xl border">
-        {/* Header — AI generate bar */}
         <div className="bg-muted/50 border-border flex items-center gap-2 border-b px-4 py-2.5">
           <Sparkles className="text-muted-foreground size-3.5 shrink-0" />
           <Input
@@ -109,7 +103,6 @@ export function ReviewStep({
           </Button>
         </div>
 
-        {/* ICP fields */}
         <div className="space-y-5 p-4">
           <div>
             <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
@@ -172,7 +165,6 @@ export function ReviewStep({
           />
         </div>
 
-        {/* Footer */}
         <div className="border-border border-t px-4 py-2.5">
           {icp.description.trim() ? (
             <span className="text-muted-foreground/60 text-xs">

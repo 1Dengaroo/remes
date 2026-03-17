@@ -23,9 +23,7 @@ async function post<T>(url: string, body: unknown, signal?: AbortSignal): Promis
     try {
       const data = await response.json();
       if (data.error) message = data.error;
-    } catch {
-      // response wasn't JSON
-    }
+    } catch {}
     throw new ApiError(message, response.status);
   }
 
@@ -50,9 +48,7 @@ async function streamSSE(
     try {
       const data = await response.json();
       if (data.error) message = data.error;
-    } catch {
-      // response wasn't JSON
-    }
+    } catch {}
     throw new ApiError(message, response.status);
   }
 
@@ -118,7 +114,8 @@ export async function researchCompanies(
   icp: ICPCriteria,
   companies: string[],
   onEvent: (event: ResearchStreamEvent) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  candidates?: DiscoveredCompanyPreview[]
 ): Promise<void> {
-  await streamSSE('/api/research', { icp, companies }, onEvent, signal);
+  await streamSSE('/api/research', { icp, companies, candidates }, onEvent, signal);
 }

@@ -1,9 +1,8 @@
-import type { ICPCriteria, CompanyResult, SourceLink, CompanySignal } from '@/lib/types';
+import type { ICPCriteria, CompanySignal, SourceLink } from '@/lib/types';
 
 /**
  * Parses natural language input (transcript, query, notes) into structured ICP.
- * Current provider: Claude Haiku
- * Could be swapped for: GPT-4, local model, manual form
+ * Providers: Claude (ai.ts)
  */
 export interface ICPParser {
   parse(input: string): Promise<ICPCriteria>;
@@ -11,25 +10,33 @@ export interface ICPParser {
 
 /**
  * Discovers companies matching an ICP.
- * Current provider: Parallel FindAll
- * Could be swapped for: Crunchbase API, PitchBook, custom scraper, Apollo
+ * Providers: Apollo (apollo.ts), Parallel (parallel.ts)
  */
 export interface CompanyDiscovery {
-  find(icp: ICPCriteria): Promise<DiscoveredCompany[]>;
+  find(icp: ICPCriteria, onProgress?: (message: string) => void): Promise<DiscoveredCompany[]>;
 }
 
 export interface DiscoveredCompany {
   name: string;
   website?: string;
   description?: string;
+  linkedin_url?: string;
+  logo_url?: string;
   /** Raw match reasoning or metadata from the discovery source */
   match_context: string;
 }
 
 /**
+ * Scores and ranks discovered companies against an ICP.
+ * Providers: Claude (scoring.ts)
+ */
+export interface CompanyScorer {
+  score(companies: DiscoveredCompany[], icp: ICPCriteria): Promise<DiscoveredCompany[]>;
+}
+
+/**
  * Deep-researches a single company: finds signals, contacts, and sources.
- * Current provider: Claude Sonnet + web search
- * Could be swapped for: multi-agent system, Parallel Task API, Perplexity, custom scraper
+ * Providers: Claude + web search (research-agent.ts)
  */
 export interface CompanyResearcher {
   research(
@@ -40,6 +47,8 @@ export interface CompanyResearcher {
 }
 
 export interface CompanyResearchResult {
+  website: string | null;
+  linkedin_url: string | null;
   signals: CompanySignal[];
   match_reason: string;
   company_overview: string;

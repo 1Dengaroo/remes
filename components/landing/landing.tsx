@@ -34,7 +34,6 @@ const STATS = [
 export function Landing() {
   return (
     <div className="relative min-h-[calc(100vh-49px)] overflow-hidden">
-      {/* Atmospheric background grid */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
@@ -44,14 +43,11 @@ export function Landing() {
         }}
       />
 
-      {/* Diagonal accent line */}
       <div className="bg-primary/10 pointer-events-none absolute -top-20 right-0 h-[600px] w-px rotate-[25deg]" />
       <div className="bg-primary/5 pointer-events-none absolute -top-10 right-20 h-[500px] w-px rotate-[25deg]" />
 
       <div className="relative mx-auto max-w-7xl px-6">
-        {/* Hero Section */}
         <section className="pt-16 pb-20 sm:pt-24 sm:pb-28 lg:pt-32">
-          {/* Dateline */}
           <div
             className="animate-in fade-in fill-mode-both mb-8 flex items-center gap-3 duration-500"
             style={{ animationDelay: '0ms' }}
@@ -62,7 +58,6 @@ export function Landing() {
             </span>
           </div>
 
-          {/* Main headline */}
           <div
             className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both duration-700"
             style={{ animationDelay: '100ms' }}
@@ -90,7 +85,6 @@ export function Landing() {
             </h1>
           </div>
 
-          {/* Subhead + CTA row */}
           <div
             className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both mt-8 flex max-w-2xl flex-col gap-8 duration-700 sm:mt-10"
             style={{ animationDelay: '250ms' }}
@@ -113,7 +107,6 @@ export function Landing() {
             </div>
           </div>
 
-          {/* Stats bar */}
           <div
             className="animate-in fade-in fill-mode-both border-border mt-16 grid grid-cols-3 border-t pt-8 duration-700 sm:mt-20"
             style={{ animationDelay: '450ms' }}
@@ -131,16 +124,13 @@ export function Landing() {
           </div>
         </section>
 
-        {/* Divider */}
         <div className="border-border border-t" />
 
-        {/* How It Works Section */}
         <section className="py-20 sm:py-28">
           <div
             className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-700"
             style={{ animationDelay: '550ms' }}
           >
-            {/* Section header */}
             <div className="mb-12 flex items-end justify-between sm:mb-16">
               <div>
                 <div className="mb-3 flex items-center gap-3">
@@ -156,14 +146,12 @@ export function Landing() {
               <Zap className="text-primary/20 hidden size-8 sm:block" />
             </div>
 
-            {/* Steps grid */}
             <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
               {STEPS.map((step, i) => (
                 <div
                   key={step.title}
                   className="border-border group relative border-t py-8 sm:border-t-0 sm:border-l sm:py-0 sm:pl-8 sm:first:border-l-0 sm:first:pl-0"
                 >
-                  {/* Top accent */}
                   <div className="bg-primary absolute top-0 left-0 hidden h-full w-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:block" />
 
                   <div className="flex flex-col gap-4">
@@ -186,7 +174,6 @@ export function Landing() {
           </div>
         </section>
 
-        {/* Bottom CTA */}
         <div className="border-border border-t" />
         <section
           className="animate-in fade-in fill-mode-both py-20 duration-700 sm:py-28"
@@ -212,7 +199,6 @@ export function Landing() {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="border-border border-t py-8">
           <p className="text-muted-foreground text-xs">
             &copy; {new Date().getFullYear()} Signal. All rights reserved.

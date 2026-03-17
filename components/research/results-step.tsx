@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, Pencil, Search, Building2, Users, Zap, Mail } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CompanyRow, GRID_COLS } from './company-card';
-import type { CompanyResult, ComposeEmailParams, ICPCriteria } from '@/lib/types';
+import { useResearchStore } from '@/lib/store/research-store';
+import type { ICPCriteria } from '@/lib/types';
 
 function ICPSummary({ icp, onEditCriteria }: { icp: ICPCriteria; onEditCriteria?: () => void }) {
   const [expanded, setExpanded] = useState(false);
@@ -94,7 +95,6 @@ function LoadingStatus({ statusMessage }: { statusMessage: string }) {
   return (
     <div className="bg-card border-border mb-6 overflow-hidden rounded-lg border">
       <div className="relative px-4 py-4">
-        {/* Shimmer bar */}
         <div className="bg-muted absolute inset-x-0 bottom-0 h-0.5">
           <div className="bg-primary h-full w-1/3 animate-[shimmer_2s_ease-in-out_infinite] rounded-full" />
         </div>
@@ -113,51 +113,31 @@ function LoadingStatus({ statusMessage }: { statusMessage: string }) {
   );
 }
 
-function SkeletonRow({ index }: { index: number }) {
-  return (
-    <div
-      className={`grid ${GRID_COLS} border-border border-b last:border-b-0`}
-      style={{ animationDelay: `${index * 100}ms` }}
-    >
-      {[0, 1, 2, 3].map((col) => (
-        <div
-          key={col}
-          className={`min-w-0 space-y-2.5 p-4 ${col < 3 ? 'border-border border-r' : ''}`}
-        >
-          <div className="bg-muted h-4 w-3/4 animate-pulse rounded" />
-          <div className="space-y-1.5">
-            <div className="bg-muted h-3 w-full animate-pulse rounded" />
-            <div className="bg-muted h-3 w-5/6 animate-pulse rounded" />
-          </div>
-          {col === 3 && <div className="bg-muted mt-3 h-16 w-full animate-pulse rounded-lg" />}
-        </div>
-      ))}
-    </div>
-  );
-}
+export function ResultsStep() {
+  const icp = useResearchStore((s) => s.icp);
+  const results = useResearchStore((s) => s.results);
+  const researchingCompany = useResearchStore((s) => s.researchingCompany);
+  const isResearching = useResearchStore((s) => s.isResearching);
+  const statusMessage = useResearchStore((s) => s.statusMessage);
+  const error = useResearchStore((s) => s.error);
+  const setComposeParams = useResearchStore((s) => s.setComposeParams);
+  const setStep = useResearchStore((s) => s.setStep);
+  const selectedCandidates = useResearchStore((s) => s.selectedCandidates)();
 
-export function ResultsStep({
-  icp,
-  results,
-  isLoading,
-  statusMessage,
-  error,
-  onComposeEmail,
-  onEditCriteria
-}: {
-  icp: ICPCriteria | null;
-  results: CompanyResult[];
-  isLoading: boolean;
-  statusMessage: string;
-  error: string | null;
-  onComposeEmail?: (params: ComposeEmailParams) => void;
-  onEditCriteria?: () => void;
-}) {
-  const showSkeletons = isLoading && results.length === 0;
+  const resultMap = useMemo(() => {
+    const map = new Map<string, (typeof results)[number]>();
+    for (const r of results) {
+      map.set(r.company_name, r);
+    }
+    return map;
+  }, [results]);
+
+  const completedCount = results.length;
+  const totalCount = selectedCandidates.length;
 
   return (
     <>
-      {icp && <ICPSummary icp={icp} onEditCriteria={onEditCriteria} />}
+      {icp && <ICPSummary icp={icp} onEditCriteria={() => setStep('review')} />}
 
       {error && (
         <Card className="border-destructive/30 bg-destructive/5 mb-6">
@@ -167,17 +147,15 @@ export function ResultsStep({
         </Card>
       )}
 
-      {isLoading && <LoadingStatus statusMessage={statusMessage} />}
+      {isResearching && <LoadingStatus statusMessage={statusMessage} />}
 
-      {(results.length > 0 || showSkeletons) && (
+      {selectedCandidates.length > 0 && (
         <div>
           <div className="mb-3 flex items-baseline justify-between">
             <h3 className="text-sm font-medium">
-              {showSkeletons
-                ? 'Searching for companies...'
-                : isLoading
-                  ? `${results.length} companies found so far...`
-                  : `${results.length} companies found`}
+              {isResearching
+                ? `Researching companies (${completedCount}/${totalCount})...`
+                : `${completedCount} companies researched`}
             </h3>
           </div>
 
@@ -195,21 +173,35 @@ export function ResultsStep({
               )}
             </div>
 
-            {showSkeletons
-              ? Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} index={i} />)
-              : results.map((result, i) => (
-                  <CompanyRow
-                    key={`${result.company_name}-${i}`}
-                    result={result}
-                    index={i}
-                    onComposeEmail={onComposeEmail}
-                  />
-                ))}
+            {selectedCandidates.map((candidate, i) => {
+              const result = resultMap.get(candidate.name) ?? null;
+              const isCurrentlyResearching = researchingCompany === candidate.name;
+
+              let status: 'pending' | 'researching' | 'complete' | 'error';
+              if (result) {
+                status = 'complete';
+              } else if (isCurrentlyResearching) {
+                status = 'researching';
+              } else {
+                status = 'pending';
+              }
+
+              return (
+                <CompanyRow
+                  key={candidate.name}
+                  preview={candidate}
+                  result={result}
+                  status={status}
+                  index={i}
+                  onComposeEmail={setComposeParams}
+                />
+              );
+            })}
           </div>
         </div>
       )}
 
-      {!isLoading && !error && results.length === 0 && (
+      {!isResearching && !error && selectedCandidates.length === 0 && (
         <div className="py-12 text-center">
           <p className="text-muted-foreground text-sm">
             No matching companies found. Try editing your ICP criteria.

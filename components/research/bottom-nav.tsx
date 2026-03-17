@@ -2,6 +2,7 @@
 
 import { Loader2, ChevronRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useResearchStore } from '@/lib/store/research-store';
 
 type Step = 'input' | 'review' | 'confirm' | 'results';
 
@@ -33,41 +34,29 @@ function NavButton({
   );
 }
 
-export function BottomNav({
-  step,
-  setStep,
-  isExtracting,
-  isDiscovering,
-  isLoading,
-  hasIcp,
-  hasCandidates,
-  hasResults,
-  transcript,
-  icpDescription,
-  selectedCount,
-  onExtractICP,
-  onDiscover,
-  onResearch,
-  onStartOver,
-  onSkip
-}: {
-  step: Step;
-  setStep: (s: Step) => void;
-  isExtracting: boolean;
-  isDiscovering: boolean;
-  isLoading: boolean;
-  hasIcp: boolean;
-  hasCandidates: boolean;
-  hasResults: boolean;
-  transcript: string;
-  icpDescription: string;
-  selectedCount: number;
-  onExtractICP: () => void;
-  onDiscover: () => void;
-  onResearch: () => void;
-  onStartOver: () => void;
-  onSkip: () => void;
-}) {
+export function BottomNav() {
+  const step = useResearchStore((s) => s.step);
+  const setStep = useResearchStore((s) => s.setStep);
+  const isExtracting = useResearchStore((s) => s.isExtracting);
+  const isDiscovering = useResearchStore((s) => s.isDiscovering);
+  const isResearching = useResearchStore((s) => s.isResearching);
+  const icp = useResearchStore((s) => s.icp);
+  const candidates = useResearchStore((s) => s.candidates);
+  const results = useResearchStore((s) => s.results);
+  const transcript = useResearchStore((s) => s.transcript);
+  const selectedCompanies = useResearchStore((s) => s.selectedCompanies);
+
+  const extractICP = useResearchStore((s) => s.extractICP);
+  const discover = useResearchStore((s) => s.discover);
+  const research = useResearchStore((s) => s.research);
+  const startOver = useResearchStore((s) => s.startOver);
+  const skipToReview = useResearchStore((s) => s.skipToReview);
+
+  const hasIcp = !!icp;
+  const hasCandidates = candidates.length > 0;
+  const hasResults = results.length > 0;
+  const selectedCount = selectedCompanies.length;
+
   return (
     <div className="border-border bg-card/80 fixed right-0 bottom-0 left-0 border-t backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
@@ -97,14 +86,14 @@ export function BottomNav({
           <NavButton
             label="4. Results"
             active={step === 'results'}
-            enabled={hasResults || isLoading}
+            enabled={hasResults || isResearching}
             onClick={() => setStep('results')}
           />
         </div>
 
         {/* Right: action buttons */}
         <div className="flex items-center gap-2">
-          {(isDiscovering || isLoading) && step !== 'confirm' && step !== 'results' && (
+          {(isDiscovering || isResearching) && step !== 'confirm' && step !== 'results' && (
             <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
               <Loader2 className="size-3 animate-spin" />
               {isDiscovering ? 'Discovering...' : 'Researching...'}
@@ -113,15 +102,11 @@ export function BottomNav({
 
           {step === 'input' && (
             <>
-              <Button size="sm" variant="ghost" onClick={onSkip}>
+              <Button size="sm" variant="ghost" onClick={skipToReview}>
                 Skip
                 <ChevronRight className="size-4" />
               </Button>
-              <Button
-                size="sm"
-                onClick={onExtractICP}
-                disabled={isExtracting || !transcript.trim()}
-              >
+              <Button size="sm" onClick={extractICP} disabled={isExtracting || !transcript.trim()}>
                 {isExtracting ? (
                   <>
                     <Loader2 className="size-3.5 animate-spin" />
@@ -140,8 +125,8 @@ export function BottomNav({
           {step === 'review' && (
             <Button
               size="sm"
-              onClick={onDiscover}
-              disabled={isDiscovering || !icpDescription.trim()}
+              onClick={discover}
+              disabled={isDiscovering || !icp?.description?.trim()}
             >
               {isDiscovering ? (
                 <>
@@ -167,10 +152,10 @@ export function BottomNav({
               )}
               <Button
                 size="sm"
-                onClick={onResearch}
-                disabled={isDiscovering || isLoading || selectedCount === 0}
+                onClick={research}
+                disabled={isDiscovering || isResearching || selectedCount === 0}
               >
-                {isLoading ? (
+                {isResearching ? (
                   <>
                     <Loader2 className="size-3.5 animate-spin" />
                     Researching...
@@ -187,13 +172,13 @@ export function BottomNav({
 
           {step === 'results' && (
             <>
-              {isLoading && (
+              {isResearching && (
                 <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
                   <Loader2 className="size-3.5 animate-spin" />
                   Researching...
                 </span>
               )}
-              <Button size="sm" variant="outline" onClick={onStartOver}>
+              <Button size="sm" variant="outline" onClick={startOver}>
                 <RotateCcw className="size-3.5" />
                 New Research
               </Button>

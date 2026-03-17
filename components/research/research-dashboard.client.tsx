@@ -1,143 +1,27 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useResearchStore } from '@/lib/store/research-store';
 import { TranscriptStep } from './transcript-step';
 import { ReviewStep } from './review-step';
 import { ConfirmStep } from './confirm-step';
 import { ResultsStep } from './results-step';
 import { BottomNav } from './bottom-nav';
 import { EmailEditorPanel } from './email-editor-panel.client';
-import { parseICP, discoverCompanies, researchCompanies } from '@/lib/api';
-import type {
-  CompanyResult,
-  ComposeEmailParams,
-  DiscoveredCompanyPreview,
-  ICPCriteria
-} from '@/lib/types';
-
-type Step = 'input' | 'review' | 'confirm' | 'results';
-
-const EMPTY_ICP: ICPCriteria = {
-  description: '',
-  industry_keywords: [],
-  min_funding_amount: null,
-  funding_stages: [],
-  hiring_signals: [],
-  tech_keywords: [],
-  company_examples: []
-};
 
 export function ResearchDashboard() {
-  const [step, setStep] = useState<Step>('input');
-  const [transcript, setTranscript] = useState('');
-  const [isExtracting, setIsExtracting] = useState(false);
-  const [isDiscovering, setIsDiscovering] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('');
-  const [icp, setIcp] = useState<ICPCriteria | null>(null);
-  const [candidates, setCandidates] = useState<DiscoveredCompanyPreview[]>([]);
-  const [results, setResults] = useState<CompanyResult[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [composeParams, setComposeParams] = useState<ComposeEmailParams | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const step = useResearchStore((s) => s.step);
+  const icp = useResearchStore((s) => s.icp);
+  const transcript = useResearchStore((s) => s.transcript);
+  const isExtracting = useResearchStore((s) => s.isExtracting);
+  const isDiscovering = useResearchStore((s) => s.isDiscovering);
+  const isResearching = useResearchStore((s) => s.isResearching);
+  const selectedCompanies = useResearchStore((s) => s.selectedCompanies);
+  const composeParams = useResearchStore((s) => s.composeParams);
 
-  const handleExtractICP = useCallback(async () => {
-    if (!transcript.trim() || isExtracting) return;
-
-    setIsExtracting(true);
-    setError(null);
-
-    try {
-      const data = await parseICP(transcript.trim());
-      setIcp(data);
-      setStep('review');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to extract ICP');
-    } finally {
-      setIsExtracting(false);
-    }
-  }, [transcript, isExtracting]);
-
-  // Phase 1: Discover companies
-  const handleDiscover = useCallback(async () => {
-    if (!icp || isDiscovering) return;
-
-    setIsDiscovering(true);
-    setStatusMessage('');
-    setCandidates([]);
-    setError(null);
-    setStep('confirm');
-
-    try {
-      const found = await discoverCompanies(icp, (event) => {
-        if (event.type === 'status') setStatusMessage(event.message);
-      });
-      setCandidates(found);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Discovery failed');
-    } finally {
-      setIsDiscovering(false);
-    }
-  }, [icp, isDiscovering]);
-
-  // Phase 2: Research confirmed companies
-  const handleResearch = useCallback(
-    async (companyNames: string[]) => {
-      if (!icp || isLoading || companyNames.length === 0) return;
-
-      setIsLoading(true);
-      setStatusMessage('');
-      setResults([]);
-      setError(null);
-      setStep('results');
-
-      abortRef.current = new AbortController();
-
-      try {
-        await researchCompanies(
-          icp,
-          companyNames,
-          (event) => {
-            switch (event.type) {
-              case 'status':
-                setStatusMessage(event.message);
-                break;
-              case 'company':
-                setResults((prev) => [...prev, event.data]);
-                break;
-              case 'done':
-                setStatusMessage(`Research complete. Found ${event.total} companies.`);
-                break;
-            }
-          },
-          abortRef.current.signal
-        );
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') return;
-        setError(err instanceof Error ? err.message : 'Something went wrong');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [icp, isLoading]
-  );
-
-  const handleStartOver = () => {
-    setStep('input');
-    setIcp(null);
-    setCandidates([]);
-    setResults([]);
-    setError(null);
-    setStatusMessage('');
-  };
-
-  // Store selected companies for the bottom nav to trigger research
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
-
-  // Sync selected when candidates change
-  useEffect(() => {
-    setSelectedCompanies(candidates.map((c) => c.name));
-  }, [candidates]);
+  const extractICP = useResearchStore((s) => s.extractICP);
+  const discover = useResearchStore((s) => s.discover);
+  const research = useResearchStore((s) => s.research);
 
   // Cmd+Enter / Ctrl+Enter to advance
   useEffect(() => {
@@ -145,11 +29,11 @@ export function ResearchDashboard() {
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         if (step === 'input' && transcript.trim() && !isExtracting) {
-          handleExtractICP();
+          extractICP();
         } else if (step === 'review' && icp?.description?.trim() && !isDiscovering) {
-          handleDiscover();
-        } else if (step === 'confirm' && selectedCompanies.length > 0 && !isLoading) {
-          handleResearch(selectedCompanies);
+          discover();
+        } else if (step === 'confirm' && selectedCompanies.length > 0 && !isResearching) {
+          research();
         }
       }
     };
@@ -162,81 +46,30 @@ export function ResearchDashboard() {
     selectedCompanies,
     isExtracting,
     isDiscovering,
-    isLoading,
-    handleExtractICP,
-    handleDiscover,
-    handleResearch
+    isResearching,
+    extractICP,
+    discover,
+    research
   ]);
 
   return (
     <div className="bg-background min-h-screen">
       <main className="mx-auto max-w-7xl px-6 pt-10 pb-24">
         <div className="animate-in fade-in duration-300" key={step}>
-          {step === 'input' && (
-            <TranscriptStep
-              transcript={transcript}
-              setTranscript={setTranscript}
-              isExtracting={isExtracting}
-              error={error}
-            />
-          )}
-
-          {step === 'review' && icp && (
-            <ReviewStep icp={icp} setIcp={setIcp} error={error} setError={setError} />
-          )}
-
-          {step === 'confirm' && (
-            <ConfirmStep
-              candidates={candidates}
-              selected={selectedCompanies}
-              onSelectionChange={setSelectedCompanies}
-              isDiscovering={isDiscovering}
-              statusMessage={statusMessage}
-              error={error}
-            />
-          )}
-
-          {step === 'results' && (
-            <ResultsStep
-              icp={icp}
-              results={results}
-              isLoading={isLoading}
-              statusMessage={statusMessage}
-              error={error}
-              onComposeEmail={setComposeParams}
-              onEditCriteria={() => setStep('review')}
-            />
-          )}
+          {step === 'input' && <TranscriptStep />}
+          {step === 'review' && icp && <ReviewStep />}
+          {step === 'confirm' && <ConfirmStep />}
+          {step === 'results' && <ResultsStep />}
         </div>
       </main>
 
       <EmailEditorPanel
         open={composeParams !== null}
         params={composeParams}
-        onClose={() => setComposeParams(null)}
+        onClose={() => useResearchStore.getState().setComposeParams(null)}
       />
 
-      <BottomNav
-        step={step}
-        setStep={setStep}
-        isExtracting={isExtracting}
-        isDiscovering={isDiscovering}
-        isLoading={isLoading}
-        hasIcp={!!icp}
-        hasCandidates={candidates.length > 0}
-        hasResults={results.length > 0}
-        transcript={transcript}
-        icpDescription={icp?.description ?? ''}
-        selectedCount={selectedCompanies.length}
-        onExtractICP={handleExtractICP}
-        onDiscover={handleDiscover}
-        onResearch={() => handleResearch(selectedCompanies)}
-        onStartOver={handleStartOver}
-        onSkip={() => {
-          if (!icp) setIcp({ ...EMPTY_ICP });
-          setStep('review');
-        }}
-      />
+      <BottomNav />
     </div>
   );
 }

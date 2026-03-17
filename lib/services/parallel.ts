@@ -14,38 +14,87 @@ function getClient(): Parallel {
  * Implements CompanyDiscovery interface.
  */
 export const parallelCompanyDiscovery: CompanyDiscovery = {
-  async find(icp: ICPCriteria): Promise<DiscoveredCompany[]> {
+  async find(
+    icp: ICPCriteria,
+    onProgress?: (message: string) => void
+  ): Promise<DiscoveredCompany[]> {
     const client = getClient();
 
-    const signalParts: string[] = [];
-    if (icp.industry_keywords.length > 0) {
-      signalParts.push(`Industries: ${icp.industry_keywords.join(', ')}`);
-    }
-    if (icp.min_funding_amount) {
-      signalParts.push(`Ideally raised $${icp.min_funding_amount / 1_000_000}M+`);
-    }
-    if (icp.funding_stages.length > 0) {
-      signalParts.push(`Funding stage: ${icp.funding_stages.join(' or ')}`);
-    }
-    if (icp.hiring_signals.length > 0) {
-      signalParts.push(`Hiring signals: ${icp.hiring_signals.join(', ')}`);
-    }
-    if (icp.tech_keywords.length > 0) {
-      signalParts.push(`Tech/tools: ${icp.tech_keywords.join(', ')}`);
-    }
-    if (icp.company_examples.length > 0) {
-      signalParts.push(`Similar to: ${icp.company_examples.join(', ')}`);
+    const conditions: { name: string; description: string }[] = [];
+
+    if (icp.min_employees !== null || icp.max_employees !== null) {
+      const sizeParts: string[] = [];
+      if (icp.min_employees !== null) sizeParts.push(`at least ${icp.min_employees}`);
+      if (icp.max_employees !== null) sizeParts.push(`no more than ${icp.max_employees}`);
+      conditions.push({
+        name: 'Company size',
+        description: `The company should have ${sizeParts.join(' and ')} employees.`
+      });
     }
 
-    const conditions = [
-      {
-        name: 'ICP fit',
-        description: `${icp.description}. ${signalParts.length > 0 ? `Attributes to look for (not all required): ${signalParts.join('. ')}` : ''}`
+    if (icp.industry_keywords.length > 0) {
+      conditions.push({
+        name: 'Industry fit',
+        description: `The company operates in one of these industries or verticals: ${icp.industry_keywords.join(', ')}.`
+      });
+    }
+
+    if (icp.hiring_signals.length > 0) {
+      conditions.push({
+        name: 'Hiring and growth signals',
+        description: `The company shows these behavioral signals: ${icp.hiring_signals.join(', ')}.`
+      });
+    }
+
+    if (icp.min_funding_amount || icp.funding_stages.length > 0) {
+      const fundingParts: string[] = [];
+      if (icp.funding_stages.length > 0) {
+        fundingParts.push(`funding stage: ${icp.funding_stages.join(' or ')}`);
       }
-    ];
+      if (icp.min_funding_amount) {
+        fundingParts.push(`raised at least $${icp.min_funding_amount / 1_000_000}M`);
+      }
+      conditions.push({
+        name: 'Funding profile',
+        description: `The company has ${fundingParts.join(' and ')}.`
+      });
+    }
+
+    if (icp.tech_keywords.length > 0) {
+      conditions.push({
+        name: 'Tech stack',
+        description: `The company uses or is adopting: ${icp.tech_keywords.join(', ')}.`
+      });
+    }
+
+    conditions.push({
+      name: 'Company legitimacy',
+      description:
+        'The company must be an established, reputable business — not a shell company, personal project, or ghost profile. It should have at least 200 followers on LinkedIn and show signs of real activity (employees, posts, website).'
+    });
+
+    // Fallback if no structured conditions were generated
+    if (conditions.length === 0) {
+      conditions.push({
+        name: 'ICP fit',
+        description: icp.description
+      });
+    }
+
+    // Build objective with size constraints for reinforcement
+    const objectiveParts = [icp.description];
+    if (icp.min_employees !== null || icp.max_employees !== null) {
+      const sizeStr =
+        icp.min_employees !== null && icp.max_employees !== null
+          ? `${icp.min_employees}-${icp.max_employees} employees`
+          : icp.max_employees !== null
+            ? `under ${icp.max_employees} employees`
+            : `at least ${icp.min_employees} employees`;
+      objectiveParts.push(`Target company size: ${sizeStr}.`);
+    }
 
     const run = await client.beta.findall.create({
-      objective: icp.description,
+      objective: objectiveParts.join(' '),
       entity_type: 'companies',
       match_conditions: conditions,
       generator: serviceConfig.findAllGenerator,
@@ -55,13 +104,31 @@ export const parallelCompanyDiscovery: CompanyDiscovery = {
     const findallId = run.findall_id;
     let runStatus = run.status.status;
     let attempts = 0;
-    const maxAttempts = 60;
+    let lastMatchedCount = 0;
 
-    while (runStatus !== 'completed' && runStatus !== 'failed' && attempts < maxAttempts) {
-      await new Promise((r) => setTimeout(r, 5000));
+    while (
+      runStatus !== 'completed' &&
+      runStatus !== 'failed' &&
+      attempts < serviceConfig.findAllMaxAttempts
+    ) {
+      await new Promise((r) => setTimeout(r, serviceConfig.findAllPollInterval));
       const check = await client.beta.findall.retrieve(findallId);
       runStatus = check.status.status;
       attempts++;
+
+      if (onProgress) {
+        const generated = check.status.metrics?.generated_candidates_count ?? 0;
+        const matched = check.status.metrics?.matched_candidates_count ?? 0;
+
+        if (matched > lastMatchedCount) {
+          onProgress(
+            `Found ${matched} matching ${matched === 1 ? 'company' : 'companies'} so far (${generated} evaluated)...`
+          );
+          lastMatchedCount = matched;
+        } else if (generated > 0) {
+          onProgress(`Evaluating companies... ${generated} scanned, ${matched} matched so far`);
+        }
+      }
     }
 
     if (runStatus !== 'completed') {

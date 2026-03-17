@@ -1,6 +1,8 @@
 export interface ICPCriteria {
   description: string;
   industry_keywords: string[];
+  min_employees: number | null;
+  max_employees: number | null;
   min_funding_amount: number | null;
   funding_stages: string[];
   hiring_signals: string[];
@@ -34,7 +36,8 @@ export interface CompanyResult {
   funding_stage: string;
   amount_raised: string;
   website: string | null;
-  linkedin_search_url: string;
+  linkedin_url: string;
+  logo_url: string;
   signals: CompanySignal[];
   match_reason: string;
   company_overview: string;
@@ -64,6 +67,8 @@ export interface DiscoveredCompanyPreview {
   name: string;
   website?: string;
   description?: string;
+  linkedin_url?: string;
+  logo_url?: string;
 }
 
 export type ResearchStreamEvent =

@@ -163,7 +163,22 @@ export const claudeResearchAgent: CompanyResearcher = {
     if (sources.funding.length === 0) sources.funding = fallbacks.funding;
     if (sources.news.length === 0) sources.news = fallbacks.news;
 
+    // Validate LinkedIn URL — must be a real linkedin.com/company/ URL from search results
+    const rawLinkedin = parsed.linkedin_url || null;
+    const linkedinUrl =
+      typeof rawLinkedin === 'string' &&
+      rawLinkedin.includes('linkedin.com/company/') &&
+      verifiedUrls.has(rawLinkedin)
+        ? rawLinkedin
+        : null;
+
+    // Extract website domain from research
+    const rawWebsite = parsed.website || null;
+    const website = typeof rawWebsite === 'string' && rawWebsite.length > 0 ? rawWebsite : null;
+
     return {
+      website,
+      linkedin_url: linkedinUrl,
       signals,
       match_reason: stripCites(parsed.match_reason || ''),
       company_overview: stripCites(parsed.company_overview || ''),

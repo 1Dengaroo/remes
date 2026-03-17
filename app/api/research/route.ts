@@ -1,16 +1,25 @@
 import { NextRequest } from 'next/server';
 import { discoverCompanies, researchConfirmedCompanies } from '@/lib/services/pipeline';
-import type { ResearchStreamEvent, ICPCriteria } from '@/lib/types';
+import type { ResearchStreamEvent, ICPCriteria, DiscoveredCompanyPreview } from '@/lib/types';
 
 export const maxDuration = 300;
+
+function isICPCriteria(value: unknown): value is ICPCriteria {
+  if (typeof value !== 'object' || value === null) return false;
+  const obj = value as Record<string, unknown>;
+  return typeof obj.description === 'string' && Array.isArray(obj.industry_keywords);
+}
 
 export async function POST(req: NextRequest) {
   const body: Record<string, unknown> = await req.json();
 
   // Phase 1: discover — send { icp } → get candidates back
-  // Phase 2: research — send { icp, companies: ["Name1", "Name2"] } → get results back
-  const icp = body.icp && typeof body.icp === 'object' ? (body.icp as ICPCriteria) : undefined;
+  // Phase 2: research — send { icp, companies: [...], candidates: [...] } → get results back
+  const icp = isICPCriteria(body.icp) ? body.icp : undefined;
   const companies = Array.isArray(body.companies) ? (body.companies as string[]) : undefined;
+  const candidates = Array.isArray(body.candidates)
+    ? (body.candidates as DiscoveredCompanyPreview[])
+    : undefined;
 
   if (!icp) {
     return Response.json({ error: 'ICP is required' }, { status: 400 });
@@ -18,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   const missing: string[] = [];
   if (!process.env.ANTHROPIC_API_KEY) missing.push('ANTHROPIC_API_KEY');
-  if (!process.env.PARALLEL_API_KEY && !companies) missing.push('PARALLEL_API_KEY');
+  if (!process.env.APOLLO_API_KEY && !companies) missing.push('APOLLO_API_KEY');
 
   if (missing.length > 0) {
     return Response.json(
@@ -36,10 +45,8 @@ export async function POST(req: NextRequest) {
 
       try {
         if (companies) {
-          // Phase 2: research confirmed companies
-          await researchConfirmedCompanies(companies, icp, send);
+          await researchConfirmedCompanies(companies, icp, send, undefined, candidates);
         } else {
-          // Phase 1: discover candidates
           await discoverCompanies(icp, send);
         }
       } catch (err) {

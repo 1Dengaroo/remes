@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Building2, ExternalLink, X, Plus, Loader2, Search } from 'lucide-react';
+import { Building2, ExternalLink, X, Plus, Search } from 'lucide-react';
+import { CompanyLogoWithFallback } from '@/components/company-logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { DiscoveredCompanyPreview } from '@/lib/types';
+import { useResearchStore } from '@/lib/store/research-store';
 
 function Checkbox({ checked, className }: { checked: boolean; className?: string }) {
   return (
@@ -66,21 +67,14 @@ function SkeletonRow({ index }: { index: number }) {
   );
 }
 
-export function ConfirmStep({
-  candidates,
-  selected,
-  onSelectionChange,
-  isDiscovering,
-  statusMessage,
-  error
-}: {
-  candidates: DiscoveredCompanyPreview[];
-  selected: string[];
-  onSelectionChange: (companies: string[]) => void;
-  isDiscovering: boolean;
-  statusMessage: string;
-  error: string | null;
-}) {
+export function ConfirmStep() {
+  const candidates = useResearchStore((s) => s.candidates);
+  const selected = useResearchStore((s) => s.selectedCompanies);
+  const setSelectedCompanies = useResearchStore((s) => s.setSelectedCompanies);
+  const isDiscovering = useResearchStore((s) => s.isDiscovering);
+  const statusMessage = useResearchStore((s) => s.statusMessage);
+  const error = useResearchStore((s) => s.error);
+
   const [adding, setAdding] = useState(false);
   const [newCompany, setNewCompany] = useState('');
 
@@ -88,15 +82,15 @@ export function ConfirmStep({
 
   const toggle = (name: string) => {
     if (selectedSet.has(name)) {
-      onSelectionChange(selected.filter((n) => n !== name));
+      setSelectedCompanies(selected.filter((n) => n !== name));
     } else {
-      onSelectionChange([...selected, name]);
+      setSelectedCompanies([...selected, name]);
     }
   };
 
   const addCustom = () => {
     if (newCompany.trim() && !selectedSet.has(newCompany.trim())) {
-      onSelectionChange([...selected, newCompany.trim()]);
+      setSelectedCompanies([...selected, newCompany.trim()]);
       setNewCompany('');
       setAdding(false);
     }
@@ -127,10 +121,10 @@ export function ConfirmStep({
             <button
               onClick={() => {
                 if (allSelected) {
-                  onSelectionChange(customNames);
+                  setSelectedCompanies(customNames);
                 } else {
                   const allNames = [...candidates.map((c) => c.name), ...customNames];
-                  onSelectionChange([...new Set(allNames)]);
+                  setSelectedCompanies([...new Set(allNames)]);
                 }
               }}
             >
@@ -161,8 +155,13 @@ export function ConfirmStep({
           >
             <Checkbox checked={selectedSet.has(company.name)} className="mt-0.5" />
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <Building2 className="text-muted-foreground size-3.5 shrink-0" />
+              <div className="flex items-center gap-2">
+                <CompanyLogoWithFallback
+                  name={company.name}
+                  website={company.website}
+                  logoUrl={company.logo_url}
+                  size="sm"
+                />
                 <span className="text-sm font-medium">{company.name}</span>
                 {company.website && (
                   <a
@@ -171,8 +170,23 @@ export function ConfirmStep({
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary transition-colors"
                     onClick={(e) => e.stopPropagation()}
+                    title="Website"
                   >
                     <ExternalLink className="size-3" />
+                  </a>
+                )}
+                {company.linkedin_url && (
+                  <a
+                    href={company.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                    title="LinkedIn"
+                  >
+                    <svg className="size-3" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
                   </a>
                 )}
               </div>
@@ -200,7 +214,7 @@ export function ConfirmStep({
               </span>
             </div>
             <button
-              onClick={() => onSelectionChange(selected.filter((n) => n !== name))}
+              onClick={() => setSelectedCompanies(selected.filter((n) => n !== name))}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <X className="size-3.5" />
