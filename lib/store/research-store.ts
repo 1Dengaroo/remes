@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import {
   parseICP,
+  streamStrategy,
   discoverCompanies,
   researchCompanies,
   searchPeople,
@@ -11,7 +12,8 @@ import type {
   CompanyResult,
   ComposeEmailParams,
   DiscoveredCompanyPreview,
-  ApolloPersonPreview
+  ApolloPersonPreview,
+  StrategyMessage
 } from '@/lib/types';
 
 type Step = 'input' | 'review' | 'confirm' | 'results';
@@ -36,8 +38,10 @@ interface ResearchState {
   transcript: string;
   isExtracting: boolean;
 
-  // Step 2: ICP
+  // Step 2: Strategy
   icp: ICPCriteria | null;
+  strategyMessages: StrategyMessage[];
+  isStrategizing: boolean;
 
   // Step 3: Discovery
   isDiscovering: boolean;
@@ -73,8 +77,11 @@ interface ResearchActions {
   setTranscript: (transcript: string) => void;
   extractICP: () => Promise<void>;
 
-  // Step 2
-  setIcp: (icp: ICPCriteria) => void;
+  // Step 2: Strategy
+  updateIcp: <K extends keyof ICPCriteria>(field: K, value: ICPCriteria[K]) => void;
+  generateStrategy: () => Promise<void>;
+  sendStrategyMessage: (message: string) => Promise<void>;
+  approveStrategy: () => void;
 
   // Step 3
   discover: () => Promise<void>;
@@ -102,12 +109,39 @@ interface ResearchActions {
 
 export type ResearchStore = ResearchState & ResearchActions;
 
+function buildStrategyCallbacks(
+  set: (partial: Partial<ResearchState>) => void,
+  get: () => ResearchStore,
+  priorMessages: StrategyMessage[]
+): {
+  onChunk: (text: string) => void;
+  onStatus: (message: string) => void;
+  onIcpUpdate: (updates: Partial<ICPCriteria>) => void;
+} {
+  return {
+    onChunk: (text) => {
+      set({
+        strategyMessages: [...priorMessages, { role: 'assistant', content: text }]
+      });
+    },
+    onStatus: (message) => {
+      set({ statusMessage: message });
+    },
+    onIcpUpdate: (updates) => {
+      const current = get().icp;
+      if (current) set({ icp: { ...current, ...updates } });
+    }
+  };
+}
+
 export const useResearchStore = create<ResearchStore>((set, get) => ({
   // Initial state
   step: 'input',
   transcript: '',
   isExtracting: false,
   icp: null,
+  strategyMessages: [],
+  isStrategizing: false,
   isDiscovering: false,
   candidates: [],
   selectedCompanies: [],
@@ -139,8 +173,11 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       set({
         icp: { ...data, description: transcript.trim() },
         step: 'review',
-        isExtracting: false
+        isExtracting: false,
+        strategyMessages: []
       });
+      // Auto-generate strategy after ICP is parsed
+      get().generateStrategy();
     } catch (err) {
       set({
         error: err instanceof Error ? err.message : 'Failed to extract ICP',
@@ -149,8 +186,66 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     }
   },
 
-  // Step 2: ICP
-  setIcp: (icp) => set({ icp }),
+  // Step 2: Strategy
+  updateIcp: (field, value) => {
+    const current = get().icp;
+    if (current) set({ icp: { ...current, [field]: value } });
+  },
+
+  generateStrategy: async () => {
+    const { icp, isStrategizing } = get();
+    if (!icp || isStrategizing) return;
+
+    set({ isStrategizing: true, error: null, strategyMessages: [] });
+
+    try {
+      const cleanText = await streamStrategy(icp, [], buildStrategyCallbacks(set, get, []));
+      set({ strategyMessages: [{ role: 'assistant', content: cleanText }] });
+    } catch (err) {
+      set({
+        error: err instanceof Error ? err.message : 'Strategy generation failed'
+      });
+    } finally {
+      set({ isStrategizing: false, statusMessage: '' });
+    }
+  },
+
+  sendStrategyMessage: async (message: string) => {
+    const { icp, isStrategizing, strategyMessages } = get();
+    if (!icp || isStrategizing || !message.trim()) return;
+
+    const updatedMessages: StrategyMessage[] = [
+      ...strategyMessages,
+      { role: 'user', content: message.trim() }
+    ];
+
+    set({
+      isStrategizing: true,
+      error: null,
+      strategyMessages: updatedMessages
+    });
+
+    try {
+      const cleanText = await streamStrategy(
+        icp,
+        updatedMessages,
+        buildStrategyCallbacks(set, get, updatedMessages)
+      );
+      set({
+        strategyMessages: [...updatedMessages, { role: 'assistant', content: cleanText }]
+      });
+    } catch (err) {
+      set({
+        error: err instanceof Error ? err.message : 'Strategy update failed'
+      });
+    } finally {
+      set({ isStrategizing: false, statusMessage: '' });
+    }
+  },
+
+  approveStrategy: () => {
+    get().discover();
+  },
 
   // Step 3: Discovery
   discover: async () => {
@@ -340,6 +435,8 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     set({
       step: 'input',
       icp: null,
+      strategyMessages: [],
+      isStrategizing: false,
       candidates: [],
       selectedCompanies: [],
       results: [],
@@ -355,7 +452,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   skipToReview: () => {
     const { icp } = get();
     if (!icp) set({ icp: { ...EMPTY_ICP } });
-    set({ step: 'review' });
+    set({ step: 'review', strategyMessages: [] });
   },
 
   // Email

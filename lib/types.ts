@@ -93,6 +93,11 @@ export interface PeopleSearchResult {
   ranked_people: ApolloPersonPreview[];
 }
 
+export interface StrategyMessage {
+  role: 'assistant' | 'user';
+  content: string;
+}
+
 export type ResearchStreamEvent =
   | { type: 'status'; message: string }
   | { type: 'icp'; data: ICPCriteria }

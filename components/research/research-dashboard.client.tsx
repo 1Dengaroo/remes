@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useResearchStore } from '@/lib/store/research-store';
 import { TranscriptStep } from './transcript-step';
-import { ReviewStep } from './review-step';
+import { StrategyStep } from './strategy-step';
 import { ConfirmStep } from './confirm-step';
 import { ResultsStep } from './results-step';
 import { BottomNav } from './bottom-nav';
@@ -14,13 +14,14 @@ export function ResearchDashboard() {
   const icp = useResearchStore((s) => s.icp);
   const transcript = useResearchStore((s) => s.transcript);
   const isExtracting = useResearchStore((s) => s.isExtracting);
-  const isDiscovering = useResearchStore((s) => s.isDiscovering);
   const isResearching = useResearchStore((s) => s.isResearching);
   const selectedCompanies = useResearchStore((s) => s.selectedCompanies);
   const composeParams = useResearchStore((s) => s.composeParams);
 
   const extractICP = useResearchStore((s) => s.extractICP);
-  const discover = useResearchStore((s) => s.discover);
+  const approveStrategy = useResearchStore((s) => s.approveStrategy);
+  const isStrategizing = useResearchStore((s) => s.isStrategizing);
+  const strategyMessages = useResearchStore((s) => s.strategyMessages);
   const research = useResearchStore((s) => s.research);
 
   // Cmd+Enter / Ctrl+Enter to advance
@@ -30,8 +31,8 @@ export function ResearchDashboard() {
         e.preventDefault();
         if (step === 'input' && transcript.trim() && !isExtracting) {
           extractICP();
-        } else if (step === 'review' && icp?.description?.trim() && !isDiscovering) {
-          discover();
+        } else if (step === 'review' && strategyMessages.length > 0 && !isStrategizing) {
+          approveStrategy();
         } else if (step === 'confirm' && selectedCompanies.length > 0 && !isResearching) {
           research();
         }
@@ -42,13 +43,13 @@ export function ResearchDashboard() {
   }, [
     step,
     transcript,
-    icp,
+    strategyMessages,
     selectedCompanies,
     isExtracting,
-    isDiscovering,
+    isStrategizing,
     isResearching,
     extractICP,
-    discover,
+    approveStrategy,
     research
   ]);
 
@@ -57,7 +58,7 @@ export function ResearchDashboard() {
       <main className="mx-auto max-w-7xl px-6 pt-10 pb-24">
         <div className="animate-in fade-in duration-300" key={step}>
           {step === 'input' && <TranscriptStep />}
-          {step === 'review' && icp && <ReviewStep />}
+          {step === 'review' && icp && <StrategyStep />}
           {step === 'confirm' && <ConfirmStep />}
           {step === 'results' && <ResultsStep />}
         </div>

@@ -4,8 +4,6 @@ import { Loader2, ChevronRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useResearchStore } from '@/lib/store/research-store';
 
-type Step = 'input' | 'review' | 'confirm' | 'results';
-
 function NavButton({
   label,
   active,
@@ -46,8 +44,11 @@ export function BottomNav() {
   const transcript = useResearchStore((s) => s.transcript);
   const selectedCompanies = useResearchStore((s) => s.selectedCompanies);
 
+  const strategyMessages = useResearchStore((s) => s.strategyMessages);
+  const isStrategizing = useResearchStore((s) => s.isStrategizing);
+
   const extractICP = useResearchStore((s) => s.extractICP);
-  const discover = useResearchStore((s) => s.discover);
+  const approveStrategy = useResearchStore((s) => s.approveStrategy);
   const research = useResearchStore((s) => s.research);
   const startOver = useResearchStore((s) => s.startOver);
   const skipToReview = useResearchStore((s) => s.skipToReview);
@@ -70,7 +71,7 @@ export function BottomNav() {
           />
           <span className="text-border">&mdash;</span>
           <NavButton
-            label="2. ICP"
+            label="2. Strategy"
             active={step === 'review'}
             enabled={hasIcp}
             onClick={() => setStep('review')}
@@ -123,23 +124,22 @@ export function BottomNav() {
           )}
 
           {step === 'review' && (
-            <Button
-              size="sm"
-              onClick={discover}
-              disabled={isDiscovering || !icp?.description?.trim()}
-            >
-              {isDiscovering ? (
-                <>
-                  <Loader2 className="size-3.5 animate-spin" />
-                  Finding...
-                </>
-              ) : (
-                <>
-                  Find Companies
-                  <ChevronRight className="size-4" />
-                </>
+            <>
+              {isStrategizing && (
+                <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                  <Loader2 className="size-3 animate-spin" />
+                  Thinking...
+                </span>
               )}
-            </Button>
+              <Button
+                size="sm"
+                onClick={approveStrategy}
+                disabled={isStrategizing || strategyMessages.length === 0}
+              >
+                Approve &amp; Start
+                <ChevronRight className="size-4" />
+              </Button>
+            </>
           )}
 
           {step === 'confirm' && (

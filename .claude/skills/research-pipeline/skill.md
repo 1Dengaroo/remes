@@ -18,11 +18,13 @@ STEP 4: DEEP RESEARCH    → Claude researches each company with web search, str
 ```
 User Input (transcript)
   → Claude Haiku (ICP extraction)
-    → Apollo Organizations Search (broad company discovery)
+    → Apollo Organizations Search (broad company discovery, returns apollo_org_id per company)
       → Claude Haiku (score + rank companies 1-10 against ICP)
         → User confirms company selection
-          → Claude Haiku + web_search × N sequential (deep research per company)
-            → Stream each CompanyResult to UI via SSE
+          → IN PARALLEL:
+            ├── Stream A: Claude Haiku + web_search × N (deep research per company → SSE)
+            └── Stream B: Apollo People Search → Claude Haiku ranking → top 3 people per company
+          → On "Get Contact" click: Apollo People Match (1 credit) → full name, email, phone, LinkedIn
 ```
 
 ## Four Service Interfaces
@@ -53,10 +55,11 @@ lib/services/
 ├── pipeline.ts        # Orchestrator — two phases: discoverCompanies() + researchConfirmedCompanies()
 ├── ai.ts              # claudeICPParser (Claude Haiku)
 ├── apollo.ts          # apolloCompanyDiscovery (Apollo Organizations Search)
+├── apollo-people.ts   # apolloPeopleSearch() + apolloPersonEnrich() (Apollo People API)
+├── people-ranking.ts  # rankPeopleForCompany() (Claude Haiku ranks top 3 by ICP fit)
 ├── scoring.ts         # claudeCompanyScorer (Claude Haiku scores 1-10)
 ├── research-agent.ts  # claudeResearchAgent (Claude Haiku + web_search tool)
-├── parallel.ts        # parallelCompanyDiscovery (inactive alternative)
-└── config.ts          # All tunable parameters
+└── parallel.ts        # parallelCompanyDiscovery (inactive alternative)
 
 lib/prompts/
 ├── parse-icp.ts       # ICP extraction prompt
@@ -65,14 +68,20 @@ lib/prompts/
 lib/store/
 └── research-store.ts  # Zustand store — all pipeline state + actions
 
-lib/api.ts             # Client-side fetch wrappers (parseICP, discoverCompanies, researchCompanies)
-lib/types.ts           # ICPCriteria, CompanyResult, CompanySignal, TargetContact, etc.
+lib/api.ts             # Client-side fetch wrappers (parseICP, discoverCompanies, researchCompanies, searchPeople, enrichPerson)
+lib/types.ts           # ICPCriteria, CompanyResult, CompanySignal, TargetContact, ApolloPersonPreview, PeopleSearchResult, etc.
 
 app/api/parse-icp/
 └── route.ts           # POST endpoint — ICP parsing
 
 app/api/research/
 └── route.ts           # POST endpoint — SSE stream for discovery + research phases
+
+app/api/people/search/
+└── route.ts           # POST endpoint — Apollo people search + Claude ranking
+
+app/api/people/enrich/
+└── route.ts           # POST endpoint — Apollo person enrichment (1 credit)
 
 components/research/
 ├── research-dashboard.client.tsx  # Main orchestrator (keyboard shortcuts, step routing)
@@ -125,9 +134,10 @@ Apollo Organizations Search is the primary company discovery method. The strateg
 Each Apollo org is transformed into a `DiscoveredCompany` with:
 - `name`, `website`, `description`, `linkedin_url`, `logo_url`
 - `match_context`: JSON string of Apollo metadata (employee count, keywords, funding, departments)
+- `apollo_org_id`: Apollo organization ID (threaded through to `DiscoveredCompanyPreview` for people search)
 
 ### Environment Variable
-- `APOLLO_API_KEY` — required for discovery
+- `APOLLO_API_KEY` — required for discovery and people search
 
 ## Company Scoring (Claude)
 
@@ -175,10 +185,78 @@ Claude can hallucinate URLs. Defenses:
 
 ### Contact Handling
 
-- Contacts are **inferred by Claude** from research data (press releases, articles)
-- Server-side filtering: must have real first+last name (2+ parts), not just titles
-- LinkedIn search URLs generated per person (name + company)
-- Emails inferred from domain patterns (first@domain.com, first.last@domain.com)
+Contacts are sourced from **Apollo People API**, not Claude inference. The research agent prompt returns `inferred_contacts: []` (empty) to save tokens.
+
+## Apollo People Integration
+
+**Files**: `lib/services/apollo-people.ts`, `lib/services/people-ranking.ts`
+
+### People Search Flow (parallel with company research)
+
+```
+Step 4 starts → in parallel:
+  ├── Company research (existing SSE stream)
+  └── People search:
+      candidates[selected].apollo_org_id
+        → POST /api/people/search
+          → apolloPeopleSearch(orgIds) — Apollo mixed_people/api_search endpoint
+            → Groups people by organization name
+          → rankPeopleForCompany(people, icp, companyName) — Claude Haiku picks top 3
+        → Store in peopleResults[companyName]
+```
+
+### Person Enrichment Flow (on-demand, 1 Apollo credit)
+
+```
+User clicks "Get Contact"
+  → POST /api/people/enrich { person_id }
+    → apolloPersonEnrich(personId) — Apollo people/match endpoint
+      → Returns: first_name, last_name, title, email, phone, linkedin_url
+    → Updates person in peopleResults with is_enriched: true
+```
+
+### Apollo API Response Shapes
+
+**mixed_people/api_search** returns obfuscated data:
+- `first_name`, `last_name_obfuscated` (e.g. "Hu***n")
+- `has_email: boolean`, `has_direct_phone: "Yes" | "No"`
+- `organization.name` (nested, not flat `organization_name`)
+- No `email`, `phone_numbers`, or `linkedin_url` on this endpoint
+
+**people/match** returns full data:
+- `first_name`, `last_name`, `email`, `linkedin_url`
+- Phone via `person.contact.phone_numbers[].raw_number` (nested under contact)
+
+### Key Types
+
+```typescript
+interface ApolloPersonPreview {
+  apollo_person_id: string;
+  first_name: string;
+  last_name_obfuscated: string;
+  title: string | null;
+  organization_name: string;
+  has_email: boolean;
+  has_direct_phone: boolean;
+  // Filled after enrichment:
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  linkedin_url?: string;
+  is_enriched?: boolean;
+}
+
+interface PeopleSearchResult {
+  company_name: string;
+  apollo_org_id: string;
+  ranked_people: ApolloPersonPreview[];
+}
+```
+
+### Edge Cases
+- Custom-added companies (no `apollo_org_id`): skip in people search, show "No contacts available"
+- Empty people results: show "No contacts found"
+- Enrichment failure: error logged, loading state cleared
 
 ## API Routes
 
@@ -200,6 +278,16 @@ Claude can hallucinate URLs. Defenses:
 - Input: `{ icp, companies: string[], candidates? }`
 - Calls `researchConfirmedCompanies()` → Claude research per company
 - Streams: `status`, `company` (per result), `done`
+
+### POST `/api/people/search`
+- **Input**: `{ org_ids: string[], icp: ICPCriteria, companies: { name: string, apollo_org_id: string }[] }`
+- **Output**: `{ results: PeopleSearchResult[] }`
+- Calls `apolloPeopleSearch()` → groups by org name → `rankPeopleForCompany()` per company
+
+### POST `/api/people/enrich`
+- **Input**: `{ person_id: string }`
+- **Output**: `{ person: { first_name, last_name, title, email, phone, linkedin_url } }`
+- Calls `apolloPersonEnrich()` — costs 1 Apollo credit
 
 ### SSE Event Types
 
@@ -230,12 +318,17 @@ type ResearchStreamEvent =
 | `isExtracting`      | `boolean`                   | Loading |
 | `isDiscovering`     | `boolean`                   | Loading |
 | `isResearching`     | `boolean`                   | Loading |
+| `peopleResults`     | `Record<string, ApolloPersonPreview[]>` | Step 4 |
+| `isPeopleSearching` | `boolean`                   | Loading |
+| `enrichingPersonIds`| `string[]`                  | Loading |
 | `abortController`   | `AbortController \| null`   | Cancel  |
 
 ### Key Actions
 - `extractICP()` → POST `/api/parse-icp` → sets ICP, advances to review
 - `discover()` → POST `/api/research` (phase 1) → sets candidates, advances to confirm
-- `research()` → POST `/api/research` (phase 2) → streams results, advances to results
+- `research()` → POST `/api/research` (phase 2) → streams results + fires `searchPeopleAction()` in parallel
+- `searchPeopleAction()` → POST `/api/people/search` → stores top 3 people per company
+- `enrichPersonAction(personId, companyName)` → POST `/api/people/enrich` → updates person with full contact details
 - `startOver()` → resets everything to step 1
 - `toggleCompany()`, `selectAll()`, `deselectAll()` → company selection
 
@@ -295,7 +388,10 @@ type ResearchStreamEvent =
 | Apollo discovery  | Apollo Organizations API   | Free tier / per-credit       |
 | Company scoring   | Claude Haiku               | ~$0.005                      |
 | Research × N      | Claude Haiku + web_search  | ~$0.03/company               |
-| **Total (5 co.)** |                            | **~$0.16/request**           |
+| People search     | Apollo mixed_people API    | Free (obfuscated data)       |
+| People ranking    | Claude Haiku               | ~$0.001/company              |
+| Person enrich     | Apollo people/match        | 1 credit per person (on-demand) |
+| **Total (5 co.)** |                            | **~$0.17/request** + credits |
 
 ## Cost Optimization History
 
@@ -303,9 +399,10 @@ type ResearchStreamEvent =
 2. **Parallel FindAll → Apollo Organizations Search** — Apollo is the primary discovery now
 3. **Added Claude scoring step** — broad Apollo search + Claude scoring handles nuance better than narrow API filters
 4. **Parallel Search API → Claude web_search tool** — Claude decides what to search, iterates, follows threads — much better quality
-5. **Apollo contact enrichment → Claude-inferred contacts** — Avoids $60/month Apollo People API subscription
+5. **Claude-inferred contacts → Apollo People API** — Real people data with verified emails, ranked by ICP fit via Claude
 6. **Max searches reduced to 2 per company** — Sufficient for funding + jobs/news coverage
 7. **Sequential per-company research** — Enables streaming UX (results appear one at a time)
+8. **On-demand person enrichment** — Only spend Apollo credits when user clicks "Get Contact", not upfront
 
 ## Architecture Notes
 
