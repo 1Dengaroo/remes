@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Loader2, ChevronRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useResearchStore } from '@/lib/store/research-store';
@@ -33,6 +34,7 @@ function NavButton({
 }
 
 export function BottomNav() {
+  const router = useRouter();
   const step = useResearchStore((s) => s.step);
   const setStep = useResearchStore((s) => s.setStep);
   const isExtracting = useResearchStore((s) => s.isExtracting);
@@ -59,7 +61,14 @@ export function BottomNav() {
   const selectedCount = selectedCompanies.length;
 
   return (
-    <div className="border-border bg-card/80 fixed right-0 bottom-0 left-0 border-t backdrop-blur-sm">
+    <div
+      className="fixed right-0 bottom-0 left-0 border-t"
+      style={{
+        backgroundColor: 'var(--bottom-nav-bg, hsl(var(--card) / 0.8))',
+        borderColor: 'var(--bottom-nav-border, hsl(var(--border)))',
+        backdropFilter: 'var(--bottom-nav-backdrop, blur(8px))'
+      }}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Left: step navigation */}
         <div className="flex items-center gap-1 text-xs">
@@ -178,7 +187,14 @@ export function BottomNav() {
                   Researching...
                 </span>
               )}
-              <Button size="sm" variant="outline" onClick={startOver}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  startOver();
+                  router.push('/research');
+                }}
+              >
                 <RotateCcw className="size-3.5" />
                 New Research
               </Button>

@@ -12,7 +12,8 @@ docs/
 ├── ARCHITECTURE.md                ← Domain layers, data flow, service interfaces
 ├── PRODUCT.md                     ← User flows, business domain, current limitations
 ├── CONVENTIONS.md                 ← SSR boundary, TypeScript, Tailwind, component rules
-└── CODE-CLEANUP.md                ← Post-iteration cleanup checklist
+├── CODE-CLEANUP.md                ← Post-iteration cleanup checklist
+└── PERSISTENCE.md                 ← Sessions, ICPs, contact tracking, auto-save
 .claude/skills/
 ├── research-pipeline/skill.md     ← Pipeline deep-dive: types, APIs, config, Apollo integration
 └── theme-framework/skill.md       ← Token system, adding themes, font system
@@ -26,7 +27,8 @@ lib/services/config.ts             ← Models, limits, thresholds (one file to t
 lib/services/interfaces.ts         ← Swappable service contracts
 lib/services/pipeline.ts           ← Pipeline orchestrator
 lib/services/gmail.ts              ← Gmail OAuth + sending
-lib/store/research-store.ts        ← Zustand store (all state + actions)
+lib/store/research-store.ts        ← Zustand store (all state + actions + session persistence)
+lib/store/icp-store.ts             ← Saved ICP library state
 lib/store/profile-store.ts         ← Profile modal state
 lib/api.ts                         ← Client-side fetch wrappers
 middleware.ts                      ← Supabase auth + route protection

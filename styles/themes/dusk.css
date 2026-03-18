@@ -1,0 +1,123 @@
+/*
+ * DUSK — Twilight Light Theme
+ * Where warm meets cool. Deep indigo primary, terracotta copper secondary,
+ * muted sage tertiary. Surfaces have a barely-there lavender warmth.
+ * Sophisticated, editorial — like a design magazine at golden hour.
+ */
+
+[data-theme='dusk'] body {
+  background-color: #f6f5f3;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E"),
+    linear-gradient(170deg, #f6f5f3 0%, #f3f1ef 50%, #f5f3f4 100%);
+  background-attachment: fixed;
+}
+
+[data-theme='dusk'] {
+  /* Semantic tokens (oklch L C H) */
+
+  /* Deep indigo primary, warm copper secondary, muted sage tertiary */
+  --accent-primary: 0.4 0.14 280;
+  --accent-secondary: 0.58 0.13 40;
+  --accent-tertiary: 0.54 0.07 165;
+
+  /* Warm pearl surfaces with lavender undertone */
+  --surface-primary: 0.97 0.004 280;
+  --surface-secondary: 0.955 0.005 270;
+  --surface-elevated: 0.99 0.003 290;
+  --surface-overlay: 0.16 0.01 280;
+
+  /* Warm gray borders with cool tint */
+  --border-default: 0.9 0.006 270;
+  --border-subtle: 0.93 0.004 280;
+  --border-strong: 0.82 0.01 270;
+
+  /* Warm charcoal text, not pure black */
+  --text-primary: 0.17 0.01 280;
+  --text-secondary: 0.42 0.008 270;
+  --text-muted: 0.56 0.006 270;
+  --text-inverse: 0.97 0.004 280;
+
+  /* Soft shadows with cool tint */
+  --shadow-sm: 0 1px 2px oklch(0.2 0.01 280 / 0.06);
+  --shadow-md: 0 3px 10px oklch(0.2 0.01 280 / 0.08);
+  --shadow-lg: 0 8px 24px oklch(0.2 0.01 280 / 0.1);
+
+  /* Tag tokens — soft squircle, not pill */
+  --tag-radius: 6px;
+  --tag-padding-x: 0.5rem;
+  --tag-padding-y: 0.1875rem;
+  --tag-font-size: 0.6875rem;
+
+  /* Section label tokens — refined, quieter */
+  --section-label-size: 0.6875rem;
+  --section-label-tracking: 0.06em;
+  --section-label-transform: uppercase;
+
+  /* Card style tokens */
+  --card-radius: 10px;
+  --card-border-width: 1px;
+  --card-border-opacity: 0.5;
+  --card-shadow: var(--shadow-sm);
+  --card-hover-shadow: var(--shadow-md);
+  --card-hover-y: -1px;
+  --card-accent-bar-height: 0px;
+  --card-accent-bar-scale: 0;
+
+  /* Header — solid with subtle warmth */
+  --header-bg: hsl(260 10% 98%);
+  --header-border: hsl(260 8% 89%);
+  --header-backdrop: none;
+  --bottom-nav-bg: hsl(260 10% 97% / 0.88);
+  --bottom-nav-border: hsl(260 8% 89%);
+  --bottom-nav-backdrop: blur(10px);
+
+  /* Signal badges — derived from three accent families */
+  --signal-job-bg: hsl(245 40% 50% / 0.08);
+  --signal-job-text: hsl(245 35% 40%);
+  --signal-funding-bg: hsl(155 30% 45% / 0.1);
+  --signal-funding-text: hsl(155 30% 32%);
+  --signal-news-bg: hsl(28 55% 52% / 0.1);
+  --signal-news-text: hsl(22 45% 38%);
+  --signal-product-bg: hsl(280 35% 52% / 0.08);
+  --signal-product-text: hsl(280 30% 40%);
+
+  /* shadcn bridge tokens */
+  --background: hsl(40 8% 96%);
+  --foreground: hsl(250 10% 14%);
+  --card: hsl(260 8% 99%);
+  --card-foreground: hsl(250 10% 14%);
+  --popover: hsl(260 8% 99%);
+  --popover-foreground: hsl(250 10% 14%);
+  --primary: hsl(245 42% 40%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(18 35% 92%);
+  --secondary-foreground: hsl(18 30% 30%);
+  --muted: hsl(260 6% 94%);
+  --muted-foreground: hsl(250 5% 42%);
+  --accent: hsl(260 6% 94%);
+  --accent-foreground: hsl(250 10% 14%);
+  --destructive: hsl(0 65% 48%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(260 8% 88%);
+  --input: hsl(260 8% 88%);
+  --ring: hsl(245 42% 40%);
+  --radius: 0.625rem;
+
+  /* Chart palette — indigo, copper, sage spread */
+  --chart-1: hsl(245 42% 42%);
+  --chart-2: hsl(18 48% 52%);
+  --chart-3: hsl(155 28% 44%);
+  --chart-4: hsl(280 30% 52%);
+  --chart-5: hsl(40 50% 48%);
+
+  /* Sidebar */
+  --sidebar-background: hsl(260 8% 96%);
+  --sidebar-foreground: hsl(250 5% 42%);
+  --sidebar-primary: hsl(245 42% 40%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(260 6% 93%);
+  --sidebar-accent-foreground: hsl(250 10% 14%);
+  --sidebar-border: hsl(260 8% 88%);
+  --sidebar-ring: hsl(245 42% 40%);
+}

@@ -63,6 +63,10 @@ export interface GeneratedEmail {
   body: string;
 }
 
+export interface GeneratedEmailSequence {
+  emails: [GeneratedEmail, GeneratedEmail, GeneratedEmail];
+}
+
 export interface SentEmail {
   id: string;
   user_id: string;
@@ -128,3 +132,55 @@ export type ResearchStreamEvent =
   | { type: 'company'; data: CompanyResult }
   | { type: 'done'; total: number }
   | { type: 'error'; message: string };
+
+// ---------------------------------------------------------------------------
+// Persistence
+// ---------------------------------------------------------------------------
+
+export interface SavedICP {
+  id: string;
+  user_id: string;
+  name: string;
+  icp: ICPCriteria;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResearchSession {
+  id: string;
+  user_id: string;
+  name: string;
+  step: string;
+  transcript: string;
+  icp: ICPCriteria | null;
+  strategy_messages: StrategyMessage[];
+  candidates: DiscoveredCompanyPreview[];
+  selected_companies: string[];
+  results: CompanyResult[];
+  people_results: Record<string, ApolloPersonPreview[]>;
+  status: 'in_progress' | 'completed';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ResearchSessionSummary {
+  id: string;
+  name: string;
+  step: string;
+  status: 'in_progress' | 'completed';
+  icp_description: string | null;
+  company_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContactedCompany {
+  id: string;
+  user_id: string;
+  company_name: string;
+  contact_email: string;
+  contact_name: string;
+  session_id: string | null;
+  sent_email_id: string | null;
+  created_at: string;
+}

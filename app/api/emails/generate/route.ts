@@ -2,7 +2,12 @@ import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { serviceConfig } from '@/lib/services/config';
 import { buildEmailGenerationPrompt } from '@/lib/prompts/email-generation';
-import type { CompanyResult, TargetContact, ICPCriteria, GeneratedEmail } from '@/lib/types';
+import type {
+  CompanyResult,
+  TargetContact,
+  ICPCriteria,
+  GeneratedEmailSequence
+} from '@/lib/types';
 
 interface GenerateEmailRequest {
   company?: CompanyResult;
@@ -38,8 +43,13 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: 'Failed to parse email response' }, { status: 500 });
     }
 
-    const email: GeneratedEmail = JSON.parse(jsonMatch[0]);
-    return Response.json(email);
+    const sequence: GeneratedEmailSequence = JSON.parse(jsonMatch[0]);
+
+    if (!sequence.emails || sequence.emails.length !== 3) {
+      return Response.json({ error: 'Invalid email sequence format' }, { status: 500 });
+    }
+
+    return Response.json(sequence);
   } catch (err) {
     const errMessage = err instanceof Error ? err.message : 'Failed to generate email';
     return Response.json({ error: errMessage }, { status: 500 });

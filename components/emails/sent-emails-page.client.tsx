@@ -20,8 +20,8 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       <div className="mb-6 flex items-center gap-3">
-        <div className="bg-primary/10 flex size-9 items-center justify-center rounded-lg">
-          <Mail className="text-primary size-4" />
+        <div className="bg-accent-secondary/10 flex size-9 items-center justify-center rounded-lg">
+          <Mail className="text-accent-secondary size-4" />
         </div>
         <div>
           <h1 className="text-foreground text-lg font-semibold">Sent Emails</h1>

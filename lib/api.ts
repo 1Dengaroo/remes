@@ -4,10 +4,13 @@ import type {
   ResearchStreamEvent,
   PeopleSearchResult,
   StrategyMessage,
-  GeneratedEmail,
+  GeneratedEmailSequence,
   CompanyResult,
   TargetContact,
-  SendEmailRequest
+  SendEmailRequest,
+  SavedICP,
+  ResearchSession,
+  ContactedCompany
 } from '@/lib/types';
 
 class ApiError extends Error {
@@ -239,15 +242,15 @@ export async function enrichPerson(
 // Email generation & sending
 // ---------------------------------------------------------------------------
 
-/** Generate a personalized email via AI */
-export async function generateEmail(
+/** Generate a 3-step personalized email sequence via AI */
+export async function generateEmailSequence(
   company: CompanyResult,
   contact: TargetContact,
   icp: ICPCriteria,
   signal?: AbortSignal
-): Promise<GeneratedEmail> {
+): Promise<GeneratedEmailSequence> {
   const response = await postJson('/api/emails/generate', { company, contact, icp }, signal);
-  return (await response.json()) as GeneratedEmail;
+  return (await response.json()) as GeneratedEmailSequence;
 }
 
 /** Send an email via connected Gmail */
@@ -281,4 +284,72 @@ export async function connectGmail(): Promise<void> {
 /** Disconnect Gmail account */
 export async function disconnectGmail(): Promise<void> {
   await postJson('/api/gmail/disconnect', {});
+}
+
+// ---------------------------------------------------------------------------
+// Saved ICPs
+// ---------------------------------------------------------------------------
+
+export async function listICPs(): Promise<SavedICP[]> {
+  const response = await fetch('/api/icps');
+  if (!response.ok) throw new ApiError('Failed to load ICPs', response.status);
+  const data = (await response.json()) as { icps: SavedICP[] };
+  return data.icps;
+}
+
+export async function createICP(name: string, icp: ICPCriteria): Promise<SavedICP> {
+  const response = await postJson('/api/icps', { name, icp });
+  return (await response.json()) as SavedICP;
+}
+
+export async function updateICP(
+  id: string,
+  updates: { name?: string; icp?: ICPCriteria }
+): Promise<SavedICP> {
+  const response = await fetch(`/api/icps/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates)
+  });
+  if (!response.ok) throw new ApiError('Failed to update ICP', response.status);
+  return (await response.json()) as SavedICP;
+}
+
+export async function deleteICP(id: string): Promise<void> {
+  const response = await fetch(`/api/icps/${id}`, { method: 'DELETE' });
+  if (!response.ok) throw new ApiError('Failed to delete ICP', response.status);
+}
+
+// ---------------------------------------------------------------------------
+// Research Sessions
+// ---------------------------------------------------------------------------
+
+export async function createSession(initial?: Partial<ResearchSession>): Promise<ResearchSession> {
+  const response = await postJson('/api/sessions', initial ?? {});
+  return (await response.json()) as ResearchSession;
+}
+
+export async function updateSession(id: string, updates: Partial<ResearchSession>): Promise<void> {
+  const response = await fetch(`/api/sessions/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates)
+  });
+  if (!response.ok) throw new ApiError('Failed to save session', response.status);
+}
+
+export async function deleteSession(id: string): Promise<void> {
+  const response = await fetch(`/api/sessions/${id}`, { method: 'DELETE' });
+  if (!response.ok) throw new ApiError('Failed to delete session', response.status);
+}
+
+// ---------------------------------------------------------------------------
+// Contacted Companies
+// ---------------------------------------------------------------------------
+
+export async function listContactedCompanies(): Promise<ContactedCompany[]> {
+  const response = await fetch('/api/contacts');
+  if (!response.ok) throw new ApiError('Failed to load contacts', response.status);
+  const data = (await response.json()) as { contacts: ContactedCompany[] };
+  return data.contacts;
 }

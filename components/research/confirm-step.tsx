@@ -97,7 +97,7 @@ export function ConfirmStep() {
         />
       )}
 
-      <div className="border-border bg-card overflow-hidden rounded-xl border">
+      <div className="border-border bg-card overflow-hidden rounded-[var(--card-radius)] border">
         {/* Header */}
         <div className="bg-muted/50 border-border flex items-center gap-4 border-b px-4 py-2.5">
           {candidates.length > 0 && (
@@ -114,9 +114,7 @@ export function ConfirmStep() {
               <Checkbox checked={allSelected} />
             </button>
           )}
-          <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-            Company
-          </span>
+          <span className="text-muted-foreground section-label">Company</span>
           <span className="text-muted-foreground ml-auto text-xs">{selected.length} selected</span>
         </div>
 
@@ -192,7 +190,7 @@ export function ConfirmStep() {
             <div className="flex min-w-0 flex-1 items-center gap-1.5">
               <Building2 className="text-muted-foreground size-3.5 shrink-0" />
               <span className="text-sm font-medium">{name}</span>
-              <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-xs">
+              <span className="bg-accent-tertiary/10 text-accent-tertiary rounded px-1.5 py-0.5 text-xs">
                 Custom
               </span>
             </div>

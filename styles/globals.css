@@ -3,10 +3,11 @@
 @import 'shadcn/tailwind.css';
 
 /* Theme files */
-@import '../styles/themes/light.css';
-@import '../styles/themes/dark.css';
-@import '../styles/themes/claude.css';
-@import '../styles/themes/print.css';
+@import './themes/light.css';
+@import './themes/dark.css';
+@import './themes/claude.css';
+@import './themes/print.css';
+@import './themes/dusk.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -58,6 +59,7 @@
   /* Semantic tokens → Tailwind (oklch with alpha support) */
   --color-accent-primary: oklch(var(--accent-primary) / <alpha-value>);
   --color-accent-secondary: oklch(var(--accent-secondary) / <alpha-value>);
+  --color-accent-tertiary: oklch(var(--accent-tertiary) / <alpha-value>);
   --color-surface-primary: oklch(var(--surface-primary) / <alpha-value>);
   --color-surface-secondary: oklch(var(--surface-secondary) / <alpha-value>);
   --color-surface-elevated: oklch(var(--surface-elevated) / <alpha-value>);
@@ -90,6 +92,15 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+@layer components {
+  .section-label {
+    font-size: var(--section-label-size, 0.75rem);
+    letter-spacing: var(--section-label-tracking, 0.05em);
+    text-transform: var(--section-label-transform, uppercase);
+    font-weight: 500;
   }
 }
 

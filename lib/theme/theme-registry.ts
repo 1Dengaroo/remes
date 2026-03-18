@@ -6,7 +6,8 @@ export interface ThemeDefinition {
   previewColors: {
     bg: string;
     primary: string;
-    accent: string;
+    secondary: string;
+    tertiary: string;
   };
 }
 
@@ -14,23 +15,25 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'light',
     name: 'Light',
-    description: 'Coral and teal on cream',
+    description: 'Gold and sand on white',
     isDark: false,
     previewColors: {
-      bg: '#faf6f1',
-      primary: 'hsl(12, 75%, 55%)',
-      accent: 'hsl(175, 45%, 42%)'
+      bg: '#f7f7f5',
+      primary: '#FECF40',
+      secondary: '#7a7774',
+      tertiary: 'hsl(220, 50%, 48%)'
     }
   },
   {
     id: 'dark',
     name: 'Dark',
-    description: 'Coral and teal on midnight',
+    description: 'Gold and sand on charcoal',
     isDark: true,
     previewColors: {
-      bg: '#101114',
-      primary: 'hsl(12, 75%, 58%)',
-      accent: 'hsl(175, 50%, 50%)'
+      bg: '#121110',
+      primary: '#FECF40',
+      secondary: '#7a7774',
+      tertiary: 'hsl(220, 50%, 58%)'
     }
   },
   {
@@ -41,7 +44,8 @@ export const themes: ThemeDefinition[] = [
     previewColors: {
       bg: '#1a1614',
       primary: 'hsl(24, 70%, 55%)',
-      accent: 'hsl(15, 50%, 52%)'
+      secondary: 'hsl(15, 50%, 52%)',
+      tertiary: 'hsl(70, 30%, 42%)'
     }
   },
   {
@@ -52,7 +56,20 @@ export const themes: ThemeDefinition[] = [
     previewColors: {
       bg: '#f2efea',
       primary: 'hsl(218, 55%, 48%)',
-      accent: 'hsl(200, 40%, 42%)'
+      secondary: 'hsl(200, 40%, 42%)',
+      tertiary: 'hsl(195, 25%, 45%)'
+    }
+  },
+  {
+    id: 'dusk',
+    name: 'Dusk',
+    description: 'Indigo, copper, and sage',
+    isDark: false,
+    previewColors: {
+      bg: '#f6f5f3',
+      primary: 'hsl(245, 42%, 40%)',
+      secondary: 'hsl(18, 48%, 52%)',
+      tertiary: 'hsl(155, 28%, 44%)'
     }
   }
 ];

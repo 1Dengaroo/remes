@@ -12,6 +12,7 @@
   /* Semantic tokens (oklch L C H) */
   --accent-primary: 0.65 0.15 45;
   --accent-secondary: 0.58 0.12 35;
+  --accent-tertiary: 0.55 0.08 95;
 
   --surface-primary: 0.18 0.015 50;
   --surface-secondary: 0.21 0.018 50;
@@ -40,6 +41,24 @@
   --card-hover-y: -3px;
   --card-accent-bar-height: 0px;
   --card-accent-bar-scale: 0;
+
+  /* Header & bottom nav tokens */
+  --header-bg: hsl(25 12% 13%);
+  --header-border: hsl(25 10% 20%);
+  --header-backdrop: none;
+  --bottom-nav-bg: hsl(25 12% 13% / 0.8);
+  --bottom-nav-border: hsl(25 10% 20%);
+  --bottom-nav-backdrop: blur(8px);
+
+  /* Signal badge colors */
+  --signal-job-bg: hsl(217 91% 60% / 0.1);
+  --signal-job-text: hsl(217 80% 70%);
+  --signal-funding-bg: hsl(160 84% 39% / 0.1);
+  --signal-funding-text: hsl(160 70% 65%);
+  --signal-news-bg: hsl(38 92% 50% / 0.1);
+  --signal-news-text: hsl(38 80% 65%);
+  --signal-product-bg: hsl(270 67% 47% / 0.1);
+  --signal-product-text: hsl(270 60% 72%);
 
   /* Typography — clean, readable */
   --heading-font: inherit;
@@ -92,30 +111,4 @@
 /* Warm terracotta accent on labels */
 [data-theme='claude'] .section-label {
   color: oklch(0.65 0.15 45);
-}
-
-/* Card surface lift on hover */
-[data-theme='claude'] .card-editorial {
-  background: hsl(25 12% 13%);
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.3s ease;
-}
-
-[data-theme='claude'] .card-editorial:hover {
-  background: hsl(25 12% 16%);
-}
-
-/* Soft pill tags */
-[data-theme='claude'] .tag-pill {
-  border-color: hsl(25 10% 24%);
-  color: hsl(30 8% 60%);
-  background: transparent;
-}
-
-[data-theme='claude'] .tag-pill:hover {
-  border-color: oklch(0.65 0.15 45);
-  color: oklch(0.65 0.15 45);
-  background: oklch(0.65 0.15 45 / 0.1);
 }

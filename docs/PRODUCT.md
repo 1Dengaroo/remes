@@ -13,7 +13,9 @@ Step 4: Deep Research       Claude researches each company (web search), streams
                             → "Get Contact" for full details (1 Apollo credit)
 ```
 
-Navigation: Cmd+Enter advances steps. Bottom nav. "Start Over" resets. Cancel mid-stream.
+Navigation: Cmd+Enter advances steps. Bottom nav. "New Research" navigates to sessions list. Cancel mid-stream.
+
+Sessions live at `/research` (list) and `/research/[id]` (individual). Sessions are created upfront, state is auto-saved, and loaded server-side on revisit (no loading flash).
 
 ## Domain
 
@@ -25,7 +27,5 @@ Outreach Hooks     Signal-specific email openers referencing real company activi
 
 ## Limitations (MVP)
 
-- No persistence — refresh loses results
-- No saved ICPs or research history
 - No team collaboration
 - Sequential company research (streaming UX)

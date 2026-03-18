@@ -16,6 +16,7 @@
   /* Semantic tokens (oklch L C H) */
   --accent-primary: 0.52 0.12 240;
   --accent-secondary: 0.45 0.1 230;
+  --accent-tertiary: 0.48 0.06 200;
 
   --surface-primary: 0.97 0.005 80;
   --surface-secondary: 0.95 0.008 75;
@@ -34,6 +35,35 @@
   --shadow-sm: 0 1px 2px oklch(0.3 0.01 50 / 0.06);
   --shadow-md: 0 2px 8px oklch(0.3 0.01 50 / 0.06);
   --shadow-lg: 0 8px 24px oklch(0.3 0.01 50 / 0.08);
+
+  /* Tag tokens — sharp corners for editorial feel */
+  --tag-radius: 2px;
+  --tag-padding-x: 0.5rem;
+  --tag-padding-y: 0.125rem;
+  --tag-font-size: 0.75rem;
+
+  /* Section label tokens */
+  --section-label-size: 0.75rem;
+  --section-label-tracking: 0.05em;
+  --section-label-transform: uppercase;
+
+  /* Header & bottom nav tokens */
+  --header-bg: hsl(40 20% 98%);
+  --header-border: hsl(36 12% 88%);
+  --header-backdrop: none;
+  --bottom-nav-bg: hsl(40 20% 98% / 0.8);
+  --bottom-nav-border: hsl(36 12% 88%);
+  --bottom-nav-backdrop: blur(8px);
+
+  /* Signal badge colors */
+  --signal-job-bg: hsl(217 91% 60% / 0.1);
+  --signal-job-text: hsl(217 70% 45%);
+  --signal-funding-bg: hsl(160 84% 39% / 0.1);
+  --signal-funding-text: hsl(160 60% 35%);
+  --signal-news-bg: hsl(38 92% 50% / 0.1);
+  --signal-news-text: hsl(38 70% 40%);
+  --signal-product-bg: hsl(270 67% 47% / 0.1);
+  --signal-product-text: hsl(270 50% 45%);
 
   /* Card style tokens */
   --card-radius: 2px;

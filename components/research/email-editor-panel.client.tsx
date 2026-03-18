@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Copy, Check, Send, RefreshCw, Loader2, Link2 } from 'lucide-react';
+import {
+  Copy,
+  Check,
+  Send,
+  RefreshCw,
+  Loader2,
+  Link2,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -14,9 +23,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import type { ComposeEmailParams } from '@/lib/types';
-import { generateEmail, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
+import type { ComposeEmailParams, GeneratedEmail } from '@/lib/types';
+import { generateEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
+
+const STEP_LABELS = ['Initial Email', 'Follow-up 1', 'Follow-up 2'] as const;
 
 export function EmailEditorPanel({
   open,
@@ -28,6 +39,8 @@ export function EmailEditorPanel({
   onClose: () => void;
 }) {
   const [toEmail, setToEmail] = useState('');
+  const [steps, setSteps] = useState<[GeneratedEmail, GeneratedEmail, GeneratedEmail] | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [copied, setCopied] = useState(false);
@@ -48,47 +61,98 @@ export function EmailEditorPanel({
     });
   }, []);
 
-  // Generate email when panel opens with new params
+  // Load step content into editor fields
+  const loadStep = useCallback(
+    (stepIndex: number, emailSteps: [GeneratedEmail, GeneratedEmail, GeneratedEmail] | null) => {
+      if (!emailSteps) return;
+      const step = emailSteps[stepIndex];
+      setSubject(step.subject);
+      setBody(step.body);
+      setActiveStep(stepIndex);
+    },
+    []
+  );
+
+  // Save current edits back to the steps array before switching
+  const saveCurrentStep = useCallback(() => {
+    setSteps((prev) => {
+      if (!prev) return prev;
+      const updated = [...prev] as [GeneratedEmail, GeneratedEmail, GeneratedEmail];
+      updated[activeStep] = { subject, body };
+      return updated;
+    });
+  }, [activeStep, subject, body]);
+
+  // Generate sequence when panel opens with new params
   useEffect(() => {
     if (!params || !open) return;
 
     setToEmail(params.contact.email ?? '');
     setSendResult(null);
+    setActiveStep(0);
+    setSteps(null);
 
     const controller = new AbortController();
     setGenerating(true);
-    generateEmail(params.company, params.contact, params.icp, controller.signal)
-      .then((email) => {
-        setSubject(email.subject);
-        setBody(email.body);
+    generateEmailSequence(params.company, params.contact, params.icp, controller.signal)
+      .then((sequence) => {
+        setSteps(sequence.emails);
+        loadStep(0, sequence.emails);
       })
       .catch((err) => {
         if (err.name !== 'AbortError') {
-          // Fallback to the email hook
           const signalTitle = params.company.signals[0]?.title ?? 'Introduction';
-          setSubject(`${signalTitle} — ${params.company.company_name}`);
-          setBody(params.initialBody);
+          const fallback: [GeneratedEmail, GeneratedEmail, GeneratedEmail] = [
+            {
+              subject: `${signalTitle} — ${params.company.company_name}`,
+              body: params.initialBody
+            },
+            { subject: `Re: ${signalTitle} — ${params.company.company_name}`, body: '' },
+            { subject: `Re: ${signalTitle} — ${params.company.company_name}`, body: '' }
+          ];
+          setSteps(fallback);
+          loadStep(0, fallback);
         }
       })
       .finally(() => setGenerating(false));
 
     return () => controller.abort();
-  }, [params, open]);
+  }, [params, open, loadStep]);
+
+  const handleStepChange = useCallback(
+    (newStep: number) => {
+      saveCurrentStep();
+      setSteps((prev) => {
+        if (!prev) return prev;
+        // Save current edits first
+        const updated = [...prev] as [GeneratedEmail, GeneratedEmail, GeneratedEmail];
+        updated[activeStep] = { subject, body };
+        // Then load new step
+        const step = updated[newStep];
+        setSubject(step.subject);
+        setBody(step.body);
+        setActiveStep(newStep);
+        return updated;
+      });
+      setSendResult(null);
+    },
+    [activeStep, subject, body, saveCurrentStep]
+  );
 
   const handleRegenerate = useCallback(async () => {
     if (!params) return;
     setGenerating(true);
     setSendResult(null);
     try {
-      const email = await generateEmail(params.company, params.contact, params.icp);
-      setSubject(email.subject);
-      setBody(email.body);
+      const sequence = await generateEmailSequence(params.company, params.contact, params.icp);
+      setSteps(sequence.emails);
+      loadStep(activeStep, sequence.emails);
     } catch {
       // keep current content
     } finally {
       setGenerating(false);
     }
-  }, [params]);
+  }, [params, activeStep, loadStep]);
 
   const handleCopy = useCallback(() => {
     const text = `Subject: ${subject}\n\n${body}`;
@@ -96,6 +160,20 @@ export function EmailEditorPanel({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [subject, body]);
+
+  const handleCopyAll = useCallback(() => {
+    if (!steps) return;
+    // Save current edits
+    const current = [...steps] as [GeneratedEmail, GeneratedEmail, GeneratedEmail];
+    current[activeStep] = { subject, body };
+
+    const text = current
+      .map((step, i) => `--- ${STEP_LABELS[i]} ---\nSubject: ${step.subject}\n\n${step.body}`)
+      .join('\n\n');
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [steps, activeStep, subject, body]);
 
   const handleSend = useCallback(async () => {
     if (!params || !toEmail) return;
@@ -136,6 +214,25 @@ export function EmailEditorPanel({
         </SheetHeader>
 
         <SheetBody className="flex flex-col gap-4">
+          {/* Step navigation */}
+          <div className="flex items-center gap-1">
+            {STEP_LABELS.map((label, i) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => handleStepChange(i)}
+                disabled={generating}
+                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  activeStep === i
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <div className="space-y-1.5">
             <label className="text-muted-foreground text-xs font-medium">To</label>
             <Input
@@ -163,7 +260,7 @@ export function EmailEditorPanel({
               onChange={(e) => setBody(e.target.value)}
               className="min-h-52 flex-1 resize-none"
               disabled={generating}
-              placeholder={generating ? 'Generating personalized email...' : ''}
+              placeholder={generating ? 'Generating personalized email sequence...' : ''}
             />
           </div>
 
@@ -191,7 +288,36 @@ export function EmailEditorPanel({
             {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
             {copied ? 'Copied' : 'Copy'}
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopyAll}
+            disabled={generating || !steps}
+          >
+            <Copy className="size-3.5" />
+            Copy All
+          </Button>
           <div className="ml-auto flex items-center gap-2">
+            {/* Step navigation arrows */}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleStepChange(activeStep - 1)}
+                disabled={activeStep === 0 || generating}
+                className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <span className="text-muted-foreground text-xs tabular-nums">{activeStep + 1}/3</span>
+              <button
+                type="button"
+                onClick={() => handleStepChange(activeStep + 1)}
+                disabled={activeStep === 2 || generating}
+                className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
             {gmailChecked && !gmailConnected && (
               <button
                 type="button"

@@ -27,17 +27,35 @@ export async function POST(req: NextRequest) {
     const { gmail, fromEmail } = await getGmailClient(user.id);
     const messageId = await sendEmail(gmail, to, subject, emailBody, fromEmail);
 
-    await supabase.from('sent_emails').insert({
-      user_id: user.id,
-      recipient_email: to,
-      recipient_name: contactName,
-      subject,
-      body: emailBody,
-      company_name: companyName,
-      contact_name: contactName,
-      status: 'sent',
-      gmail_message_id: messageId
-    });
+    const { data: sentEmail } = await supabase
+      .from('sent_emails')
+      .insert({
+        user_id: user.id,
+        recipient_email: to,
+        recipient_name: contactName,
+        subject,
+        body: emailBody,
+        company_name: companyName,
+        contact_name: contactName,
+        status: 'sent',
+        gmail_message_id: messageId
+      })
+      .select('id')
+      .single();
+
+    // Track contacted company
+    if (companyName && to) {
+      await supabase.from('contacted_companies').upsert(
+        {
+          user_id: user.id,
+          company_name: companyName,
+          contact_email: to,
+          contact_name: contactName,
+          sent_email_id: sentEmail?.id ?? null
+        },
+        { onConflict: 'user_id,company_name,contact_email' }
+      );
+    }
 
     return Response.json({ success: true, messageId });
   } catch (err) {

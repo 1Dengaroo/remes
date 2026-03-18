@@ -46,7 +46,13 @@ function ICPSummary({ icp, onEditCriteria }: { icp: ICPCriteria; onEditCriteria?
             {icp.industry_keywords.map((kw, i) => (
               <span
                 key={`ind-${i}`}
-                className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs"
+                className="bg-primary/10 text-primary"
+                style={{
+                  borderRadius: 'var(--tag-radius, 9999px)',
+                  paddingInline: 'var(--tag-padding-x, 0.5rem)',
+                  paddingBlock: 'var(--tag-padding-y, 0.125rem)',
+                  fontSize: 'var(--tag-font-size, 0.75rem)'
+                }}
               >
                 {kw}
               </span>
@@ -54,7 +60,13 @@ function ICPSummary({ icp, onEditCriteria }: { icp: ICPCriteria; onEditCriteria?
             {icp.tech_keywords.map((kw, i) => (
               <span
                 key={`tech-${i}`}
-                className="bg-secondary text-secondary-foreground rounded-full px-2 py-0.5 text-xs"
+                className="bg-secondary text-secondary-foreground"
+                style={{
+                  borderRadius: 'var(--tag-radius, 9999px)',
+                  paddingInline: 'var(--tag-padding-x, 0.5rem)',
+                  paddingBlock: 'var(--tag-padding-y, 0.125rem)',
+                  fontSize: 'var(--tag-font-size, 0.75rem)'
+                }}
               >
                 {kw}
               </span>
@@ -62,13 +74,27 @@ function ICPSummary({ icp, onEditCriteria }: { icp: ICPCriteria; onEditCriteria?
             {icp.hiring_signals.map((kw, i) => (
               <span
                 key={`hire-${i}`}
-                className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs text-blue-600 dark:text-blue-400"
+                className="bg-accent-secondary/10 text-accent-secondary"
+                style={{
+                  borderRadius: 'var(--tag-radius, 9999px)',
+                  paddingInline: 'var(--tag-padding-x, 0.5rem)',
+                  paddingBlock: 'var(--tag-padding-y, 0.125rem)',
+                  fontSize: 'var(--tag-font-size, 0.75rem)'
+                }}
               >
                 {kw}
               </span>
             ))}
             {icp.min_funding_amount && (
-              <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-600 dark:text-emerald-400">
+              <span
+                className="bg-accent-tertiary/10 text-accent-tertiary"
+                style={{
+                  borderRadius: 'var(--tag-radius, 9999px)',
+                  paddingInline: 'var(--tag-padding-x, 0.5rem)',
+                  paddingBlock: 'var(--tag-padding-y, 0.125rem)',
+                  fontSize: 'var(--tag-font-size, 0.75rem)'
+                }}
+              >
                 ${(icp.min_funding_amount / 1_000_000).toFixed(0)}M+ raised
               </span>
             )}
@@ -93,6 +119,7 @@ export function ResultsStep() {
   const isPeopleSearching = useResearchStore((s) => s.isPeopleSearching);
   const enrichingPersonIds = useResearchStore((s) => s.enrichingPersonIds);
   const enrichPersonAction = useResearchStore((s) => s.enrichPersonAction);
+  const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
 
   const resultMap = useMemo(() => {
     const map = new Map<string, (typeof results)[number]>();
@@ -131,13 +158,13 @@ export function ResultsStep() {
             </h3>
           </div>
 
-          <div className="border-border bg-card overflow-x-auto rounded-xl border">
+          <div className="border-border bg-card overflow-x-auto rounded-[var(--card-radius)] border">
             <div className={`bg-muted/50 border-border grid ${GRID_COLS} border-b`}>
               {['Company', 'Target Person', 'Buying Signal', 'Overview & Fit'].map(
                 (label, i, arr) => (
                   <div
                     key={label}
-                    className={`text-muted-foreground min-w-0 px-4 py-2.5 text-xs font-medium tracking-wider uppercase ${i < arr.length - 1 ? 'border-border border-r' : ''}`}
+                    className={`text-muted-foreground section-label min-w-0 px-4 py-2.5 ${i < arr.length - 1 ? 'border-border border-r' : ''}`}
                   >
                     {label}
                   </div>
@@ -170,6 +197,7 @@ export function ResultsStep() {
                   isPeopleSearching={isPeopleSearching}
                   onEnrichPerson={enrichPersonAction}
                   enrichingPersonIds={enrichingPersonIds}
+                  contactedEmails={getContactedEmails(candidate.name)}
                 />
               );
             })}

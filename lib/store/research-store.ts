@@ -5,7 +5,9 @@ import {
   discoverCompanies,
   researchCompanies,
   searchPeople,
-  enrichPerson
+  enrichPerson,
+  updateSession,
+  listContactedCompanies
 } from '@/lib/api';
 import type {
   ICPCriteria,
@@ -67,6 +69,15 @@ interface ResearchState {
 
   // Abort controller (not serializable, but fine for zustand)
   abortController: AbortController | null;
+
+  // Session persistence
+  sessionId: string | null;
+  sessionName: string;
+  isSaving: boolean;
+  lastSavedAt: string | null;
+
+  // Contact tracking
+  contactedCompanies: Map<string, string[]>;
 }
 
 interface ResearchActions {
@@ -102,6 +113,15 @@ interface ResearchActions {
 
   // Email
   setComposeParams: (params: ComposeEmailParams | null) => void;
+
+  // Session persistence
+  saveSession: () => Promise<void>;
+  setSessionName: (name: string) => void;
+
+  // Contact tracking
+  loadContactedCompanies: () => Promise<void>;
+  isContactContacted: (companyName: string, email: string) => boolean;
+  getContactedEmails: (companyName: string) => string[];
 
   // Derived getters
   selectedCandidates: () => DiscoveredCompanyPreview[];
@@ -155,6 +175,11 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   error: null,
   composeParams: null,
   abortController: null,
+  sessionId: null,
+  sessionName: 'Untitled Session',
+  isSaving: false,
+  lastSavedAt: null,
+  contactedCompanies: new Map(),
 
   // Navigation
   setStep: (step) => set({ step }),
@@ -176,6 +201,13 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         isExtracting: false,
         strategyMessages: []
       });
+      // Auto-save: update session name from ICP description + save state
+      const { sessionId } = get();
+      if (sessionId) {
+        const name = transcript.trim().slice(0, 60) || 'Untitled Session';
+        set({ sessionName: name });
+      }
+      get().saveSession();
       // Auto-generate strategy after ICP is parsed
       get().generateStrategy();
     } catch (err) {
@@ -272,6 +304,8 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         selectedCompanies: found.map((c) => c.name),
         isDiscovering: false
       });
+      // Auto-save after discovery
+      get().saveSession();
     } catch (err) {
       set({
         error: err instanceof Error ? err.message : 'Discovery failed',
@@ -339,6 +373,8 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
                 results: [...state.results, event.data],
                 researchingCompany: null
               }));
+              // Auto-save after each company result
+              get().saveSession();
               break;
             case 'done':
               set({
@@ -358,6 +394,16 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       });
     } finally {
       set({ isResearching: false, researchingCompany: null, abortController: null });
+      // Auto-save and mark completed after research
+      if (get().sessionId) {
+        const { sessionId } = get();
+        if (sessionId) {
+          updateSession(sessionId, { status: 'completed' } as Partial<
+            import('@/lib/types').ResearchSession
+          >).catch(() => {});
+        }
+      }
+      get().saveSession();
     }
   },
 
@@ -444,7 +490,11 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       enrichingPersonIds: [],
       error: null,
       statusMessage: '',
-      composeParams: null
+      composeParams: null,
+      sessionId: null,
+      sessionName: 'Untitled Session',
+      isSaving: false,
+      lastSavedAt: null
     }),
 
   skipToReview: () => {
@@ -455,6 +505,71 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
 
   // Email
   setComposeParams: (params) => set({ composeParams: params }),
+
+  // Session persistence
+  saveSession: async () => {
+    const {
+      sessionId,
+      isSaving,
+      transcript,
+      step,
+      icp,
+      strategyMessages,
+      candidates,
+      selectedCompanies,
+      results,
+      peopleResults,
+      sessionName
+    } = get();
+    if (!sessionId || isSaving) return;
+
+    set({ isSaving: true });
+    try {
+      await updateSession(sessionId, {
+        name: sessionName,
+        transcript,
+        step,
+        icp,
+        strategy_messages: strategyMessages,
+        candidates,
+        selected_companies: selectedCompanies,
+        results,
+        people_results: peopleResults
+      } as Parameters<typeof updateSession>[1]);
+      set({ lastSavedAt: new Date().toISOString() });
+    } catch (err) {
+      console.error('Failed to save session:', err);
+    } finally {
+      set({ isSaving: false });
+    }
+  },
+
+  setSessionName: (name: string) => set({ sessionName: name }),
+
+  // Contact tracking
+  loadContactedCompanies: async () => {
+    try {
+      const contacts = await listContactedCompanies();
+      const map = new Map<string, string[]>();
+      for (const c of contacts) {
+        const existing = map.get(c.company_name) ?? [];
+        existing.push(c.contact_email);
+        map.set(c.company_name, existing);
+      }
+      set({ contactedCompanies: map });
+    } catch (err) {
+      console.error('Failed to load contacted companies:', err);
+    }
+  },
+
+  isContactContacted: (companyName: string, email: string) => {
+    const emails = get().contactedCompanies.get(companyName);
+    return emails?.includes(email) ?? false;
+  },
+
+  getContactedEmails: (companyName: string) => {
+    return get().contactedCompanies.get(companyName) ?? [];
+  },
 
   // Derived
   selectedCandidates: () => {

@@ -77,7 +77,14 @@ function UserAvatar() {
 
 export function Header() {
   return (
-    <header className="border-border bg-card sticky top-0 z-50 border-b">
+    <header
+      className="sticky top-0 z-50 border-b"
+      style={{
+        backgroundColor: 'var(--header-bg, hsl(var(--card)))',
+        borderColor: 'var(--header-border, hsl(var(--border)))',
+        backdropFilter: 'var(--header-backdrop, none)'
+      }}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2.5">

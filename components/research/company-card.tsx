@@ -50,11 +50,13 @@ function SourceLinkRow({ source }: { source: SourceLink }) {
 function ContactRow({
   contact,
   compact,
-  onCompose
+  onCompose,
+  isSent
 }: {
   contact: TargetContact;
   compact?: boolean;
   onCompose?: () => void;
+  isSent?: boolean;
 }) {
   return (
     <div className="space-y-0.5">
@@ -76,6 +78,11 @@ function ContactRow({
         >
           <Linkedin className="size-3" />
         </a>
+        {isSent && (
+          <span className="text-muted-foreground bg-muted rounded px-1 py-0.5 text-[10px] font-medium">
+            Sent
+          </span>
+        )}
       </div>
       <p className="text-muted-foreground text-xs">{contact.title}</p>
       {contact.email && (
@@ -101,12 +108,14 @@ function PersonRow({
   person,
   isEnriching,
   onEnrich,
-  onCompose
+  onCompose,
+  isSent
 }: {
   person: ApolloPersonPreview;
   isEnriching: boolean;
   onEnrich: () => void;
   onCompose?: () => void;
+  isSent?: boolean;
 }) {
   const displayName = person.is_enriched
     ? `${person.first_name} ${person.last_name}`
@@ -137,6 +146,11 @@ function PersonRow({
           >
             <Linkedin className="size-3" />
           </a>
+        )}
+        {isSent && (
+          <span className="text-muted-foreground bg-muted rounded px-1 py-0.5 text-[10px] font-medium">
+            Sent
+          </span>
         )}
       </div>
       {person.title && <p className="text-muted-foreground text-xs">{person.title}</p>}
@@ -233,7 +247,8 @@ export function CompanyRow({
   people,
   isPeopleSearching,
   onEnrichPerson,
-  enrichingPersonIds
+  enrichingPersonIds,
+  contactedEmails
 }: {
   preview: DiscoveredCompanyPreview;
   result: CompanyResult | null;
@@ -244,11 +259,13 @@ export function CompanyRow({
   isPeopleSearching?: boolean;
   onEnrichPerson?: (personId: string, companyName: string) => void;
   enrichingPersonIds?: string[];
+  contactedEmails?: string[];
 }) {
   const [contactsOpen, setContactsOpen] = useState(false);
   const icp = useResearchStore((s) => s.icp);
   const isComplete = status === 'complete' && result !== null;
   const isResearching = status === 'researching';
+  const hasContacted = contactedEmails && contactedEmails.length > 0;
 
   const composeFor = (contact: TargetContact) => {
     if (!result) return;
@@ -321,6 +338,11 @@ export function CompanyRow({
                 <ExternalLink className="size-3" />
               </a>
             )}
+            {hasContacted && (
+              <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+                Contacted
+              </span>
+            )}
           </div>
 
           {isComplete && result ? (
@@ -392,6 +414,11 @@ export function CompanyRow({
                         })
                     : undefined
                 }
+                isSent={
+                  person.is_enriched && person.email
+                    ? contactedEmails?.includes(person.email)
+                    : false
+                }
               />
             ))}
             <a
@@ -416,12 +443,22 @@ export function CompanyRow({
               <div className="min-w-0 flex-1 space-y-2">
                 {decisionMakers.length > 0 ? (
                   decisionMakers.map((dm, i) => (
-                    <ContactRow key={i} contact={dm} onCompose={() => composeFor(dm)} />
+                    <ContactRow
+                      key={i}
+                      contact={dm}
+                      onCompose={() => composeFor(dm)}
+                      isSent={dm.email ? contactedEmails?.includes(dm.email) : false}
+                    />
                   ))
                 ) : result.contacts.length > 0 ? (
                   <ContactRow
                     contact={result.contacts[0]}
                     onCompose={() => composeFor(result.contacts[0])}
+                    isSent={
+                      result.contacts[0].email
+                        ? contactedEmails?.includes(result.contacts[0].email)
+                        : false
+                    }
                   />
                 ) : (
                   <p className="text-muted-foreground text-xs">No contacts found</p>
@@ -464,6 +501,7 @@ export function CompanyRow({
                         contact={contact}
                         compact
                         onCompose={() => composeFor(contact)}
+                        isSent={contact.email ? contactedEmails?.includes(contact.email) : false}
                       />
                     ))}
                   </div>
@@ -536,14 +574,12 @@ export function CompanyRow({
             <p className="text-xs leading-relaxed">{result.company_overview}</p>
 
             <div
-              className="border-primary/20 bg-primary/5 hover:border-primary/40 cursor-pointer space-y-1.5 rounded-lg border p-3 transition-colors"
+              className="border-accent-tertiary/20 bg-accent-tertiary/5 hover:border-accent-tertiary/40 cursor-pointer space-y-1.5 rounded-lg border p-3 transition-colors"
               onClick={() => firstContact && composeFor(firstContact)}
             >
               <div className="flex items-center gap-1.5">
-                <Mail className="text-primary size-3" />
-                <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-                  Email Hook
-                </span>
+                <Mail className="text-accent-tertiary size-3" />
+                <span className="text-muted-foreground section-label">Email Hook</span>
               </div>
               <div className="flex items-start gap-1.5">
                 <p className="flex-1 text-xs leading-relaxed italic">

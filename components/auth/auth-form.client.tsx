@@ -123,7 +123,7 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
 
       {serverMessage && (
         <p
-          className={`text-sm ${serverMessage.type === 'success' ? 'text-green-600' : 'text-red-500'}`}
+          className={`text-sm ${serverMessage.type === 'success' ? 'text-accent-tertiary' : 'text-destructive'}`}
         >
           {serverMessage.text}
         </p>
@@ -209,7 +209,7 @@ function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProps) {
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input id="email" type="email" placeholder="you@example.com" {...register('email')} />
-        {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+        {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
@@ -219,7 +219,7 @@ function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProps) {
           placeholder={isSignUp ? 'Create a password' : 'Your password'}
           {...register('password')}
         />
-        {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+        {errors.password && <p className="text-destructive text-xs">{errors.password.message}</p>}
       </div>
       {isSignUp && (
         <div className="space-y-2">
@@ -231,7 +231,7 @@ function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProps) {
             {...register('confirmPassword')}
           />
           {errors.confirmPassword && (
-            <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
+            <p className="text-destructive text-xs">{errors.confirmPassword.message}</p>
           )}
         </div>
       )}

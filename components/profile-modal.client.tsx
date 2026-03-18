@@ -53,7 +53,11 @@ function AppearanceTab() {
                 />
                 <span
                   className="border-border/50 inline-block size-3.5 rounded-full border"
-                  style={{ background: t.previewColors.accent }}
+                  style={{ background: t.previewColors.secondary }}
+                />
+                <span
+                  className="border-border/50 inline-block size-3.5 rounded-full border"
+                  style={{ background: t.previewColors.tertiary }}
                 />
               </div>
               <span>{t.name}</span>

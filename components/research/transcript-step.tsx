@@ -1,11 +1,79 @@
 'use client';
 
-import { FileText } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { FileText, BookOpen, ChevronDown } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useResearchStore } from '@/lib/store/research-store';
+import { useICPStore } from '@/lib/store/icp-store';
 
 const EXAMPLE_INPUT = `We sell GPU scheduling and orchestration software for ML teams. Our ideal customer is an AI-intensive startup that's scaling past the point where manual GPU management works. They've typically raised $30M+ and are hiring for MLOps, ML Platform, or GPU infrastructure roles. Key signals we look for are job postings mentioning Kubernetes GPU scheduling, distributed training, or compute cost optimization. Companies like Modal, Anyscale, and Replicate are good examples of the type of company we sell to, though they're also competitors in some ways. We mainly target VP of Infrastructure, Head of ML Platform, or CTO as the buyer.`;
+
+function ICPPicker() {
+  const icps = useICPStore((s) => s.icps);
+  const loadICPs = useICPStore((s) => s.loadICPs);
+  const isLoading = useICPStore((s) => s.isLoading);
+  const setTranscript = useResearchStore((s) => s.setTranscript);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    loadICPs();
+  }, [loadICPs]);
+
+  if (icps.length === 0 && !isLoading) return null;
+
+  const handleSelect = (savedIcp: (typeof icps)[number]) => {
+    setTranscript(savedIcp.icp.description);
+    useResearchStore.setState({
+      icp: savedIcp.icp,
+      step: 'review',
+      strategyMessages: []
+    });
+    // Save session with loaded ICP then generate strategy
+    useResearchStore.getState().saveSession();
+    useResearchStore.getState().generateStrategy();
+    setOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setOpen(!open)}
+        className="text-muted-foreground"
+      >
+        <BookOpen className="size-3.5" />
+        Load saved ICP
+        <ChevronDown className={`size-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </Button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="border-border bg-card absolute bottom-full left-0 z-20 mb-1 w-72 overflow-hidden rounded-lg border shadow-lg">
+            {isLoading ? (
+              <div className="text-muted-foreground px-4 py-3 text-xs">Loading...</div>
+            ) : (
+              icps.map((savedIcp) => (
+                <button
+                  key={savedIcp.id}
+                  onClick={() => handleSelect(savedIcp)}
+                  className="hover:bg-muted/50 w-full px-4 py-2.5 text-left transition-colors"
+                >
+                  <span className="block truncate text-sm font-medium">{savedIcp.name}</span>
+                  <span className="text-muted-foreground block truncate text-xs">
+                    {savedIcp.icp.description.slice(0, 80)}...
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export function TranscriptStep() {
   const transcript = useResearchStore((s) => s.transcript);
@@ -25,11 +93,9 @@ export function TranscriptStep() {
 
       {error && <p className="text-destructive mb-4 text-sm">{error}</p>}
 
-      <div className="border-border bg-card overflow-hidden rounded-xl border">
+      <div className="border-border bg-card overflow-hidden rounded-[var(--card-radius)] border">
         <div className="bg-muted/50 border-border flex items-center justify-between border-b px-4 py-2.5">
-          <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-            Customer Profile
-          </span>
+          <span className="text-muted-foreground section-label">Customer Profile</span>
           {transcript.trim() && (
             <span className="text-muted-foreground/60 text-xs">
               <kbd className="bg-muted rounded px-1 py-0.5 font-mono text-xs">Cmd+Enter</kbd> to
@@ -48,7 +114,7 @@ export function TranscriptStep() {
           />
         </div>
 
-        <div className="border-border border-t px-4 py-2.5">
+        <div className="border-border flex items-center gap-2 border-t px-4 py-2.5">
           <Button
             variant="ghost"
             size="sm"
@@ -58,6 +124,7 @@ export function TranscriptStep() {
             <FileText className="size-3.5" />
             Try an example
           </Button>
+          <ICPPicker />
         </div>
       </div>
     </>

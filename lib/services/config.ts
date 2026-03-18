@@ -33,6 +33,6 @@ export const serviceConfig = {
   /** Model used for email generation */
   emailModel: 'claude-haiku-4-5-20251001',
 
-  /** Max tokens for email generation */
-  emailMaxTokens: 1024
+  /** Max tokens for email sequence generation (3 emails) */
+  emailMaxTokens: 2048
 } as const;

@@ -28,8 +28,8 @@ export function LoadingStatus({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-primary/10 flex size-8 items-center justify-center rounded-lg">
-            <CurrentIcon className="text-primary size-4 animate-pulse" />
+          <div className="bg-accent-secondary/10 flex size-8 items-center justify-center rounded-lg">
+            <CurrentIcon className="text-accent-secondary size-4 animate-pulse" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium">{statusMessage || 'Searching...'}</p>

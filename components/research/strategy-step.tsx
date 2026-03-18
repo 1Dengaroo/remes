@@ -1,20 +1,21 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Loader2, Send, Check, Search, X, Plus } from 'lucide-react';
+import { Loader2, Send, Check, Search, X, Plus, Save } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useResearchStore } from '@/lib/store/research-store';
+import { useICPStore } from '@/lib/store/icp-store';
 
-type TagColor = 'primary' | 'secondary' | 'blue' | 'green';
+type TagColor = 'primary' | 'secondary' | 'accent-secondary' | 'accent-tertiary';
 
 const TAG_COLORS: Record<TagColor, string> = {
   primary: 'bg-primary/10 text-primary',
   secondary: 'bg-muted text-muted-foreground',
-  blue: 'bg-blue-500/10 text-blue-700 dark:text-blue-400',
-  green: 'bg-green-500/10 text-green-700 dark:text-green-400'
+  'accent-secondary': 'bg-accent-secondary/10 text-accent-secondary',
+  'accent-tertiary': 'bg-accent-tertiary/10 text-accent-tertiary'
 };
 
 function EditableTagGroup({
@@ -56,7 +57,13 @@ function EditableTagGroup({
         {tags.map((tag) => (
           <span
             key={tag}
-            className={`flex items-center gap-0.5 rounded-md px-2 py-0.5 text-xs ${TAG_COLORS[color]}`}
+            className={`flex items-center gap-0.5 ${TAG_COLORS[color]}`}
+            style={{
+              borderRadius: 'var(--tag-radius, 9999px)',
+              paddingInline: 'var(--tag-padding-x, 0.5rem)',
+              paddingBlock: 'var(--tag-padding-y, 0.125rem)',
+              fontSize: 'var(--tag-font-size, 0.75rem)'
+            }}
           >
             {tag}
             <button
@@ -95,6 +102,77 @@ function EditableTagGroup({
   );
 }
 
+function SaveICPButton() {
+  const icp = useResearchStore((s) => s.icp);
+  const saveICP = useICPStore((s) => s.saveICP);
+  const [naming, setNaming] = useState(false);
+  const [name, setName] = useState('');
+  const [saved, setSaved] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (naming) inputRef.current?.focus();
+  }, [naming]);
+
+  const handleSave = async () => {
+    if (!name.trim() || !icp) return;
+    try {
+      await saveICP(name.trim(), icp);
+      setSaved(true);
+      setNaming(false);
+      setName('');
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error('Failed to save ICP:', err);
+    }
+  };
+
+  if (saved) {
+    return (
+      <span className="text-primary flex items-center gap-1 text-xs">
+        <Check className="size-3" />
+        Saved
+      </span>
+    );
+  }
+
+  if (naming) {
+    return (
+      <div className="flex items-center gap-1">
+        <Input
+          ref={inputRef}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSave();
+            if (e.key === 'Escape') {
+              setNaming(false);
+              setName('');
+            }
+          }}
+          placeholder="ICP name..."
+          className="h-6 w-32 text-xs"
+        />
+        <Button size="icon-xs" label="Save" onClick={handleSave} disabled={!name.trim()}>
+          <Check className="size-3" />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="xs"
+      onClick={() => setNaming(true)}
+      className="text-muted-foreground"
+    >
+      <Save className="size-3" />
+      Save ICP
+    </Button>
+  );
+}
+
 function IcpPanel() {
   const icp = useResearchStore((s) => s.icp)!;
   const updateIcp = useResearchStore((s) => s.updateIcp);
@@ -105,11 +183,10 @@ function IcpPanel() {
   };
 
   return (
-    <div className="border-border bg-card overflow-hidden rounded-xl border">
+    <div className="border-border bg-card overflow-hidden rounded-[var(--card-radius)] border">
       <div className="bg-muted/50 border-border flex items-center justify-between border-b px-4 py-2.5">
-        <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-          Current ICP
-        </span>
+        <span className="text-muted-foreground section-label">Current ICP</span>
+        <SaveICPButton />
       </div>
 
       <div className="space-y-4 p-4">
@@ -140,13 +217,13 @@ function IcpPanel() {
         <EditableTagGroup
           label="Hiring Signals"
           tags={icp.hiring_signals}
-          color="blue"
+          color="accent-secondary"
           onChange={(v) => updateIcp('hiring_signals', v)}
         />
         <EditableTagGroup
           label="Example Companies"
           tags={icp.company_examples}
-          color="green"
+          color="accent-tertiary"
           onChange={(v) => updateIcp('company_examples', v)}
         />
         <EditableTagGroup
@@ -254,18 +331,16 @@ export function StrategyStep() {
       <div className="relative flex gap-4">
         {/* Chat — pinned to ICP height via absolute positioning */}
         <div className="absolute top-0 bottom-0 left-0 w-80">
-          <div className="border-border bg-card flex h-full flex-col overflow-hidden rounded-xl border">
+          <div className="border-border bg-card flex h-full flex-col overflow-hidden rounded-[var(--card-radius)] border">
             <div className="bg-muted/50 border-border flex shrink-0 items-center justify-between border-b px-4 py-2.5">
-              <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-                Strategy Chat
-              </span>
+              <span className="text-muted-foreground section-label">Strategy Chat</span>
             </div>
             {/* Messages — scrollable */}
             <div className="flex-1 space-y-4 overflow-y-auto p-4">
               {strategyMessages.map((msg, i) => (
                 <div key={i} className={msg.role === 'user' ? 'flex justify-end' : ''}>
                   {msg.role === 'assistant' ? (
-                    <div className="bg-muted/50 rounded-xl rounded-bl-md px-3 py-2">
+                    <div className="bg-muted/50 rounded-[var(--card-radius)] rounded-bl-md px-3 py-2">
                       <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-5">
                         <ReactMarkdown
                           components={{
@@ -277,7 +352,7 @@ export function StrategyStep() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-primary text-primary-foreground rounded-xl rounded-br-md px-3 py-2 text-xs whitespace-pre-wrap">
+                    <div className="bg-primary text-primary-foreground rounded-[var(--card-radius)] rounded-br-md px-3 py-2 text-xs whitespace-pre-wrap">
                       {msg.content}
                     </div>
                   )}

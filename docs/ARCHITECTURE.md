@@ -1,16 +1,20 @@
 # Architecture
 
-4-step pipeline. No database — Zustand (browser memory). No background jobs — real-time SSE streaming.
+4-step pipeline. Supabase for persistence (sessions, ICPs, contact tracking). Zustand for in-memory state, hydrated from server on load. No background jobs — real-time SSE streaming.
 
 ## Layers
 
 ```
 /app                    Routing shell only (server-only)
 ├── page.tsx            Landing
-├── research/           Dashboard page
+├── research/           Sessions list (server-fetched)
+│   └── [id]/           Session dashboard (server-fetched, hydrated to client)
 ├── emails/             Sent emails history
 ├── settings/           Settings page (Gmail OAuth redirect target)
 └── api/                API routes (SSE, REST)
+    ├── icps/           Saved ICP CRUD
+    ├── sessions/       Session CRUD + auto-save
+    └── contacts/       Contacted companies tracking
 
 /components             UI layer (feature-organized)
 ├── research/           Pipeline UI (steps 1-4)
@@ -77,6 +81,6 @@ Claude Haiku             ICP parsing, scoring, research, ranking   ~$0.03/compan
 Apollo Organizations     Company discovery                         Free tier
 Apollo People Search     Contact search (obfuscated)               Free
 Apollo People Match      Contact enrichment                        1 credit/person
-Supabase                 Auth + gmail_connections + sent_emails     Free tier
+Supabase                 Auth + sessions + ICPs + contacts + emails Free tier
 Gmail API                Email sending via OAuth (gmail.send)       Free
 ```

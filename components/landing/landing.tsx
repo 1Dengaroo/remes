@@ -1,206 +1,185 @@
 'use client';
 
-import { ArrowRight, Radio, UserCheck, Pencil, Zap } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Radio, UserCheck, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
+import { createClient } from '@/lib/supabase/client';
 
 const STEPS = [
   {
     num: '01',
     icon: Radio,
     title: 'Detect signals',
-    desc: 'Job postings, funding rounds, hiring surges, tech stack changes — captured in real time.'
+    desc: 'Job postings, funding rounds, hiring surges — captured in real time.',
+    accent: 'accent-primary'
   },
   {
     num: '02',
     icon: UserCheck,
     title: 'Find decision makers',
-    desc: 'The right person at the right company, with verified contact info ready to go.'
+    desc: 'The right person with verified contact info, ready to go.',
+    accent: 'accent-secondary'
   },
   {
     num: '03',
     icon: Pencil,
     title: 'Draft outreach',
-    desc: 'Personalized emails rooted in the exact signal detected. No templates, no fluff.'
+    desc: 'Personalized emails rooted in the exact signal detected.',
+    accent: 'accent-tertiary'
   }
 ];
 
 const STATS = [
-  { value: '10x', label: 'faster than manual research' },
-  { value: '73%', label: 'open rate on signal-based emails' },
-  { value: '0', label: 'sales hires needed' }
+  { value: '10x', label: 'Faster than manual research' },
+  { value: '73%', label: 'Open rate on signal-based emails' },
+  { value: '0', label: 'Sales hires needed' }
 ];
 
 export function Landing() {
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        router.push('/research');
+      } else {
+        openAuthModal();
+      }
+    });
+  };
 
   return (
-    <div className="relative min-h-[calc(100vh-49px)] overflow-hidden">
+    <div className="relative flex min-h-[calc(100vh-49px)] flex-col overflow-hidden">
+      {/* Subtle dot background */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+        className="pointer-events-none absolute inset-0 opacity-[0.025]"
         style={{
-          backgroundImage:
-            'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',
-          backgroundSize: '80px 80px'
+          backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)',
+          backgroundSize: '32px 32px'
         }}
       />
 
-      <div className="bg-primary/10 pointer-events-none absolute -top-20 right-0 h-[600px] w-px rotate-[25deg]" />
-      <div className="bg-primary/5 pointer-events-none absolute -top-10 right-20 h-[500px] w-px rotate-[25deg]" />
+      {/* Accent glow — top right */}
+      <div
+        className="pointer-events-none absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full opacity-[0.04]"
+        style={{
+          background: 'radial-gradient(circle, oklch(var(--accent-primary)), transparent 70%)'
+        }}
+      />
 
-      <div className="relative mx-auto max-w-7xl px-6">
-        <section className="pt-16 pb-20 sm:pt-24 sm:pb-28 lg:pt-32">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-6">
+        {/* ── Hero + Stats ── */}
+        <section className="flex flex-1 flex-col justify-center pb-8 sm:pb-12">
           <div
-            className="animate-in fade-in fill-mode-both mb-8 flex items-center gap-3 duration-500"
+            className="animate-in fade-in fill-mode-both duration-500"
             style={{ animationDelay: '0ms' }}
           >
-            <div className="bg-primary h-px w-8" />
-            <span className="text-muted-foreground text-[11px] font-medium tracking-[0.2em] uppercase">
-              AI-Powered Outbound
-            </span>
+            <span className="section-label text-muted-foreground">AI-Powered Outbound</span>
           </div>
 
           <div
-            className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both duration-700"
+            className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both mt-5 duration-700"
             style={{ animationDelay: '100ms' }}
           >
-            <h1 className="text-foreground max-w-4xl text-5xl leading-[1.05] font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl">
-              The best time
-              <br />
-              to reach out is{' '}
-              <span className="text-primary relative inline-block">
-                right now
-                <svg
-                  className="text-primary/20 absolute -bottom-2 left-0 w-full"
-                  viewBox="0 0 300 12"
-                  fill="none"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M0 8 Q75 0, 150 6 T300 4"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
+            <h1 className="text-foreground max-w-3xl text-4xl leading-[1.08] font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              The best time to reach out is <span className="text-primary">right now</span>
             </h1>
           </div>
 
           <div
-            className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both mt-8 flex max-w-2xl flex-col gap-8 duration-700 sm:mt-10"
-            style={{ animationDelay: '250ms' }}
+            className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both mt-5 duration-700 sm:mt-6"
+            style={{ animationDelay: '200ms' }}
           >
-            <p className="text-muted-foreground max-w-lg text-lg leading-relaxed sm:text-xl">
+            <p className="text-muted-foreground max-w-lg text-base leading-relaxed sm:text-lg">
               Signal monitors the web for buying signals and turns them into personalized outreach —
-              automatically. No sales hires needed.
+              automatically.
             </p>
-
-            <div className="flex items-center gap-4">
-              <Button size="lg" className="gap-2 px-6" onClick={openAuthModal}>
-                Get started
-                <ArrowRight className="size-4" />
-              </Button>
-              <span className="text-muted-foreground text-xs tracking-wide">
-                No credit card required
-              </span>
-            </div>
           </div>
 
           <div
-            className="animate-in fade-in fill-mode-both border-border mt-16 grid grid-cols-3 border-t pt-8 duration-700 sm:mt-20"
-            style={{ animationDelay: '450ms' }}
+            className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both mt-7 flex items-center gap-4 duration-700 sm:mt-8"
+            style={{ animationDelay: '300ms' }}
+          >
+            <Button size="lg" className="gap-2 px-6" onClick={handleGetStarted}>
+              Get started
+              <ArrowRight className="size-4" />
+            </Button>
+            <span className="text-muted-foreground text-xs">No credit card required</span>
+          </div>
+
+          {/* Stats row */}
+          <div
+            className="animate-in fade-in fill-mode-both border-border mt-10 grid grid-cols-3 border-t pt-8 duration-700 sm:mt-14 sm:pt-10"
+            style={{ animationDelay: '400ms' }}
           >
             {STATS.map((stat) => (
               <div key={stat.label}>
-                <p className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
+                <p className="text-primary text-3xl font-bold tracking-tight sm:text-4xl">
                   {stat.value}
                 </p>
-                <p className="text-muted-foreground mt-1 text-xs leading-relaxed sm:text-sm">
-                  {stat.label}
-                </p>
+                <p className="text-muted-foreground mt-1 text-xs sm:text-sm">{stat.label}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <div className="border-border border-t" />
-
-        <section className="py-20 sm:py-28">
-          <div
-            className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-700"
-            style={{ animationDelay: '550ms' }}
-          >
-            <div className="mb-12 flex items-end justify-between sm:mb-16">
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="bg-primary h-px w-8" />
-                  <span className="text-muted-foreground text-[11px] font-medium tracking-[0.2em] uppercase">
-                    How it works
-                  </span>
-                </div>
-                <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-                  Three steps to pipeline
-                </h2>
-              </div>
-              <Zap className="text-primary/20 hidden size-8 sm:block" />
-            </div>
-
-            <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
-              {STEPS.map((step, i) => (
-                <div
-                  key={step.title}
-                  className="border-border group relative border-t py-8 sm:border-t-0 sm:border-l sm:py-0 sm:pl-8 sm:first:border-l-0 sm:first:pl-0"
-                >
-                  <div className="bg-primary absolute top-0 left-0 hidden h-full w-0.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:block" />
-
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-primary/30 font-mono text-xs font-bold">
-                        {step.num}
-                      </span>
-                      <step.icon className="text-primary size-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-foreground text-base font-semibold">{step.title}</h3>
-                      <p className="text-muted-foreground mt-2 max-w-xs text-sm leading-relaxed">
-                        {step.desc}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <div className="border-border border-t" />
+        {/* ── How it works ── */}
         <section
-          className="animate-in fade-in fill-mode-both py-20 duration-700 sm:py-28"
-          style={{ animationDelay: '700ms' }}
+          className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both border-border border-t py-10 duration-700 sm:py-14"
+          style={{ animationDelay: '500ms' }}
         >
-          <div className="flex flex-col items-center text-center">
-            <p className="text-muted-foreground mb-4 text-[11px] font-medium tracking-[0.2em] uppercase">
-              Ready to start?
-            </p>
-            <h2 className="text-foreground max-w-lg text-3xl font-bold tracking-tight sm:text-4xl">
-              Turn signals into pipeline, today
-            </h2>
-            <p className="text-muted-foreground mt-4 max-w-md text-base leading-relaxed">
-              Stop paying for sales hires that take months to ramp. Let Signal find and engage your
-              best prospects automatically.
-            </p>
-            <Button size="lg" className="mt-8 gap-2 px-6" onClick={openAuthModal}>
+          <div className="mb-8 flex items-end justify-between sm:mb-10">
+            <div>
+              <span className="section-label text-muted-foreground">How it works</span>
+              <h2 className="text-foreground mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+                Three steps to pipeline
+              </h2>
+            </div>
+            <Button variant="ghost" size="sm" className="gap-1.5" onClick={handleGetStarted}>
               Start for free
-              <ArrowRight className="size-4" />
+              <ArrowRight className="size-3.5" />
             </Button>
           </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+            {STEPS.map((step) => (
+              <div
+                key={step.title}
+                className="bg-card group rounded-lg border p-5 transition-shadow duration-300"
+                style={{ boxShadow: 'var(--card-shadow, none)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    'var(--card-hover-shadow, var(--shadow-md, 0 4px 12px rgba(0,0,0,.08)))';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'var(--card-shadow, none)';
+                }}
+              >
+                <div className="mb-3 flex items-center gap-3">
+                  <div
+                    className="flex size-8 items-center justify-center rounded-md"
+                    style={{ backgroundColor: `oklch(var(--${step.accent}) / 0.1)` }}
+                  >
+                    <step.icon
+                      className="size-4"
+                      style={{ color: `oklch(var(--${step.accent}))` }}
+                    />
+                  </div>
+                  <span className="text-muted-foreground font-mono text-xs">{step.num}</span>
+                </div>
+                <h3 className="text-foreground text-sm font-semibold">{step.title}</h3>
+                <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
-        <footer className="border-border border-t py-8">
-          <p className="text-muted-foreground text-xs">
-            &copy; {new Date().getFullYear()} Signal. All rights reserved.
-          </p>
+        {/* ── Footer ── */}
+        <footer className="border-border border-t py-6">
+          <p className="text-muted-foreground text-xs">&copy; {new Date().getFullYear()} Signal</p>
         </footer>
       </div>
     </div>
