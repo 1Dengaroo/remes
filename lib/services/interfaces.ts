@@ -43,7 +43,8 @@ export interface CompanyResearcher {
   research(
     companyName: string,
     icp: ICPCriteria,
-    context?: { description?: string; website?: string }
+    context?: { description?: string; website?: string },
+    onProgress?: (message: string) => void
   ): Promise<CompanyResearchResult>;
 }
 

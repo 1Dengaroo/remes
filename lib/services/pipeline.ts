@@ -96,10 +96,15 @@ export async function researchConfirmedCompanies(
   const processCompany = async (companyName: string) => {
     try {
       const candidate = candidateMap.get(companyName);
-      const research = await config.companyResearcher.research(companyName, icp, {
-        description: candidate?.description,
-        website: candidate?.website
-      });
+      const research = await config.companyResearcher.research(
+        companyName,
+        icp,
+        {
+          description: candidate?.description,
+          website: candidate?.website
+        },
+        (message) => send({ type: 'status', message: `Researching ${companyName}: ${message}` })
+      );
 
       // Apollo people search handles contacts — skip Claude-inferred ones
       const contacts: {

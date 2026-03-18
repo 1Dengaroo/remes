@@ -93,13 +93,17 @@ export const claudeResearchAgent: CompanyResearcher = {
   async research(
     companyName: string,
     icp: ICPCriteria,
-    context?: { description?: string; website?: string }
+    context?: { description?: string; website?: string },
+    onProgress?: (message: string) => void
   ): Promise<CompanyResearchResult> {
     const client = getClient();
 
-    const response = await client.messages.create({
+    onProgress?.('Starting research...');
+
+    const stream = await client.messages.create({
       model: serviceConfig.researchModel,
       max_tokens: serviceConfig.researchMaxTokens,
+      stream: true,
       tools: [
         {
           type: 'web_search_20250305',
@@ -115,13 +119,67 @@ export const claudeResearchAgent: CompanyResearcher = {
       ]
     });
 
-    // Build citation index from actual search results
-    const verifiedUrls = extractVerifiedUrls(response.content);
+    // Accumulate content blocks while surfacing progress
+    let searchCount = 0;
+    const contentBlocks: Anthropic.ContentBlock[] = [];
+    let currentBlockIndex = -1;
+    let currentTextParts: string[] = [];
 
-    // Extract text and resolve cite tags to inline source links
+    for await (const event of stream) {
+      if (event.type === 'content_block_start') {
+        currentBlockIndex = event.index;
+        const block = event.content_block;
+
+        if (block.type === 'server_tool_use' && block.name === 'web_search') {
+          searchCount++;
+          const input = block.input as { query?: string };
+          onProgress?.(input.query ? `Searching: "${input.query}"` : `Searching the web...`);
+        }
+
+        // Seed the block for accumulation
+        if (block.type === 'text') {
+          currentTextParts = [];
+        }
+        contentBlocks[currentBlockIndex] = block;
+      }
+
+      if (event.type === 'content_block_delta') {
+        const delta = event.delta as { type: string; text?: string };
+        if (delta.type === 'text_delta' && delta.text) {
+          currentTextParts.push(delta.text);
+        }
+      }
+
+      if (event.type === 'content_block_stop') {
+        const block = contentBlocks[currentBlockIndex];
+
+        // Finalize text blocks with accumulated text
+        if (block && block.type === 'text') {
+          (block as { text: string }).text = currentTextParts.join('');
+        }
+
+        // Surface result count for search results
+        if (block && block.type === 'web_search_tool_result') {
+          const results = (block as { content?: unknown[] }).content;
+          const count = Array.isArray(results)
+            ? results.filter((r) => (r as { type?: string }).type === 'web_search_result').length
+            : 0;
+          onProgress?.(
+            `Found ${count} results${searchCount < serviceConfig.maxSearchesPerCompany ? ', searching more...' : ', compiling research...'}`
+          );
+        }
+      }
+    }
+
+    onProgress?.('Compiling results...');
+
+    // Build citation index from actual search results
+    const verifiedUrls = extractVerifiedUrls(contentBlocks);
+
+    // Extract text
     let fullText = '';
-    for (const block of response.content) {
-      if (block.type === 'text') {
+    for (const block of contentBlocks) {
+      if (block?.type === 'text') {
         fullText += block.text;
       }
     }
