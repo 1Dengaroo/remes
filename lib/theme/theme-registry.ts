@@ -35,7 +35,7 @@ export const themes: ThemeDefinition[] = [
       secondary: '#7a7774',
       tertiary: 'hsl(220, 50%, 58%)'
     }
-  },
+  }
 ];
 
 export const themeIds = themes.map((t) => t.id);

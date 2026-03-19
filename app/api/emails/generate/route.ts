@@ -32,8 +32,19 @@ export async function POST(req: NextRequest) {
     const {
       data: { user }
     } = await supabase.auth.getUser();
-    const fullName =
-      typeof user?.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : '';
+
+    // Prefer user_profiles.full_name, fall back to OAuth metadata
+    let fullName = '';
+    if (user) {
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+      fullName =
+        profile?.full_name ||
+        (typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : '');
+    }
     const senderFirstName = fullName.split(' ')[0] || undefined;
 
     const anthropic = new Anthropic();

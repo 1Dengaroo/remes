@@ -13,7 +13,7 @@ export const serviceConfig = {
   maxSearchesPerCompany: 2,
 
   /** Max tokens for research agent output */
-  researchMaxTokens: 4096,
+  researchMaxTokens: 2048,
 
   /** Max tokens for ICP parsing */
   parseMaxTokens: 1024,

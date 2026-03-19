@@ -5,21 +5,20 @@ export function buildResearchAgentPrompt(
   icp: ICPCriteria,
   context?: { description?: string; website?: string }
 ): string {
-  const contextLine = context?.description ? `Context: ${context.description}` : '';
+  const contextLine = context?.description ? ` Context: ${context.description}` : '';
   const signals = icp.hiring_signals.slice(0, 3).join(', ');
 
-  return `Research "${companyName}" for outbound sales. ${contextLine}
+  return `Research "${companyName}" for outbound sales.${contextLine}
 
 ICP: ${icp.description}
-Signals to find: ${signals}
-Tech: ${icp.tech_keywords.slice(0, 3).join(', ')}
+Signals: ${signals} | Tech: ${icp.tech_keywords.slice(0, 3).join(', ')}
 
-You have 2 web searches. Use them wisely:
-- Search 1: "${companyName} funding raised series investors" — gets funding + company overview
-- Search 2: "${companyName} jobs hiring ${icp.hiring_signals[0] || 'engineering'} news" — gets jobs + recent news
+You have 2 web searches:
+1. "${companyName} funding raised series investors"
+2. "${companyName} jobs hiring ${icp.hiring_signals[0] || 'engineering'} news"
 
 Return ONLY JSON:
-{"website":"company main domain e.g. example.com (from search results, no https://)","linkedin_url":"full LinkedIn company page URL from search results or null","signals":[{"type":"job_posting"|"news"|"funding"|"product_launch"|"other","title":"description","key_phrases":["phrases"],"source_url":"real URL from search or null"}],"match_reason":"one sentence with concrete fact","company_overview":"2-3 sentences: what they do, stage, why they fit ICP","industry":"industry","funding_stage":"stage or Unknown","amount_raised":"e.g. $150M Series C or Unknown","inferred_contacts":[],"sources":{"jobs":[{"title":"title","url":"URL"}],"funding":[{"title":"title","url":"URL"}],"news":[{"title":"title","url":"URL"}]}}
+{"website":"domain (no https://)","linkedin_url":"exact LinkedIn URL from results or null","signals":[{"type":"job_posting"|"news"|"funding"|"product_launch"|"other","title":"desc","key_phrases":["phrases"],"source_url":"real URL or null"}],"match_reason":"one sentence with a concrete fact","company_overview":"2-3 sentences","industry":"industry","funding_stage":"stage or Unknown","amount_raised":"e.g. $150M Series C or Unknown","inferred_contacts":[],"sources":{"jobs":[{"title":"t","url":"u"}],"funding":[{"title":"t","url":"u"}],"news":[{"title":"t","url":"u"}]}}
 
-Rules: Only use URLs from search results (null if not found). For linkedin_url, use the exact URL you found in search results (e.g. https://www.linkedin.com/company/stripe) — do NOT guess or construct it. Leave inferred_contacts as an empty array — contacts are handled separately.`;
+Only use URLs from search results. For linkedin_url use exact URL found — do NOT guess. Leave inferred_contacts empty.`;
 }
