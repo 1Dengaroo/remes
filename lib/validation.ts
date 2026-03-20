@@ -28,7 +28,8 @@ export const icpCriteriaSchema = z.object({
   funding_stages: strArray(20),
   hiring_signals: strArray(50),
   tech_keywords: strArray(50),
-  company_examples: strArray(50)
+  company_examples: strArray(50),
+  locations: strArray(50).default([])
 });
 
 export const strategyMessageSchema = z.object({
@@ -95,7 +96,8 @@ const candidateLoose = z
     description: mediumStr.optional(),
     linkedin_url: urlStr.optional(),
     logo_url: urlStr.optional(),
-    apollo_org_id: shortStr.optional()
+    apollo_org_id: shortStr.optional(),
+    location: shortStr.optional()
   })
   .loose();
 
@@ -159,7 +161,8 @@ export const candidateSchema = z.object({
   description: mediumStr.optional(),
   linkedin_url: urlStr.optional(),
   logo_url: urlStr.optional(),
-  apollo_org_id: shortStr.optional()
+  apollo_org_id: shortStr.optional(),
+  location: shortStr.optional()
 });
 
 // API request schemas

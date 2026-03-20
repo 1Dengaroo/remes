@@ -26,6 +26,7 @@ ${icp.description}
 - Hiring signals: ${icp.hiring_signals.join(', ') || 'none specified'}
 - Tech: ${icp.tech_keywords.join(', ') || 'any'}
 - Funding: ${icp.funding_stages.join(', ') || 'any stage'}
+- Locations: ${icp.locations.join(', ') || 'any'}
 
 **Companies to score:**
 ${companySummaries}

@@ -31,7 +31,8 @@ const EMPTY_ICP: ICPCriteria = {
   funding_stages: [],
   hiring_signals: [],
   tech_keywords: [],
-  company_examples: []
+  company_examples: [],
+  locations: []
 };
 
 interface ResearchState {
@@ -84,6 +85,9 @@ interface ResearchState {
 
   // Cross-session dedup
   previouslyResearched: Set<string>;
+
+  // ICP change tracking for re-discovery
+  icpChangedSinceDiscovery: boolean;
 }
 
 interface ResearchActions {
@@ -189,6 +193,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   lastSavedAt: null,
   contactedCompanies: new Map(),
   previouslyResearched: new Set(),
+  icpChangedSinceDiscovery: false,
 
   // Navigation
   setStep: (step) => set({ step }),
@@ -255,6 +260,8 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     const { icp, isStrategizing, strategyMessages } = get();
     if (!icp || isStrategizing || !message.trim()) return;
 
+    const icpBefore = JSON.stringify(icp);
+
     const updatedMessages: StrategyMessage[] = [
       ...strategyMessages,
       { role: 'user', content: message.trim() }
@@ -275,6 +282,11 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       set({
         strategyMessages: [...updatedMessages, { role: 'assistant', content: cleanText }]
       });
+      // Check if ICP changed during strategy chat
+      const icpAfter = JSON.stringify(get().icp);
+      if (icpBefore !== icpAfter) {
+        set({ icpChangedSinceDiscovery: true });
+      }
     } catch (err) {
       set({
         error: err instanceof Error ? err.message : 'Strategy update failed'
@@ -297,7 +309,8 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       isDiscovering: true,
       statusMessage: '',
       error: null,
-      step: 'confirm'
+      step: 'confirm',
+      icpChangedSinceDiscovery: false
     });
 
     try {

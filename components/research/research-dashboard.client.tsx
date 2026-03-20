@@ -9,6 +9,7 @@ import { ConfirmStep } from './confirm-step';
 import { ResultsStep } from './results-step';
 import { BottomNav } from './bottom-nav';
 import type { ResearchSession } from '@/lib/types';
+import { MAX_WIDTH } from '@/lib/layout';
 
 function SaveIndicator() {
   const isSaving = useResearchStore((s) => s.isSaving);
@@ -124,7 +125,7 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
 
   return (
     <div className="bg-background min-h-dvh">
-      <main className="mx-auto max-w-7xl px-4 pt-10 pb-24 md:px-6">
+      <main className={`mx-auto ${MAX_WIDTH} px-4 pt-10 pb-24 md:px-6`}>
         {sessionId && (
           <div className="mb-4 flex items-center justify-between">
             <h1 className="text-muted-foreground truncate text-sm font-medium">{sessionName}</h1>

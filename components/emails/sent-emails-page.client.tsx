@@ -11,6 +11,7 @@ import {
   SheetDescription
 } from '@/components/ui/sheet';
 import type { SentEmail } from '@/lib/types';
+import { MAX_WIDTH } from '@/lib/layout';
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(false);
@@ -96,7 +97,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
   const selected = emails.find((e) => e.id === selectedId) ?? null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+    <div className={`mx-auto ${MAX_WIDTH} px-4 py-10 md:px-6`}>
       <div className="mb-6 flex items-center gap-3">
         <div className="bg-accent-secondary/10 flex size-9 items-center justify-center rounded-lg">
           <Mail className="text-accent-secondary size-4" />

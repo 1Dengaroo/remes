@@ -250,7 +250,8 @@ export function CompanyRow({
       funding_stages: [],
       hiring_signals: [],
       tech_keywords: [],
-      company_examples: []
+      company_examples: [],
+      locations: []
     };
     const contact: TargetContact = {
       name: `${person.first_name} ${person.last_name}`,

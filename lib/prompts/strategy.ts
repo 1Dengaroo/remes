@@ -8,6 +8,7 @@ function formatIcp(icp: ICPCriteria): string {
 - Hiring signals: ${icp.hiring_signals.join(', ') || 'Not specified'}
 - Funding: ${icp.funding_stages.join(', ') || 'Not specified'} / Min ${icp.min_funding_amount ? `$${(icp.min_funding_amount / 1_000_000).toFixed(0)}M` : 'any'}
 - Employees: ${icp.min_employees ?? '?'}–${icp.max_employees ?? '?'}
+- Locations: ${icp.locations.join(', ') || 'Global'}
 - Examples: ${icp.company_examples.join(', ') || 'None'}`;
 }
 
@@ -20,7 +21,7 @@ Format:
 {"funding_stages": ["Series A", "Series B"]}
 </icp_update>
 
-Valid fields: description, industry_keywords, tech_keywords, hiring_signals, funding_stages, min_funding_amount, min_employees, max_employees, company_examples.
+Valid fields: description, industry_keywords, tech_keywords, hiring_signals, funding_stages, min_funding_amount, min_employees, max_employees, company_examples, locations.
 If nothing changed, omit the block.`;
 
 export function buildStrategyPrompt(icp: ICPCriteria): string {

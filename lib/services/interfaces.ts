@@ -23,6 +23,7 @@ export interface DiscoveredCompany {
   linkedin_url?: string;
   logo_url?: string;
   apollo_org_id?: string;
+  location?: string;
   /** Raw match reasoning or metadata from the discovery source */
   match_context: string;
 }

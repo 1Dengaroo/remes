@@ -5,6 +5,7 @@ import { ArrowRight, Radio, UserCheck, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { createClient } from '@/lib/supabase/client';
+import { MAX_WIDTH } from '@/lib/layout';
 
 const STEPS = [
   {
@@ -64,7 +65,7 @@ export function Landing() {
         }}
       />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-6">
+      <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-1 flex-col px-6`}>
         {/* ── Hero + Stats ── */}
         <section className="flex flex-1 flex-col justify-center pt-16 pb-8 sm:pt-24 sm:pb-12">
           <div

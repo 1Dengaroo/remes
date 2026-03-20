@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, ChevronRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { useResearchStore } from '@/lib/store/research-store';
+import { MAX_WIDTH } from '@/lib/layout';
 
 function NavButton({
   label,
@@ -100,7 +100,9 @@ export function BottomNav() {
         backdropFilter: 'var(--bottom-nav-backdrop, blur(8px))'
       }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6">
+      <div
+        className={`mx-auto flex ${MAX_WIDTH} items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6`}
+      >
         {/* Left: step navigation */}
         <div className="flex items-center gap-1 text-xs">
           <NavButton
@@ -179,6 +181,23 @@ export function BottomNav() {
                   <Loader2 className="size-3 animate-spin" />
                   Thinking...
                 </span>
+              )}
+              {hasCandidates && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    useResearchStore.setState({
+                      candidates: [],
+                      selectedCompanies: [],
+                      icpChangedSinceDiscovery: false
+                    });
+                    approveStrategy();
+                  }}
+                >
+                  <RotateCcw className="size-3.5" />
+                  Start New Search
+                </Button>
               )}
               <Button
                 size="sm"

@@ -16,6 +16,7 @@ import {
 import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { createClient } from '@/lib/supabase/client';
+import { MAX_WIDTH } from '@/lib/layout';
 
 function SignalMark({ className }: { className?: string }) {
   return (
@@ -142,7 +143,7 @@ export function Header() {
         backdropFilter: 'var(--header-backdrop, none)'
       }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+      <div className={`mx-auto flex ${MAX_WIDTH} items-center justify-between px-4 py-3 md:px-6`}>
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2.5">
             <SignalMark className="text-primary" />

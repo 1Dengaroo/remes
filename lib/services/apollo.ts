@@ -15,6 +15,7 @@ interface ApolloOrganization {
   annual_revenue_printed: string | null;
   total_funding_printed: string | null;
   latest_funding_stage: string | null;
+  country: string | null;
   departments: { name: string; count: number }[];
 }
 
@@ -101,6 +102,7 @@ function orgToCompany(org: ApolloOrganization): DiscoveredCompany {
     linkedin_url: org.linkedin_url || undefined,
     logo_url: org.logo_url || undefined,
     apollo_org_id: org.id,
+    location: org.country ?? undefined,
     match_context: JSON.stringify({
       employee_count: org.estimated_num_employees,
       industry: org.industry,
@@ -152,6 +154,10 @@ function buildStrategies(icp: ICPCriteria): SearchStrategy[] {
     payload.organization_latest_funding_stage_cd = icp.funding_stages.map((s) =>
       s.toLowerCase().replace(/\s+/g, '_')
     );
+  }
+
+  if (icp.locations.length > 0) {
+    payload.organization_locations = icp.locations;
   }
 
   if (icp.min_funding_amount) {

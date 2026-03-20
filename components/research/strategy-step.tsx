@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Loader2, Send, Search, Save, ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Save, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
-import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useResearchStore } from '@/lib/store/research-store';
 import { useICPStore } from '@/lib/store/icp-store';
 import { IcpPanelEditable } from './icp-panel-editable';
+import { StrategyChat } from './strategy-chat.client';
 
 function SaveICPButton() {
   const icp = useResearchStore((s) => s.icp);
@@ -99,32 +98,8 @@ function IcpPanel() {
 }
 
 export function StrategyStep() {
-  const strategyMessages = useResearchStore((s) => s.strategyMessages);
-  const isStrategizing = useResearchStore((s) => s.isStrategizing);
-  const statusMessage = useResearchStore((s) => s.statusMessage);
   const error = useResearchStore((s) => s.error);
   const icp = useResearchStore((s) => s.icp);
-  const sendStrategyMessage = useResearchStore((s) => s.sendStrategyMessage);
-  const approveStrategy = useResearchStore((s) => s.approveStrategy);
-
-  const [input, setInput] = useState('');
-
-  const hasMessages = strategyMessages.length > 0;
-  const lastMessage = strategyMessages[strategyMessages.length - 1];
-  const canApprove = hasMessages && !isStrategizing && lastMessage?.role === 'assistant';
-
-  const handleSend = useCallback(() => {
-    if (!input.trim() || isStrategizing) return;
-    sendStrategyMessage(input.trim());
-    setInput('');
-  }, [input, isStrategizing, sendStrategyMessage]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
 
   const [icpOpen, setIcpOpen] = useState(false);
 
@@ -166,76 +141,7 @@ export function StrategyStep() {
 
         {/* Chat panel */}
         <div className="w-full lg:absolute lg:top-0 lg:bottom-0 lg:left-0 lg:w-80">
-          <div className="border-border bg-card flex h-full min-h-[400px] flex-col overflow-hidden rounded-[var(--card-radius)] border lg:min-h-0">
-            <div className="bg-muted/50 border-border flex shrink-0 items-center justify-between border-b px-4 py-2.5">
-              <span className="text-muted-foreground section-label">Strategy Chat</span>
-            </div>
-            {/* Messages — scrollable */}
-            <div className="flex-1 space-y-4 overflow-y-auto p-4">
-              {strategyMessages.map((msg, i) => (
-                <div key={i} className={msg.role === 'user' ? 'flex justify-end' : ''}>
-                  {msg.role === 'assistant' ? (
-                    <div className="bg-muted/50 rounded-[var(--card-radius)] rounded-bl-md px-3 py-2">
-                      <div className="prose prose-sm dark:prose-invert max-w-none text-xs leading-5">
-                        <ReactMarkdown
-                          components={{
-                            p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>
-                          }}
-                        >
-                          {msg.content.replace(/\n/g, '  \n')}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-primary text-primary-foreground rounded-[var(--card-radius)] rounded-br-md px-3 py-2 text-xs whitespace-pre-wrap">
-                      {msg.content}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {isStrategizing && !hasMessages && (
-                <div className="text-muted-foreground flex items-center gap-2 text-xs">
-                  <Loader2 className="size-3 animate-spin" />
-                  Analyzing your ICP...
-                </div>
-              )}
-
-              {isStrategizing && statusMessage && (
-                <div className="text-muted-foreground flex items-center gap-2 text-xs">
-                  <Search className="size-3 animate-pulse" />
-                  {statusMessage}
-                </div>
-              )}
-            </div>
-
-            {/* Input — pinned to bottom */}
-            <div className="border-border shrink-0 border-t px-4 py-3">
-              <div className="flex items-end gap-2">
-                <Textarea
-                  placeholder="Request changes..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={isStrategizing}
-                  className="max-h-24 min-h-9 flex-1 resize-none text-xs"
-                  rows={1}
-                />
-                <Button
-                  size="icon"
-                  label="Send"
-                  onClick={handleSend}
-                  disabled={isStrategizing || !input.trim()}
-                >
-                  {isStrategizing ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Send className="size-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
+          <StrategyChat />
         </div>
 
         {/* ICP Panel — desktop only, drives the row height */}

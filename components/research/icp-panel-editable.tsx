@@ -161,6 +161,12 @@ export function IcpPanelEditable({
           tags={icp.funding_stages}
           onChange={(v) => onUpdate('funding_stages', v)}
         />
+        <EditableTagGroup
+          label="Locations"
+          tags={icp.locations ?? []}
+          color="secondary"
+          onChange={(v) => onUpdate('locations', v)}
+        />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>

@@ -6,6 +6,7 @@ import { ICPList } from './icp-list.client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { createSession } from '@/lib/api';
 import type { ResearchSessionSummary, SavedICP } from '@/lib/types';
+import { MAX_WIDTH } from '@/lib/layout';
 
 export function ResearchHub({
   sessions,
@@ -26,7 +27,7 @@ export function ResearchHub({
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pt-10 pb-24">
+    <div className={`mx-auto ${MAX_WIDTH} px-6 pt-10 pb-24`}>
       <Tabs defaultValue="sessions">
         <TabsList className="mb-6">
           <TabsTrigger value="sessions">Sessions</TabsTrigger>

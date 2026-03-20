@@ -33,7 +33,8 @@ const EMPTY_ICP: ICPCriteria = {
   funding_stages: [],
   hiring_signals: [],
   tech_keywords: [],
-  company_examples: []
+  company_examples: [],
+  locations: []
 };
 
 function PersonCard({

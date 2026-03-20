@@ -8,6 +8,7 @@ export interface ICPCriteria {
   hiring_signals: string[];
   tech_keywords: string[];
   company_examples: string[];
+  locations: string[];
 }
 
 export interface SourceLink {
@@ -97,6 +98,7 @@ export interface DiscoveredCompanyPreview {
   linkedin_url?: string;
   logo_url?: string;
   apollo_org_id?: string;
+  location?: string;
 }
 
 export interface ApolloPersonPreview {

@@ -66,7 +66,8 @@ export async function discoverCompanies(
     description: c.description,
     linkedin_url: c.linkedin_url,
     logo_url: c.logo_url,
-    apollo_org_id: c.apollo_org_id
+    apollo_org_id: c.apollo_org_id,
+    location: c.location
   }));
 
   send({ type: 'candidates', data: candidates });

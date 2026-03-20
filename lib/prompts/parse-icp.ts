@@ -6,6 +6,7 @@ Think broadly about the BUYER, not the product being sold:
 - industry_keywords = company's core business/sector
 - hiring_signals = job titles being hired (e.g. "SDR", "Account Executive") — NOT narrative phrases
 - If input mentions "scaling SDR teams", extract role titles into hiring_signals, not industry_keywords
+- locations = geographic focus as country names (e.g. ["United States"]). Use [] if not specified.
 
 Employee size mappings: "small" ≈ 1-50, "mid-size" ≈ 50-500, "enterprise" ≈ 500+. Use null for unspecified bounds.
 
@@ -19,7 +20,8 @@ Return ONLY valid JSON:
   "funding_stages": [],
   "hiring_signals": ["clean job titles"],
   "tech_keywords": ["technologies the buyer uses"],
-  "company_examples": ["mentioned companies"]
+  "company_examples": ["mentioned companies"],
+  "locations": []
 }
 
 Input:
