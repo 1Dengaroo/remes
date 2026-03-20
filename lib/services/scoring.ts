@@ -60,9 +60,59 @@ function isScoredEntryArray(value: unknown): value is ScoredEntry[] {
   );
 }
 
+/** Max companies per scoring batch to keep prompt size manageable */
+const SCORING_BATCH_SIZE = 30;
+
+/**
+ * Score a single batch of companies. Returns scored entries with
+ * indices remapped to the original array positions.
+ */
+async function scoreBatch(
+  client: Anthropic,
+  companies: DiscoveredCompany[],
+  icp: ICPCriteria,
+  indexOffset: number
+): Promise<{ company: DiscoveredCompany; score: number; reason: string }[]> {
+  const message = await client.messages.create({
+    model: serviceConfig.fastModel,
+    max_tokens: serviceConfig.scoringMaxTokens,
+    messages: [{ role: 'user', content: buildScoringPrompt(companies, icp) }]
+  });
+
+  const text = message.content[0].type === 'text' ? message.content[0].text : '';
+  const jsonMatch = text.match(/\[[\s\S]*\]/);
+
+  if (!jsonMatch) {
+    // If scoring fails, return all companies with a neutral score
+    return companies.map((c) => ({
+      company: c,
+      score: serviceConfig.scoringMinScore,
+      reason: 'scoring failed — included by default'
+    }));
+  }
+
+  const parsed: unknown = JSON.parse(jsonMatch[0]);
+  if (!isScoredEntryArray(parsed)) {
+    return companies.map((c) => ({
+      company: c,
+      score: serviceConfig.scoringMinScore,
+      reason: 'scoring failed — included by default'
+    }));
+  }
+
+  return parsed
+    .filter((s) => s.index >= 0 && s.index < companies.length)
+    .map((s) => ({
+      company: companies[s.index],
+      score: s.score,
+      reason: s.reason
+    }));
+}
+
 /**
  * Claude-based company scorer.
  * Scores and ranks discovered companies against the ICP, filtering out poor fits.
+ * Handles large candidate sets by batching scoring calls in parallel.
  */
 export const claudeCompanyScorer: CompanyScorer = {
   async score(companies: DiscoveredCompany[], icp: ICPCriteria): Promise<DiscoveredCompany[]> {
@@ -70,30 +120,26 @@ export const claudeCompanyScorer: CompanyScorer = {
 
     const client = getClient();
 
-    const message = await client.messages.create({
-      model: serviceConfig.fastModel,
-      max_tokens: serviceConfig.scoringMaxTokens,
-      messages: [{ role: 'user', content: buildScoringPrompt(companies, icp) }]
-    });
-
-    const text = message.content[0].type === 'text' ? message.content[0].text : '';
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-
-    if (!jsonMatch) {
-      // If scoring fails, return all companies unsorted rather than losing them
-      return companies;
+    // Split into batches
+    const batches: DiscoveredCompany[][] = [];
+    for (let i = 0; i < companies.length; i += SCORING_BATCH_SIZE) {
+      batches.push(companies.slice(i, i + SCORING_BATCH_SIZE));
     }
 
-    const parsed: unknown = JSON.parse(jsonMatch[0]);
-    if (!isScoredEntryArray(parsed)) return companies;
+    // Score all batches in parallel
+    const batchResults = await Promise.all(
+      batches.map((batch, i) => scoreBatch(client, batch, icp, i * SCORING_BATCH_SIZE))
+    );
 
-    return parsed
-      .filter((s) => s.index >= 0 && s.index < companies.length)
-      .map((s) => ({
-        ...companies[s.index],
-        description: companies[s.index].description
-          ? `${companies[s.index].description} (ICP score: ${s.score}/10 — ${s.reason})`
-          : `ICP score: ${s.score}/10 — ${s.reason}`
-      }));
+    // Merge, sort by score descending, and format
+    const allScored = batchResults.flat();
+    allScored.sort((a, b) => b.score - a.score);
+
+    return allScored.map((s) => ({
+      ...s.company,
+      description: s.company.description
+        ? `${s.company.description} (ICP score: ${s.score}/10 — ${s.reason})`
+        : `ICP score: ${s.score}/10 — ${s.reason}`
+    }));
   }
 };

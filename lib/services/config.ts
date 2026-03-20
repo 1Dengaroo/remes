@@ -27,6 +27,12 @@ export const serviceConfig = {
   /** Apollo results per page (max 100) */
   apolloPerPage: 25,
 
+  /** Number of pages to fetch per Apollo search strategy */
+  apolloPagesPerStrategy: 2,
+
+  /** Max companies to pass to scoring after dedup across all strategies */
+  apolloMaxCandidates: 75,
+
   /** Apollo API base URL */
   apolloBaseUrl: 'https://api.apollo.io/api/v1',
 
