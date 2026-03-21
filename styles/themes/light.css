@@ -1,6 +1,6 @@
 /*
- * LIGHT — Gold & Sand
- * Gold primary (#FECF40), warm sand neutrals, crisp white surfaces.
+ * LIGHT — Purple & Sand
+ * Violet primary, warm sand neutrals, crisp white surfaces.
  * Clean, data-dense, professional sales tool aesthetic.
  */
 
@@ -11,8 +11,8 @@
 [data-theme='light'] {
   /* Semantic tokens (oklch L C H) */
 
-  /* Gold primary, warm sand secondary, slate-blue tertiary */
-  --accent-primary: 0.8 0.15 88;
+  /* Purple primary, warm sand secondary, slate-blue tertiary */
+  --accent-primary: 0.55 0.2 290;
   --accent-secondary: 0.62 0.04 70;
   --accent-tertiary: 0.52 0.1 250;
 
@@ -84,8 +84,8 @@
   --card-foreground: rgba(0, 0, 0, 0.87);
   --popover: #ffffff;
   --popover-foreground: rgba(0, 0, 0, 0.87);
-  --primary: #e8b820;
-  --primary-foreground: #000000;
+  --primary: #6f42d6;
+  --primary-foreground: #ffffff;
   --secondary: #f5f4f2;
   --secondary-foreground: #3d3b38;
   --muted: #f0efed;
@@ -96,11 +96,11 @@
   --destructive-foreground: #ffffff;
   --border: #e8e6e3;
   --input: #e8e6e3;
-  --ring: #e8b820;
+  --ring: #6f42d6;
   --radius: 0.5rem;
 
-  /* Chart palette — gold, blue, green, warm spread */
-  --chart-1: #e8b820;
+  /* Chart palette — purple, blue, green, warm spread */
+  --chart-1: #6f42d6;
   --chart-2: hsl(220 50% 48%);
   --chart-3: hsl(155 40% 42%);
   --chart-4: hsl(270 35% 50%);
@@ -109,10 +109,10 @@
   /* Sidebar */
   --sidebar-background: #ffffff;
   --sidebar-foreground: #7a7774;
-  --sidebar-primary: #e8b820;
-  --sidebar-primary-foreground: #000000;
+  --sidebar-primary: #6f42d6;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f5f4f2;
   --sidebar-accent-foreground: rgba(0, 0, 0, 0.87);
   --sidebar-border: #e8e6e3;
-  --sidebar-ring: #e8b820;
+  --sidebar-ring: #6f42d6;
 }

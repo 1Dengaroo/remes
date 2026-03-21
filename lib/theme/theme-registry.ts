@@ -15,11 +15,11 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'light',
     name: 'Light',
-    description: 'Gold and sand on white',
+    description: 'Purple and sand on white',
     isDark: false,
     previewColors: {
       bg: '#f7f7f5',
-      primary: '#e8b820',
+      primary: '#6f42d6',
       secondary: '#7a7774',
       tertiary: 'hsl(220, 50%, 48%)'
     }
@@ -27,11 +27,11 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'dark',
     name: 'Dark',
-    description: 'Gold and sand on charcoal',
+    description: 'Purple and sand on charcoal',
     isDark: true,
     previewColors: {
       bg: '#121110',
-      primary: '#FECF40',
+      primary: '#a48efa',
       secondary: '#7a7774',
       tertiary: 'hsl(220, 50%, 58%)'
     }

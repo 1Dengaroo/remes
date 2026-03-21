@@ -1,7 +1,7 @@
 /*
- * DARK — Gold & Charcoal
- * Same gold primary and sand personality as the light theme,
- * inverted onto warm dark surfaces. Muted gold accents against
+ * DARK — Purple & Charcoal
+ * Same purple primary and sand personality as the light theme,
+ * inverted onto warm dark surfaces. Muted purple accents against
  * charcoal with a subtle warm undertone.
  */
 
@@ -16,8 +16,8 @@
 [data-theme='dark'] {
   /* Semantic tokens (oklch L C H) */
 
-  /* Gold primary lifted for dark bg, warm sand secondary, slate-blue tertiary */
-  --accent-primary: 0.87 0.15 88;
+  /* Purple primary lifted for dark bg, warm sand secondary, slate-blue tertiary */
+  --accent-primary: 0.7 0.18 290;
   --accent-secondary: 0.58 0.04 70;
   --accent-tertiary: 0.62 0.1 250;
 
@@ -89,7 +89,7 @@
   --card-foreground: #e8e6e3;
   --popover: #171615;
   --popover-foreground: #e8e6e3;
-  --primary: #fecf40;
+  --primary: #a48efa;
   --primary-foreground: #000000;
   --secondary: #242220;
   --secondary-foreground: #c4c0bc;
@@ -101,11 +101,11 @@
   --destructive-foreground: #ffffff;
   --border: #2a2826;
   --input: #2a2826;
-  --ring: #fecf40;
+  --ring: #a48efa;
   --radius: 0.5rem;
 
   /* Chart palette — same hues, lifted for dark bg */
-  --chart-1: #fecf40;
+  --chart-1: #a48efa;
   --chart-2: hsl(220 50% 58%);
   --chart-3: hsl(155 40% 52%);
   --chart-4: hsl(270 40% 60%);
@@ -114,10 +114,10 @@
   /* Sidebar */
   --sidebar-background: #151413;
   --sidebar-foreground: #7a7774;
-  --sidebar-primary: #fecf40;
+  --sidebar-primary: #a48efa;
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: #1f1e1c;
   --sidebar-accent-foreground: #e8e6e3;
   --sidebar-border: #242220;
-  --sidebar-ring: #fecf40;
+  --sidebar-ring: #a48efa;
 }
