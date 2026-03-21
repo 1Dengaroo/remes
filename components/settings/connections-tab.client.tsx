@@ -1,24 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { getGmailStatus, connectGmail, disconnectGmail } from '@/lib/api';
+import { connectGmail, disconnectGmail } from '@/lib/api';
+import { useProfileStore } from '@/lib/store/profile-store';
 
 export function ConnectionsTab() {
-  const [gmailConnected, setGmailConnected] = useState(false);
-  const [gmailEmail, setGmailEmail] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const gmailConnected = useProfileStore((s) => s.gmailConnected);
+  const gmailEmail = useProfileStore((s) => s.gmailEmail);
+  const connectionsLoaded = useProfileStore((s) => s.connectionsLoaded);
+  const setGmailStatus = useProfileStore((s) => s.setGmailStatus);
+  const loadConnections = useProfileStore((s) => s.loadConnections);
   const [disconnecting, setDisconnecting] = useState(false);
 
   useEffect(() => {
-    getGmailStatus().then((status) => {
-      setGmailConnected(status.connected);
-      setGmailEmail(status.email);
-      setLoading(false);
-    });
-  }, []);
+    loadConnections();
+  }, [loadConnections]);
 
   return (
     <div>
@@ -33,7 +32,7 @@ export function ConnectionsTab() {
           </div>
           <div>
             <p className="text-foreground text-sm font-medium">Gmail</p>
-            {loading ? (
+            {!connectionsLoaded ? (
               <p className="text-muted-foreground text-xs">Checking...</p>
             ) : gmailConnected ? (
               <p className="text-muted-foreground flex items-center gap-1 text-xs">
@@ -46,7 +45,7 @@ export function ConnectionsTab() {
           </div>
         </div>
 
-        {!loading &&
+        {connectionsLoaded &&
           (gmailConnected ? (
             <Button
               variant="outline"
@@ -55,8 +54,7 @@ export function ConnectionsTab() {
                 setDisconnecting(true);
                 try {
                   await disconnectGmail();
-                  setGmailConnected(false);
-                  setGmailEmail(null);
+                  setGmailStatus(false, null);
                   toast.success('Gmail disconnected');
                 } catch {
                   toast.error('Failed to disconnect Gmail');

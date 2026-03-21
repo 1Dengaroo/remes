@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { FontProvider } from '@/lib/theme/font-provider';
 import { Header } from '@/components/header';
+import { AuthProvider } from '@/components/auth/auth-provider.client';
 import { AuthModal } from '@/components/auth/auth-modal.client';
 import { ProfileModal } from '@/components/profile-modal.client';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -58,11 +59,13 @@ export default function RootLayout({
         <ThemeProvider defaultTheme="light">
           <FontProvider>
             <TooltipProvider>
-              <Header />
-              <AuthModal />
-              <ProfileModal />
-              {children}
-              <Toaster />
+              <AuthProvider>
+                <Header />
+                <AuthModal />
+                <ProfileModal />
+                {children}
+                <Toaster />
+              </AuthProvider>
             </TooltipProvider>
           </FontProvider>
         </ThemeProvider>

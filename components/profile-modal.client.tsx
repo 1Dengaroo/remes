@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,14 +7,13 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/dialog';
+import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
-import { createClient } from '@/lib/supabase/client';
 import { ProfileTab } from '@/components/settings/profile-tab.client';
 import { AppearanceTab } from '@/components/settings/appearance-tab.client';
 import { ConnectionsTab } from '@/components/settings/connections-tab.client';
 import { SignaturesTab } from '@/components/settings/signatures-tab.client';
 import { AccountTab } from '@/components/settings/account-tab.client';
-import type { User } from '@supabase/supabase-js';
 
 const TABS = [
   { value: 'profile', label: 'Profile' },
@@ -30,23 +28,7 @@ export function ProfileModal() {
   const tab = useProfileStore((s) => s.tab);
   const closeProfile = useProfileStore((s) => s.closeProfile);
   const setTab = useProfileStore((s) => s.setTab);
-  const [user, setUser] = useState<User | null>(null);
-
-  const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabase = configured ? createClient() : null;
-
-  useEffect(() => {
-    if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+  const user = useAuthStore((s) => s.user);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && closeProfile()}>

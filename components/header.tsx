@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
-import type { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -16,29 +15,12 @@ import {
 } from '@/components/ui/sheet';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
-import { createClient } from '@/lib/supabase/client';
 import { MAX_WIDTH } from '@/lib/layout';
 
 function UserAvatar() {
-  const [user, setUser] = useState<User | null>(null);
+  const user = useAuthStore((s) => s.user);
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
   const openProfile = useProfileStore((s) => s.openProfile);
-
-  const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabase = configured ? createClient() : null;
-
-  useEffect(() => {
-    if (!supabase) return;
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
 
   if (!user) {
     return (

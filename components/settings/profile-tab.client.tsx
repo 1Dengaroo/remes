@@ -1,22 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useProfileStore } from '@/lib/store/profile-store';
 import { toast } from 'sonner';
 
 export function ProfileTab() {
-  const [fullName, setFullName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const fullName = useProfileStore((s) => s.fullName);
+  const profileLoaded = useProfileStore((s) => s.profileLoaded);
+  const setFullName = useProfileStore((s) => s.setFullName);
+  const loadProfile = useProfileStore((s) => s.loadProfile);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch('/api/profile')
-      .then((r) => r.json())
-      .then((data: { full_name?: string }) => setFullName(data.full_name ?? ''))
-      .finally(() => setLoading(false));
-  }, []);
+    loadProfile();
+  }, [loadProfile]);
 
   async function handleSave() {
     setSaving(true);
@@ -40,13 +40,13 @@ export function ProfileTab() {
       <div className="space-y-1.5">
         <label className="text-muted-foreground text-xs font-medium">Full Name</label>
         <Input
-          value={fullName}
+          value={fullName ?? ''}
           onChange={(e) => setFullName(e.target.value)}
-          placeholder={loading ? 'Loading...' : 'Your name'}
-          disabled={loading}
+          placeholder={!profileLoaded ? 'Loading...' : 'Your name'}
+          disabled={!profileLoaded}
         />
       </div>
-      <Button size="sm" onClick={handleSave} disabled={loading || saving}>
+      <Button size="sm" onClick={handleSave} disabled={!profileLoaded || saving}>
         {saving && <Loader2 className="size-3.5 animate-spin" />}
         {saving ? 'Saving...' : 'Save'}
       </Button>

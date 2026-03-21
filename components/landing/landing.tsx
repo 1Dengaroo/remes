@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Radar, Users, Send, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
-import { createClient } from '@/lib/supabase/client';
 import { MAX_WIDTH } from '@/lib/layout';
 
 const STEPS = [
@@ -53,18 +52,16 @@ const SHOWCASE = [
 ];
 
 export function Landing() {
+  const user = useAuthStore((s) => s.user);
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
   const router = useRouter();
 
   const handleGetStarted = () => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        router.push('/research');
-      } else {
-        openAuthModal();
-      }
-    });
+    if (user) {
+      router.push('/research');
+    } else {
+      openAuthModal();
+    }
   };
 
   return (
