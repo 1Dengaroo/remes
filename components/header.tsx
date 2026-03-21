@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
@@ -17,22 +18,6 @@ import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { createClient } from '@/lib/supabase/client';
 import { MAX_WIDTH } from '@/lib/layout';
-
-function SignalMark({ className }: { className?: string }) {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      <circle cx="9" cy="9" r="9" fill="currentColor" />
-      <circle cx="9" cy="9" r="4" fill="white" />
-    </svg>
-  );
-}
 
 function UserAvatar() {
   const [user, setUser] = useState<User | null>(null);
@@ -146,9 +131,9 @@ export function Header() {
       <div className={`mx-auto flex ${MAX_WIDTH} items-center justify-between px-4 py-3 md:px-6`}>
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <SignalMark className="text-primary" />
+            <Image src="/remes-logo.png" alt="Remes" width={24} height={24} className="rounded" />
             <span className="text-foreground text-sm font-semibold tracking-widest uppercase">
-              Signal
+              Remes
             </span>
             <span className="bg-primary/15 text-primary rounded-sm px-1.5 py-0.5 text-[10px] leading-none font-medium tracking-wide uppercase">
               Beta

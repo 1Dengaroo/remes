@@ -17,9 +17,29 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk'
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.ai';
+
 export const metadata: Metadata = {
-  title: 'Signal',
-  description: 'AI-powered outbound sales that finds and converts high-intent leads'
+  title: { default: 'Remes', template: '%s | Remes' },
+  description: 'AI-powered outbound sales that finds and converts high-intent leads',
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    title: 'Remes',
+    description: 'AI-powered outbound sales that finds and converts high-intent leads',
+    url: SITE_URL,
+    siteName: 'Remes',
+    locale: 'en_US',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Remes',
+    description: 'AI-powered outbound sales that finds and converts high-intent leads'
+  },
+  icons: {
+    icon: '/remes-logo.png',
+    apple: '/remes-logo.png'
+  }
 };
 
 export default function RootLayout({
