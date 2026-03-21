@@ -1,20 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Check } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { themes } from '@/lib/theme/theme-registry';
 import { fonts } from '@/lib/theme/font-registry';
 import { useFont } from '@/lib/theme/font-provider';
 
+const subscribe = () => () => {};
+function useMounted() {
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+}
+
 export function AppearanceTab() {
   const { theme, setTheme } = useTheme();
   const { font: currentFont, setFont } = useFont();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   return (
     <div className="space-y-6">

@@ -170,29 +170,23 @@ export function ContactList({
   onNextCompany?: () => void;
 }) {
   const [search, setSearch] = useState('');
-  const [people, setPeople] = useState<ApolloPersonPreview[]>([]);
   const [loading, setLoading] = useState(false);
   const icp = useResearchStore((s) => s.icp);
   const allPeopleResults = useResearchStore((s) => s.allPeopleResults);
   const peopleResults = useResearchStore((s) => s.peopleResults);
+  const people = useMemo(
+    () => allPeopleResults[companyName] ?? [],
+    [allPeopleResults, companyName]
+  );
 
   useEffect(() => {
-    setSearch('');
-
-    const cached = allPeopleResults[companyName];
-    if (cached && cached.length > 0) {
-      setPeople(cached);
-      return;
-    }
-
-    if (!apolloOrgId || !icp) return;
+    if (people.length > 0 || !apolloOrgId || !icp) return;
 
     setLoading(true);
     searchPeople([apolloOrgId], icp, [{ name: companyName, apollo_org_id: apolloOrgId }])
       .then((results) => {
         const r = results[0];
         if (r) {
-          setPeople(r.all_people);
           useResearchStore.setState((state) => ({
             allPeopleResults: { ...state.allPeopleResults, [companyName]: r.all_people }
           }));
@@ -200,7 +194,8 @@ export function ContactList({
       })
       .catch((err) => console.error('Failed to fetch contacts:', err))
       .finally(() => setLoading(false));
-  }, [companyName, apolloOrgId, icp, allPeopleResults]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch only on mount (key={companyName} handles resets)
+  }, []);
 
   // Merge enrichment data, filter by search, sort by rank/email/name — single pass
   const displayPeople = useMemo(() => {

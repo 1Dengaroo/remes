@@ -34,6 +34,7 @@ export function ContactScreen({
         {/* Left panel — Contact list (30%) */}
         <div className="border-border w-full shrink-0 overflow-hidden border-r md:w-[30%]">
           <ContactList
+            key={companyName}
             nextCompanyName={nextCompanyName}
             onNextCompany={onNextCompany}
             companyName={companyName}

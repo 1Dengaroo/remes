@@ -1,10 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { SessionsList } from './sessions-list.client';
 import { ICPList } from './icp-list.client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { createSession } from '@/lib/api';
 import type { ResearchSessionSummary, SavedICP } from '@/lib/types';
 import { MAX_WIDTH } from '@/lib/layout';
 
@@ -15,17 +13,6 @@ export function ResearchHub({
   sessions: ResearchSessionSummary[];
   icps: SavedICP[];
 }) {
-  const router = useRouter();
-
-  const handleStartResearch = async () => {
-    try {
-      const session = await createSession();
-      router.push(`/research/${session.id}`);
-    } catch (err) {
-      console.error('Failed to create session:', err);
-    }
-  };
-
   return (
     <div className={`mx-auto ${MAX_WIDTH} px-6 pt-10 pb-24`}>
       <Tabs defaultValue="sessions">
@@ -38,7 +25,7 @@ export function ResearchHub({
           <SessionsList sessions={sessions} />
         </TabsContent>
         <TabsContent value="icps">
-          <ICPList icps={icps} onStartResearch={handleStartResearch} />
+          <ICPList icps={icps} />
         </TabsContent>
       </Tabs>
     </div>

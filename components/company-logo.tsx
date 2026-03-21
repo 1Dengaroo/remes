@@ -37,6 +37,7 @@ export function CompanyLogo({
   }[size];
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- external domain, can't use next/image
     <img
       src={src}
       alt=""

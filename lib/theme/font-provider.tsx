@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react';
 import { fonts, defaultFontId, getFontDefinition } from './font-registry';
 import type { FontDefinition } from './font-registry';
 
@@ -15,28 +15,38 @@ const STORAGE_KEY = 'font';
 
 function applyFont(id: string) {
   const def = getFontDefinition(id);
-  if (!def) return;
+  if (!def || typeof document === 'undefined') return;
   document.documentElement.setAttribute('data-font', id);
 }
 
-export function FontProvider({ children }: { children: React.ReactNode }) {
-  const [fontId, setFontId] = useState(defaultFontId);
+// Listeners for useSyncExternalStore
+const listeners = new Set<() => void>();
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+function getSnapshot(): string {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && getFontDefinition(saved)) return saved;
+  return defaultFontId;
+}
+function getServerSnapshot(): string {
+  return defaultFontId;
+}
 
+export function FontProvider({ children }: { children: React.ReactNode }) {
+  const fontId = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  // Sync font to DOM (external system) — effect is the correct pattern here
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved && getFontDefinition(saved)) {
-      setFontId(saved);
-      applyFont(saved);
-    } else {
-      applyFont(defaultFontId);
-    }
-  }, []);
+    applyFont(fontId);
+  }, [fontId]);
 
   const setFont = useCallback((id: string) => {
     if (!getFontDefinition(id)) return;
-    setFontId(id);
     localStorage.setItem(STORAGE_KEY, id);
     applyFont(id);
+    listeners.forEach((cb) => cb());
   }, []);
 
   const font = getFontDefinition(fontId) ?? fonts[0];

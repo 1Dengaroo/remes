@@ -401,13 +401,7 @@ function CreateICPModal({
   );
 }
 
-export function ICPList({
-  icps: initialICPs,
-  onStartResearch
-}: {
-  icps: SavedICP[];
-  onStartResearch: () => void;
-}) {
+export function ICPList({ icps: initialICPs }: { icps: SavedICP[] }) {
   const router = useRouter();
   const [icps, setICPs] = useState(initialICPs);
   const [deletingId, setDeletingId] = useState<string | null>(null);

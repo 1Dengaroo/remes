@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -37,6 +37,7 @@ function UserAvatar() {
       className="hover:ring-primary/30 rounded-full transition-all hover:ring-2"
     >
       {user.user_metadata?.avatar_url ? (
+        // eslint-disable-next-line @next/next/no-img-element -- external Google avatar URL
         <img
           src={user.user_metadata.avatar_url}
           alt=""
@@ -53,12 +54,13 @@ function UserAvatar() {
 }
 
 function MobileNav() {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  // Key resets open state on route change without useEffect
+  return <MobileNavSheet key={pathname} pathname={pathname} />;
+}
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+function MobileNavSheet({ pathname }: { pathname: string }) {
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="md:hidden">

@@ -25,6 +25,7 @@ export function AccountTab({ user }: { user: User | null }) {
       {user && (
         <div className="border-border flex items-center gap-3 rounded-md border p-4">
           {user.user_metadata?.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element -- external Google avatar URL
             <img
               src={user.user_metadata.avatar_url}
               alt=""

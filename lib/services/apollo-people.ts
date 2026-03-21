@@ -86,7 +86,7 @@ export async function apolloPeopleSearch(
       throw new Error('No JSON object found');
     }
     data = JSON.parse(jsonMatch[0]);
-  } catch (parseErr) {
+  } catch {
     console.error(
       `[Apollo] People search returned invalid JSON (${response.status}):`,
       responseText.slice(0, 200)
