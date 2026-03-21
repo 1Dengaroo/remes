@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { getAuthUser } from '@/lib/supabase/server';
 import { discoverCompanies, researchConfirmedCompanies } from '@/lib/services/pipeline';
 import { researchBodySchema, parseBody } from '@/lib/validation';
 import type { ResearchStreamEvent } from '@/lib/types';
@@ -6,6 +7,9 @@ import type { ResearchStreamEvent } from '@/lib/types';
 export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
+  const { user } = await getAuthUser();
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
   const parsed = parseBody(researchBodySchema, await req.json());
   if (!parsed.success) return parsed.response;
 

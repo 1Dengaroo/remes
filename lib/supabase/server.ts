@@ -1,4 +1,5 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type SupabaseClient } from '@supabase/ssr';
+import { type User } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
 export async function createClient() {
@@ -25,4 +26,12 @@ export async function createClient() {
       }
     }
   );
+}
+
+export async function getAuthUser(): Promise<{ supabase: SupabaseClient; user: User | null }> {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  return { supabase, user };
 }

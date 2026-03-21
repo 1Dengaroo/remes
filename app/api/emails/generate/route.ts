@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { serviceConfig } from '@/lib/services/config';
 import { buildEmailGenerationPrompt } from '@/lib/prompts/email-generation';
-import { createClient } from '@/lib/supabase/server';
+import { getAuthUser } from '@/lib/supabase/server';
 import { emailGenerateBodySchema, parseBody } from '@/lib/validation';
 import type { GeneratedEmailSequence } from '@/lib/types';
 
@@ -17,23 +17,18 @@ export async function POST(req: NextRequest) {
   const { company, contact, icp } = parsed.data;
 
   try {
-    const supabase = await createClient();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    const { supabase, user } = await getAuthUser();
+    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     // Prefer user_profiles.full_name, fall back to OAuth metadata
-    let fullName = '';
-    if (user) {
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('full_name')
-        .eq('user_id', user.id)
-        .single();
-      fullName =
-        profile?.full_name ||
-        (typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : '');
-    }
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('full_name')
+      .eq('user_id', user.id)
+      .single();
+    const fullName =
+      profile?.full_name ||
+      (typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : '');
     const senderFirstName = fullName.split(' ')[0] || undefined;
 
     const anthropic = new Anthropic();

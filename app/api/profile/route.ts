@@ -1,12 +1,9 @@
 import { NextRequest } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getAuthUser } from '@/lib/supabase/server';
 import { profileUpdateBodySchema, parseBody } from '@/lib/validation';
 
 export async function GET() {
-  const supabase = await createClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const { supabase, user } = await getAuthUser();
 
   if (!user) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -22,10 +19,7 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const { supabase, user } = await getAuthUser();
 
   if (!user) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
