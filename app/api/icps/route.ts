@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { createIcpBodySchema, parseBody } from '@/lib/validation';
+import { listICPs, createICP } from '@/lib/supabase/queries';
 
 export async function GET() {
   const { supabase, user } = await getAuthUser();
@@ -9,11 +10,7 @@ export async function GET() {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data, error } = await supabase
-    .from('saved_icps')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('updated_at', { ascending: false });
+  const { data, error } = await listICPs(supabase, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
@@ -34,11 +31,7 @@ export async function POST(req: NextRequest) {
 
   const { name, icp } = parsed.data;
 
-  const { data, error } = await supabase
-    .from('saved_icps')
-    .insert({ user_id: user.id, name, icp })
-    .select()
-    .single();
+  const { data, error } = await createICP(supabase, user.id, name, icp);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

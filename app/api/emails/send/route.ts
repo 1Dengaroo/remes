@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { getGmailClient, sendEmail } from '@/lib/services/gmail';
 import { emailSendBodySchema, parseBody } from '@/lib/validation';
+import { insertSentEmail, insertFailedEmail, upsertContact } from '@/lib/supabase/queries';
 
 export async function POST(req: NextRequest) {
   const { supabase, user } = await getAuthUser();
@@ -19,42 +20,35 @@ export async function POST(req: NextRequest) {
     const { gmail, fromEmail } = await getGmailClient(user.id);
     const messageId = await sendEmail(gmail, to, subject, emailBody, fromEmail);
 
-    const { data: sentEmail } = await supabase
-      .from('sent_emails')
-      .insert({
-        user_id: user.id,
-        recipient_email: to,
-        recipient_name: contactName,
-        subject,
-        body: emailBody,
-        company_name: companyName,
-        contact_name: contactName,
-        status: 'sent',
-        gmail_message_id: messageId,
-        session_id: sessionId ?? null
-      })
-      .select('id')
-      .single();
+    const { data: sentEmail } = await insertSentEmail(supabase, {
+      user_id: user.id,
+      recipient_email: to,
+      recipient_name: contactName,
+      subject,
+      body: emailBody,
+      company_name: companyName,
+      contact_name: contactName,
+      status: 'sent',
+      gmail_message_id: messageId,
+      session_id: sessionId ?? null
+    });
 
     if (companyName && to) {
-      await supabase.from('contacted_companies').upsert(
-        {
-          user_id: user.id,
-          company_name: companyName,
-          contact_email: to,
-          contact_name: contactName,
-          session_id: sessionId ?? null,
-          sent_email_id: sentEmail?.id ?? null
-        },
-        { onConflict: 'user_id,company_name,contact_email' }
-      );
+      await upsertContact(supabase, {
+        user_id: user.id,
+        company_name: companyName,
+        contact_email: to,
+        contact_name: contactName,
+        session_id: sessionId ?? null,
+        sent_email_id: sentEmail?.id ?? null
+      });
     }
 
     return Response.json({ success: true, messageId });
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Failed to send email';
 
-    await supabase.from('sent_emails').insert({
+    await insertFailedEmail(supabase, {
       user_id: user.id,
       recipient_email: to,
       recipient_name: contactName,

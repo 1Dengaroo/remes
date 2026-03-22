@@ -1,5 +1,6 @@
 import { getAuthUser } from '@/lib/supabase/server';
 import { ResearchHub } from '@/components/research/research-hub.client';
+import { listSessions, listICPs } from '@/lib/supabase/queries';
 import type { SavedICP } from '@/lib/types';
 
 export default async function Research() {
@@ -8,16 +9,8 @@ export default async function Research() {
   if (!user) return <ResearchHub sessions={[]} icps={[]} />;
 
   const [sessionsRes, icpsRes] = await Promise.all([
-    supabase
-      .from('research_sessions')
-      .select('id, name, step, status, icp, candidates, created_at, updated_at')
-      .eq('user_id', user.id)
-      .order('updated_at', { ascending: false }),
-    supabase
-      .from('saved_icps')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('updated_at', { ascending: false })
+    listSessions(supabase, user.id),
+    listICPs(supabase, user.id)
   ]);
 
   const sessions = (sessionsRes.data ?? []).map((row) => ({

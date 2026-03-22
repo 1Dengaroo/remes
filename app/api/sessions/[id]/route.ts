@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { sessionUpdateBodySchema, parseBody } from '@/lib/validation';
+import { getSession, updateSession, deleteSession } from '@/lib/supabase/queries';
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -10,12 +11,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data, error } = await supabase
-    .from('research_sessions')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', user.id)
-    .single();
+  const { data, error } = await getSession(supabase, id, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 404 });
@@ -35,16 +31,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const parsed = parseBody(sessionUpdateBodySchema, await req.json());
   if (!parsed.success) return parsed.response;
 
-  const updates: Record<string, unknown> = {
-    updated_at: new Date().toISOString(),
-    ...parsed.data
-  };
-
-  const { error } = await supabase
-    .from('research_sessions')
-    .update(updates)
-    .eq('id', id)
-    .eq('user_id', user.id);
+  const { error } = await updateSession(supabase, id, user.id, parsed.data);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
@@ -61,11 +48,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { error } = await supabase
-    .from('research_sessions')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', user.id);
+  const { error } = await deleteSession(supabase, id, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

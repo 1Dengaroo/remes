@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getAuthUser } from '@/lib/supabase/server';
 import { ResearchDashboard } from '@/components/research/research-dashboard.client';
+import { getSession } from '@/lib/supabase/queries';
 import type { ResearchSession } from '@/lib/types';
 
 export default async function ResearchSessionPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,12 +10,7 @@ export default async function ResearchSessionPage({ params }: { params: Promise<
 
   if (!user) notFound();
 
-  const { data, error } = await supabase
-    .from('research_sessions')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', user.id)
-    .single();
+  const { data, error } = await getSession(supabase, id, user.id);
 
   if (error || !data) notFound();
 

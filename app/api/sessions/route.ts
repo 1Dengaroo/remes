@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { sessionCreateBodySchema, parseBody } from '@/lib/validation';
+import { listSessions, createSession } from '@/lib/supabase/queries';
 
 export async function GET() {
   const { supabase, user } = await getAuthUser();
@@ -9,11 +10,7 @@ export async function GET() {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data, error } = await supabase
-    .from('research_sessions')
-    .select('id, name, step, status, icp, candidates, created_at, updated_at')
-    .eq('user_id', user.id)
-    .order('updated_at', { ascending: false });
+  const { data, error } = await listSessions(supabase, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
@@ -43,9 +40,7 @@ export async function POST(req: NextRequest) {
   const parsed = parseBody(sessionCreateBodySchema, await req.json());
   if (!parsed.success) return parsed.response;
 
-  const insert: Record<string, unknown> = { user_id: user.id, ...parsed.data };
-
-  const { data, error } = await supabase.from('research_sessions').insert(insert).select().single();
+  const { data, error } = await createSession(supabase, { user_id: user.id, ...parsed.data });
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

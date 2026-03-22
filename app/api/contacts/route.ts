@@ -1,4 +1,5 @@
 import { getAuthUser } from '@/lib/supabase/server';
+import { listContacts } from '@/lib/supabase/queries';
 
 export async function GET() {
   const { supabase, user } = await getAuthUser();
@@ -7,11 +8,7 @@ export async function GET() {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data, error } = await supabase
-    .from('contacted_companies')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  const { data, error } = await listContacts(supabase, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

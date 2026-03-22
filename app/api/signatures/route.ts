@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { signatureCreateBodySchema, parseBody } from '@/lib/validation';
+import { listSignatures, createSignature } from '@/lib/supabase/queries';
 
 export async function GET() {
   const { supabase, user } = await getAuthUser();
@@ -9,11 +10,7 @@ export async function GET() {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { data, error } = await supabase
-    .from('email_signatures')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  const { data, error } = await listSignatures(supabase, user.id);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
@@ -34,11 +31,7 @@ export async function POST(req: NextRequest) {
 
   const { name, body: signatureBody } = parsed.data;
 
-  const { data, error } = await supabase
-    .from('email_signatures')
-    .insert({ user_id: user.id, name, body: signatureBody })
-    .select()
-    .single();
+  const { data, error } = await createSignature(supabase, user.id, name, signatureBody);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
 import { exchangeCodeForTokens } from '@/lib/services/gmail';
+import { upsertGmailConnection } from '@/lib/supabase/queries';
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get('code');
@@ -19,17 +20,12 @@ export async function GET(req: NextRequest) {
   try {
     const tokens = await exchangeCodeForTokens(code);
 
-    await supabase.from('gmail_connections').upsert(
-      {
-        user_id: user.id,
-        access_token: tokens.accessToken,
-        refresh_token: tokens.refreshToken,
-        token_expiry: tokens.tokenExpiry,
-        gmail_email: tokens.email,
-        updated_at: new Date().toISOString()
-      },
-      { onConflict: 'user_id' }
-    );
+    await upsertGmailConnection(supabase, user.id, {
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+      token_expiry: tokens.tokenExpiry,
+      gmail_email: tokens.email
+    });
 
     return NextResponse.redirect(new URL('/?gmail=connected', req.url));
   } catch (err) {

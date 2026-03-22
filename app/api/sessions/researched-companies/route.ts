@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
+import { getResearchedCompanyResults } from '@/lib/supabase/queries';
 
 export async function GET(req: NextRequest) {
   const { supabase, user } = await getAuthUser();
@@ -10,17 +11,11 @@ export async function GET(req: NextRequest) {
 
   const excludeSessionId = req.nextUrl.searchParams.get('exclude');
 
-  let query = supabase
-    .from('research_sessions')
-    .select('results')
-    .eq('user_id', user.id)
-    .not('results', 'is', null);
-
-  if (excludeSessionId) {
-    query = query.neq('id', excludeSessionId);
-  }
-
-  const { data, error } = await query;
+  const { data, error } = await getResearchedCompanyResults(
+    supabase,
+    user.id,
+    excludeSessionId ?? undefined
+  );
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

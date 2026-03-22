@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { createClient } from '@/lib/supabase/server';
+import { getGmailConnection, refreshGmailToken } from '@/lib/supabase/queries';
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send', 'email'];
 
@@ -60,11 +61,7 @@ async function refreshAccessToken(refreshToken: string) {
 export async function getGmailClient(userId: string) {
   const supabase = await createClient();
 
-  const { data: connection, error } = await supabase
-    .from('gmail_connections')
-    .select('*')
-    .eq('user_id', userId)
-    .single();
+  const { data: connection, error } = await getGmailConnection(supabase, userId);
 
   if (error || !connection) {
     throw new Error('Gmail not connected');
@@ -78,14 +75,7 @@ export async function getGmailClient(userId: string) {
     const refreshed = await refreshAccessToken(connection.refresh_token);
     accessToken = refreshed.accessToken;
 
-    await supabase
-      .from('gmail_connections')
-      .update({
-        access_token: refreshed.accessToken,
-        token_expiry: refreshed.tokenExpiry,
-        updated_at: new Date().toISOString()
-      })
-      .eq('user_id', userId);
+    await refreshGmailToken(supabase, userId, refreshed.accessToken, refreshed.tokenExpiry);
   }
 
   const client = getOAuth2Client();

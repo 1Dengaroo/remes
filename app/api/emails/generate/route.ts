@@ -5,6 +5,7 @@ import { buildEmailGenerationPrompt } from '@/lib/prompts/email-generation';
 import { getAuthUser } from '@/lib/supabase/server';
 import { emailGenerateBodySchema, parseBody } from '@/lib/validation';
 import type { GeneratedEmailSequence } from '@/lib/types';
+import { getProfile } from '@/lib/supabase/queries';
 
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -20,11 +21,7 @@ export async function POST(req: NextRequest) {
     const { supabase, user } = await getAuthUser();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('full_name')
-      .eq('user_id', user.id)
-      .single();
+    const { data: profile } = await getProfile(supabase, user.id);
     const fullName =
       profile?.full_name ||
       (typeof user.user_metadata?.full_name === 'string' ? user.user_metadata.full_name : '');

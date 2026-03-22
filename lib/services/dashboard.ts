@@ -1,4 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import {
+  getSessionsForDashboard,
+  getSentEmailsForDashboard,
+  getContactedCompaniesForDashboard
+} from '@/lib/supabase/queries';
 
 export interface DashboardFunnel {
   sessions: number;
@@ -36,15 +41,9 @@ export async function fetchDashboardData(
   userId: string
 ): Promise<DashboardData> {
   const [sessionsRes, emailsRes, contactedRes] = await Promise.all([
-    supabase
-      .from('research_sessions')
-      .select('id, status, results, candidates, created_at')
-      .eq('user_id', userId),
-    supabase
-      .from('sent_emails')
-      .select('id, status, company_name, created_at')
-      .eq('user_id', userId),
-    supabase.from('contacted_companies').select('company_name').eq('user_id', userId)
+    getSessionsForDashboard(supabase, userId),
+    getSentEmailsForDashboard(supabase, userId),
+    getContactedCompaniesForDashboard(supabase, userId)
   ]);
 
   const sessions = sessionsRes.data ?? [];

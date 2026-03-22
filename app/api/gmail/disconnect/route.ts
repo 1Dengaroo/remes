@@ -1,4 +1,5 @@
 import { getAuthUser } from '@/lib/supabase/server';
+import { deleteGmailConnection } from '@/lib/supabase/queries';
 
 export async function POST() {
   const { supabase, user } = await getAuthUser();
@@ -7,7 +8,7 @@ export async function POST() {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  await supabase.from('gmail_connections').delete().eq('user_id', user.id);
+  await deleteGmailConnection(supabase, user.id);
 
   return Response.json({ success: true });
 }
