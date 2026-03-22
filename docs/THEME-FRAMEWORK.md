@@ -5,14 +5,14 @@ This project uses a token-based theming system that powers all visual styling th
 ## Architecture Overview
 
 ```
-styles/themes/<name>.css    ← Token definitions per theme (scoped via [data-theme='<name>'])
-styles/themes/_contract.css ← Documentation of all required tokens (the contract)
-styles/globals.css          ← Tailwind bridge (@theme inline) + base styles + font switching
-lib/theme/theme-registry.ts ← Theme metadata (id, name, isDark, preview colors)
-lib/theme/theme-provider.tsx← next-themes wrapper, sets data-theme attribute + .dark class
-lib/theme/font-registry.ts  ← Font metadata (id, name, CSS variable)
-lib/theme/font-provider.tsx  ← Font context, sets data-font attribute on <html>
-components/theme-settings.tsx← UI for switching theme + font
+styles/themes/<name>.css       Token definitions per theme (scoped via [data-theme='<name>'])
+styles/themes/_contract.css    Documentation of all required tokens (the contract)
+styles/globals.css             Tailwind bridge (@theme inline) + base styles + font switching
+lib/theme/theme-registry.ts    Theme metadata (id, name, isDark, preview colors)
+lib/theme/theme-provider.tsx   next-themes wrapper, sets data-theme attribute + .dark class
+lib/theme/font-registry.ts     Font metadata (id, name, CSS variable)
+lib/theme/font-provider.tsx    Font context, sets data-font attribute on <html>
+components/settings/appearance-tab.client.tsx  UI for switching theme + font
 ```
 
 ## Two Token Layers
@@ -82,7 +82,7 @@ Control card appearance per theme (sharp editorial vs soft rounded):
      name: 'Display Name',
      description: 'Short description',
      isDark: true | false,
-     previewColors: { bg: '...', primary: '...', accent: '...' }
+     previewColors: { bg: '...', primary: '...', secondary: '...', tertiary: '...' }
    }
    ```
 
@@ -91,7 +91,7 @@ Control card appearance per theme (sharp editorial vs soft rounded):
 ## How Theme Switching Works
 
 - `next-themes` sets `data-theme="<name>"` on `<html>`
-- CSS specificity does the rest — `[data-theme='claude'] { ... }` overrides all token values
+- CSS specificity does the rest — `[data-theme='light'] { ... }` overrides all token values
 - `DarkClassManager` in `theme-provider.tsx` reads `isDark` from the registry and toggles the `.dark` class
 - Font switching uses a parallel `data-font` attribute on `<html>`, managed by `FontProvider`
 
@@ -107,21 +107,19 @@ Control card appearance per theme (sharp editorial vs soft rounded):
 
 ## Current Themes
 
-| ID       | Name   | Type  | Character                                       |
-| -------- | ------ | ----- | ----------------------------------------------- |
-| `light`  | Light  | Light | Paper & ink, blue accents, sharp 2px corners    |
-| `dark`   | Dark   | Dark  | Dark parchment, blue accents, sharp 2px corners |
-| `claude` | Claude | Dark  | Warm sand & terracotta, rounded 16px cards      |
+| ID      | Name  | Type  | Character                                      |
+| ------- | ----- | ----- | ---------------------------------------------- |
+| `light` | Light | Light | Purple and sand on white, sharp 2px corners    |
+| `dark`  | Dark  | Dark  | Purple and sand on charcoal, sharp 2px corners |
 
 ## Font System
 
 Fonts are orthogonal to themes — any font works with any theme. Managed via `data-font` attribute on `<html>`.
 
-| ID              | Font          | Character                             |
-| --------------- | ------------- | ------------------------------------- |
-| `sora`          | Sora          | Modern geometric sans-serif (default) |
-| `inter`         | Inter         | Clean and neutral                     |
-| `space-grotesk` | Space Grotesk | Technical and sharp                   |
-| `geist-mono`    | Geist Mono    | Monospaced                            |
+| ID              | Font          | Character                     |
+| --------------- | ------------- | ----------------------------- |
+| `sora`          | Sora          | Modern geometric sans-serif   |
+| `inter`         | Inter         | Clean and neutral             |
+| `space-grotesk` | Space Grotesk | Technical and sharp (default) |
 
 To add a font: register in `font-registry.ts`, load in `app/layout.tsx` via `next/font/google`, add a `[data-font='<id>']` rule in `globals.css`.

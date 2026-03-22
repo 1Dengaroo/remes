@@ -1,8 +1,8 @@
-# Research Pipeline — Architecture & Implementation Guide
+# Research Pipeline
 
 ## Pipeline Overview
 
-The research pipeline takes an ICP (Ideal Customer Profile) and produces structured company research with signals, contacts, and personalized outreach hooks. It streams results to the UI via Server-Sent Events (SSE) as each company completes. There is **no database persistence** — all state lives in a Zustand store (browser memory).
+The research pipeline takes an ICP (Ideal Customer Profile) and produces structured company research with signals, contacts, and personalized outreach hooks. It streams results to the UI via Server-Sent Events (SSE) as each company completes. State is persisted to Supabase (sessions, ICPs, contacts) and hydrated into a Zustand store on load.
 
 ### 4-Step User Flow
 
@@ -22,7 +22,7 @@ User Input (transcript)
       → Claude Haiku (score + rank companies 1-10 against ICP)
         → User confirms company selection
           → IN PARALLEL:
-            ├── Stream A: Claude Haiku + web_search × N (deep research per company → SSE)
+            ├── Stream A: Claude Haiku + web_search x N (deep research per company → SSE)
             └── Stream B: Apollo People Search → Claude Haiku ranking → top 3 people per company
           → On "Get Contact" click: Apollo People Match (1 credit) → full name, email, phone, LinkedIn
 ```
@@ -35,8 +35,7 @@ Defined in `lib/services/interfaces.ts` — all swappable:
    - Implementation: `claudeICPParser` in `lib/services/ai.ts`
 
 2. **CompanyDiscovery** — Finds companies matching an ICP
-   - Primary: `apolloCompanyDiscovery` in `lib/services/apollo.ts`
-   - Alternative: `parallelCompanyDiscovery` in `lib/services/parallel.ts` (not active)
+   - Implementation: `apolloCompanyDiscovery` in `lib/services/apollo.ts`
 
 3. **CompanyScorer** — Scores and ranks discovered companies against ICP
    - Implementation: `claudeCompanyScorer` in `lib/services/scoring.ts`
@@ -58,20 +57,21 @@ lib/services/
 ├── apollo-people.ts   # apolloPeopleSearch() + apolloPersonEnrich() (Apollo People API)
 ├── people-ranking.ts  # rankPeopleForCompany() (Claude Haiku ranks top 3 by ICP fit)
 ├── scoring.ts         # claudeCompanyScorer (Claude Haiku scores 1-10)
-├── research-agent.ts  # claudeResearchAgent (Claude Haiku + web_search tool)
-└── parallel.ts        # parallelCompanyDiscovery (inactive alternative)
+└── research-agent.ts  # claudeResearchAgent (Claude Haiku + web_search tool)
 
 lib/prompts/
-├── parse-icp.ts       # ICP extraction prompt
-└── research-agent.ts  # Research agent prompt (2-search strategy)
+├── parse-icp.ts              # ICP extraction prompt
+├── research-agent-prompt.ts  # Research agent prompt (2-search strategy)
+├── email-generation.ts       # Email sequence generation prompt
+└── strategy.ts               # Strategy analysis prompt
 
 lib/store/
-└── research-store.ts  # Zustand store — all pipeline state + actions
+└── research-store.ts  # Zustand store — all pipeline state + actions + session persistence
 
-lib/api.ts             # Client-side fetch wrappers (parseICP, discoverCompanies, researchCompanies, searchPeople, enrichPerson)
-lib/types.ts           # ICPCriteria, CompanyResult, CompanySignal, TargetContact, ApolloPersonPreview, PeopleSearchResult, etc.
+lib/api.ts             # Client-side fetch wrappers
+lib/types.ts           # ICPCriteria, CompanyResult, CompanySignal, TargetContact, etc.
 
-app/api/parse-icp/
+app/api/icps/parse/
 └── route.ts           # POST endpoint — ICP parsing
 
 app/api/research/
@@ -84,34 +84,46 @@ app/api/people/enrich/
 └── route.ts           # POST endpoint — Apollo person enrichment (1 credit)
 
 components/research/
-├── research-dashboard.client.tsx  # Main orchestrator (keyboard shortcuts, step routing)
-├── transcript-step.tsx            # Step 1: textarea input
-├── review-step.tsx                # Step 2: ICP review/edit + AI regeneration
-├── confirm-step.tsx               # Step 3: company checkbox list
-├── results-step.tsx               # Step 4: results grid
-├── company-card.tsx               # Grid row (company, contacts, signals, overview)
-├── email-editor-panel.client.tsx  # Slide-out email composer
-├── bottom-nav.tsx                 # Step progression + action buttons
-├── signal-badge.tsx               # Signal type badge (job_posting, funding, news, etc.)
-├── tag-editor.tsx                 # Tag input/edit component
-└── copy-button.client.tsx         # Copy-to-clipboard
+├── research-hub.client.tsx          # Sessions list page
+├── research-dashboard.client.tsx    # Main orchestrator (keyboard shortcuts, step routing)
+├── transcript-step.tsx              # Step 1: textarea input
+├── icp-panel-editable.tsx           # Step 2: ICP review/edit
+├── strategy-step.tsx                # Strategy analysis panel
+├── strategy-chat.client.tsx         # Strategy conversation UI
+├── confirm-step.tsx                 # Step 3: company checkbox list
+├── results-step.tsx                 # Step 4: results grid
+├── company-card.tsx                 # Grid row (company, contacts, signals, overview)
+├── contact-screen.client.tsx        # Contact panel for a company
+├── contact-list.client.tsx          # People list with enrichment
+├── email-editor-inline.client.tsx   # Inline email composer
+├── email-editor-dialog.client.tsx   # Dialog email composer
+├── sessions-list.client.tsx         # Sessions CRUD list
+├── icp-list.client.tsx              # Saved ICP library
+├── loading-status.tsx               # Pipeline loading indicator
+├── bottom-nav.tsx                   # Step progression + action buttons
+├── signal-badge.tsx                 # Signal type badge
+└── copy-button.client.tsx           # Copy-to-clipboard
 ```
 
 ## Configuration
 
 All tunable parameters in `lib/services/config.ts`:
 
-| Parameter               | Value                       | Purpose                                     |
-| ----------------------- | --------------------------- | ------------------------------------------- |
-| `fastModel`             | `claude-haiku-4-5-20251001` | ICP parsing + scoring (lightweight)         |
-| `researchModel`         | `claude-haiku-4-5-20251001` | Per-company research with web search        |
-| `maxSearchesPerCompany` | 2                           | Cap on web searches per research agent call |
-| `researchMaxTokens`     | 4096                        | Max output tokens for research              |
-| `parseMaxTokens`        | 1024                        | Max output tokens for ICP parsing           |
-| `scoringMaxTokens`      | 2048                        | Max output tokens for company scoring       |
-| `scoringMinScore`       | 5                           | Minimum score (1-10) to include a company   |
-| `apolloPerPage`         | 25                          | Companies per Apollo API request            |
-| `apolloBaseUrl`         | `https://api.apollo.io/...` | Apollo API base URL                         |
+| Parameter                | Value                       | Purpose                                      |
+| ------------------------ | --------------------------- | -------------------------------------------- |
+| `fastModel`              | `claude-haiku-4-5-20251001` | ICP parsing + scoring (lightweight)          |
+| `researchModel`          | `claude-haiku-4-5-20251001` | Per-company research with web search         |
+| `emailModel`             | `claude-haiku-4-5-20251001` | Email sequence generation                    |
+| `maxSearchesPerCompany`  | 2                           | Cap on web searches per research agent call  |
+| `researchMaxTokens`      | 2048                        | Max output tokens for research               |
+| `parseMaxTokens`         | 1024                        | Max output tokens for ICP parsing            |
+| `scoringMaxTokens`       | 2048                        | Max output tokens for company scoring        |
+| `emailMaxTokens`         | 2048                        | Max output tokens for email generation       |
+| `scoringMinScore`        | 5                           | Minimum score (1-10) to include a company    |
+| `apolloPerPage`          | 100                         | Companies per Apollo API request             |
+| `apolloPagesPerStrategy` | 1                           | Pages to fetch per search strategy           |
+| `apolloMaxCandidates`    | 75                          | Max companies to pass to scoring after dedup |
+| `apolloBaseUrl`          | `https://api.apollo.io/...` | Apollo API base URL                          |
 
 ## Apollo Integration (Primary Discovery)
 
@@ -231,32 +243,6 @@ User clicks "Get Contact"
 - `first_name`, `last_name`, `email`, `linkedin_url`
 - Phone via `person.contact.phone_numbers[].raw_number` (nested under contact)
 
-### Key Types
-
-```typescript
-interface ApolloPersonPreview {
-  apollo_person_id: string;
-  first_name: string;
-  last_name_obfuscated: string;
-  title: string | null;
-  organization_name: string;
-  has_email: boolean;
-  has_direct_phone: boolean;
-  // Filled after enrichment:
-  last_name?: string;
-  email?: string;
-  phone?: string;
-  linkedin_url?: string;
-  is_enriched?: boolean;
-}
-
-interface PeopleSearchResult {
-  company_name: string;
-  apollo_org_id: string;
-  ranked_people: ApolloPersonPreview[];
-}
-```
-
 ### Edge Cases
 
 - Custom-added companies (no `apollo_org_id`): skip in people search, show "No contacts available"
@@ -265,7 +251,7 @@ interface PeopleSearchResult {
 
 ## API Routes
 
-### POST `/api/parse-icp`
+### POST `/api/icps/parse`
 
 - **Input**: `{ input: string }`
 - **Output**: `{ icp: ICPCriteria }`
@@ -336,7 +322,7 @@ type ResearchStreamEvent =
 
 ### Key Actions
 
-- `extractICP()` → POST `/api/parse-icp` → sets ICP, advances to review
+- `extractICP()` → POST `/api/icps/parse` → sets ICP, advances to review
 - `discover()` → POST `/api/research` (phase 1) → sets candidates, advances to confirm
 - `research()` → POST `/api/research` (phase 2) → streams results + fires `searchPeopleAction()` in parallel
 - `searchPeopleAction()` → POST `/api/people/search` → stores top 3 people per company
@@ -344,56 +330,12 @@ type ResearchStreamEvent =
 - `startOver()` → resets everything to step 1
 - `toggleCompany()`, `selectAll()`, `deselectAll()` → company selection
 
-## Core Types
-
-**File**: `lib/types.ts`
-
-### ICPCriteria
-
-```typescript
-{
-  description: string
-  industry_keywords: string[]
-  min_employees: number | null
-  max_employees: number | null
-  min_funding_amount: number | null
-  funding_stages: string[]          // ["Series A", "Series B", ...]
-  hiring_signals: string[]          // ["SDR", "BDR", "Account Executive", ...]
-  tech_keywords: string[]
-  company_examples: string[]
-}
-```
-
-### CompanySignal
-
-```typescript
-{
-  type: 'job_posting' | 'news' | 'funding' | 'product_launch' | 'other'
-  title: string
-  key_phrases: string[]
-  source_url?: string
-}
-```
-
-### TargetContact
-
-```typescript
-{
-  name: string;
-  title: string;
-  linkedin_url: string;
-  email: string | null;
-  is_decision_maker: boolean;
-}
-```
-
 ## Environment Variables
 
-| Variable            | Required | Purpose                          |
-| ------------------- | -------- | -------------------------------- |
-| `ANTHROPIC_API_KEY` | Yes      | All Claude AI tasks              |
-| `APOLLO_API_KEY`    | Yes      | Apollo company discovery         |
-| `PARALLEL_API_KEY`  | No       | Alternative discovery (inactive) |
+| Variable            | Required | Purpose                  |
+| ------------------- | -------- | ------------------------ |
+| `ANTHROPIC_API_KEY` | Yes      | All Claude AI tasks      |
+| `APOLLO_API_KEY`    | Yes      | Apollo company discovery |
 
 ## Cost Breakdown (Current)
 
@@ -402,27 +344,16 @@ type ResearchStreamEvent =
 | ICP parsing       | Claude Haiku              | ~$0.001                         |
 | Apollo discovery  | Apollo Organizations API  | Free tier / per-credit          |
 | Company scoring   | Claude Haiku              | ~$0.005                         |
-| Research × N      | Claude Haiku + web_search | ~$0.03/company                  |
+| Research x N      | Claude Haiku + web_search | ~$0.03/company                  |
 | People search     | Apollo mixed_people API   | Free (obfuscated data)          |
 | People ranking    | Claude Haiku              | ~$0.001/company                 |
 | Person enrich     | Apollo people/match       | 1 credit per person (on-demand) |
 | **Total (5 co.)** |                           | **~$0.17/request** + credits    |
 
-## Cost Optimization History
-
-1. **Sonnet → Haiku for everything** — 20x cheaper, minimal quality loss for structured tasks
-2. **Parallel FindAll → Apollo Organizations Search** — Apollo is the primary discovery now
-3. **Added Claude scoring step** — broad Apollo search + Claude scoring handles nuance better than narrow API filters
-4. **Parallel Search API → Claude web_search tool** — Claude decides what to search, iterates, follows threads — much better quality
-5. **Claude-inferred contacts → Apollo People API** — Real people data with verified emails, ranked by ICP fit via Claude
-6. **Max searches reduced to 2 per company** — Sufficient for funding + jobs/news coverage
-7. **Sequential per-company research** — Enables streaming UX (results appear one at a time)
-8. **On-demand person enrichment** — Only spend Apollo credits when user clicks "Get Contact", not upfront
-
 ## Architecture Notes
 
-- **No database/Supabase** — All in-memory via Zustand (MVP)
-- **No Inngest/background jobs** — Pipeline is real-time streaming
+- **Supabase persistence** — Sessions, ICPs, contacts, emails, signatures stored in Supabase with RLS
+- **No background jobs** — Pipeline is real-time SSE streaming
 - **No `'use client'` in /app** — All interactivity in `components/research/*.client.tsx`
 - **SSE streaming** — Client gets real-time status + partial results
 - **Abort support** — Research can be cancelled via AbortController

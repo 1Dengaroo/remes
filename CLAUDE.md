@@ -13,10 +13,10 @@ docs/
 ├── PRODUCT.md                     ← User flows, business domain, current limitations
 ├── CONVENTIONS.md                 ← SSR boundary, TypeScript, Tailwind, component rules
 ├── CODE-CLEANUP.md                ← Post-iteration cleanup checklist
-└── PERSISTENCE.md                 ← Sessions, ICPs, contact tracking, auto-save
-.claude/skills/
-├── research-pipeline/skill.md     ← Pipeline deep-dive: types, APIs, config, Apollo integration
-└── theme-framework/skill.md       ← Token system, adding themes, font system
+├── PERSISTENCE.md                 ← Sessions, ICPs, contact tracking, auto-save
+├── EMAIL-WORKFLOW.md              ← Email generation, signatures, sending
+├── RESEARCH-PIPELINE.md           ← Pipeline deep-dive: types, APIs, config, Apollo integration
+└── THEME-FRAMEWORK.md             ← Token system, adding themes, font system
 ```
 
 ## Key Files
@@ -69,10 +69,10 @@ middleware.ts                      ← Supabase auth + route protection + rate l
 
 ## Workflow
 
-- Plan mode first for 3+ step tasks. Re-plan if something breaks.
-- Use subagents liberally. One task per subagent.
+- Plan mode first for 2+ step tasks. Re-plan if something breaks.
+- Use subagents freely. One task per subagent.
 - Never mark complete without verification.
 
 ## Lessons
 
-- `page.tsx` is a shell — 40 lines max, composition only, never `'use client'`. Extract all logic into named components.
+- `page.tsx` is a shell, composition only, never `'use client'`. Extract all logic into named components.
