@@ -117,7 +117,6 @@ export function EmailEditorInline({
   const loadSignatures = useSignatureStore((s) => s.loadSignatures);
   const selectedSignature = signatures.find((s) => s.id === selectedSignatureId) ?? null;
 
-  // Load Gmail status + signatures on mount
   useEffect(() => {
     getGmailStatus().then((s) => {
       setGmailConnected(s.connected);
@@ -129,7 +128,6 @@ export function EmailEditorInline({
     });
   }, [loadSignatures]);
 
-  // Restore cached sequence on mount
   useEffect(() => {
     setToEmail(contact.email ?? '');
     const cached = useResearchStore.getState().getEmailSequence(company.company_name, contactKey);

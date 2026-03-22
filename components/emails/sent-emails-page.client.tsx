@@ -19,7 +19,6 @@ function useIsMobile(breakpoint = 768) {
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    // Sync initial value via the listener pattern to avoid direct setState in effect
     handler({ matches: mql.matches } as MediaQueryListEvent);
     mql.addEventListener('change', handler);
     return () => mql.removeEventListener('change', handler);

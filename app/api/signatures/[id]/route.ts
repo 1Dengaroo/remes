@@ -17,7 +17,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (parsed.data.name !== undefined) updates.name = parsed.data.name;
   if (parsed.data.body !== undefined) updates.body = parsed.data.body;
   if (parsed.data.is_default !== undefined) {
-    // Clear default on all other signatures first
     if (parsed.data.is_default) {
       await supabase
         .from('email_signatures')

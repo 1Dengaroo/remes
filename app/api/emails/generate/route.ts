@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
     const { supabase, user } = await getAuthUser();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Prefer user_profiles.full_name, fall back to OAuth metadata
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('full_name')

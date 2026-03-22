@@ -55,7 +55,6 @@ function UserAvatar() {
 
 function MobileNav() {
   const pathname = usePathname();
-  // Key resets open state on route change without useEffect
   return <MobileNavSheet key={pathname} pathname={pathname} />;
 }
 
@@ -75,6 +74,16 @@ function MobileNavSheet({ pathname }: { pathname: string }) {
             <SheetDescription className="sr-only">Site navigation links</SheetDescription>
           </SheetHeader>
           <nav className="flex flex-col gap-1 px-4">
+            <Link
+              href="/dashboard"
+              className={`rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                pathname.startsWith('/dashboard')
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+              }`}
+            >
+              Dashboard
+            </Link>
             <Link
               href="/research"
               className={`rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
@@ -123,6 +132,9 @@ export function Header() {
               Beta
             </span>
           </Link>
+          <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
           <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
             <Link href="/research">Research</Link>
           </Button>

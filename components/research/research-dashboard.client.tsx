@@ -41,10 +41,8 @@ function toStep(value: string): 'input' | 'review' | 'confirm' | 'results' {
   return VALID_STEPS.has(value) ? (value as 'input' | 'review' | 'confirm' | 'results') : 'input';
 }
 
-/** Hydrate store synchronously from server-fetched session data */
 function hydrateStore(session: ResearchSession) {
   const state = useResearchStore.getState();
-  // Only hydrate if we haven't already (or if switching sessions)
   if (state.sessionId === session.id) return;
 
   useResearchStore.setState({
@@ -65,7 +63,6 @@ function hydrateStore(session: ResearchSession) {
 }
 
 export function ResearchDashboard({ session }: { session: ResearchSession }) {
-  // Hydrate before first render — no flash
   hydrateStore(session);
 
   const step = useResearchStore((s) => s.step);
@@ -86,7 +83,6 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
 
   const initRef = useRef(false);
 
-  // Load contacted companies + previously researched on mount
   useEffect(() => {
     if (initRef.current) return;
     initRef.current = true;
@@ -94,7 +90,6 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
     loadPreviouslyResearched();
   }, [loadContactedCompanies, loadPreviouslyResearched]);
 
-  // Cmd+Enter / Ctrl+Enter to advance
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {

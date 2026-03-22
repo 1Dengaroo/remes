@@ -197,7 +197,6 @@ export function ContactList({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch only on mount (key={companyName} handles resets)
   }, []);
 
-  // Merge enrichment data, filter by search, sort by rank/email/name — single pass
   const displayPeople = useMemo(() => {
     const enrichedMap = new Map<string, ApolloPersonPreview>();
     for (const p of peopleResults[companyName] ?? []) {

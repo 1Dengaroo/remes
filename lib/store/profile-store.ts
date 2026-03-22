@@ -8,13 +8,11 @@ interface ProfileStore {
   closeProfile: () => void;
   setTab: (tab: string) => void;
 
-  // Profile tab
   fullName: string | null;
   profileLoaded: boolean;
   setFullName: (name: string) => void;
   loadProfile: () => Promise<void>;
 
-  // Connections tab
   gmailConnected: boolean;
   gmailEmail: string | null;
   connectionsLoaded: boolean;

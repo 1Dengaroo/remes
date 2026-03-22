@@ -211,7 +211,6 @@ function MobileCompanyCard({
   );
 }
 
-/** Renders a single company row — handles both preview (loading) and complete states */
 export function CompanyRow({
   preview,
   result,

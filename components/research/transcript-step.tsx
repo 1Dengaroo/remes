@@ -28,7 +28,6 @@ function ICPPicker() {
       step: 'review',
       strategyMessages: []
     });
-    // Save session with loaded ICP then generate strategy
     useResearchStore.getState().saveSession();
     useResearchStore.getState().generateStrategy();
     setOpen(false);

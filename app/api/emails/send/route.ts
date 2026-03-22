@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
       .select('id')
       .single();
 
-    // Track contacted company
     if (companyName && to) {
       await supabase.from('contacted_companies').upsert(
         {

@@ -211,7 +211,6 @@ function CreateICPModal({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Reset state when modal closes
   useEffect(() => {
     if (!open) {
       setFormStep('describe');

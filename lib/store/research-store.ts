@@ -36,106 +36,62 @@ const EMPTY_ICP: ICPCriteria = {
 };
 
 interface ResearchState {
-  // Navigation
   step: Step;
-
-  // Step 1: Transcript
   transcript: string;
   isExtracting: boolean;
-
-  // Step 2: Strategy
   icp: ICPCriteria | null;
   strategyMessages: StrategyMessage[];
   isStrategizing: boolean;
-
-  // Step 3: Discovery
   isDiscovering: boolean;
   candidates: DiscoveredCompanyPreview[];
   selectedCompanies: string[];
-
-  // Step 4: Research
   isResearching: boolean;
   results: CompanyResult[];
   researchingCompany: string | null;
-
-  // People search
   peopleResults: Record<string, ApolloPersonPreview[]>;
   allPeopleResults: Record<string, ApolloPersonPreview[]>;
   isPeopleSearching: boolean;
   enrichingPersonIds: string[];
-
-  // Shared
   statusMessage: string;
   error: string | null;
-
-  // Email sequences
   emailSequences: Record<string, GeneratedEmailSequence>;
-
-  // Abort controller (not serializable, but fine for zustand)
   abortController: AbortController | null;
-
-  // Session persistence
   sessionId: string | null;
   sessionName: string;
   isSaving: boolean;
   lastSavedAt: string | null;
-
-  // Contact tracking
   contactedCompanies: Map<string, string[]>;
-
-  // Cross-session dedup
   previouslyResearched: Set<string>;
-
-  // ICP change tracking for re-discovery
   icpChangedSinceDiscovery: boolean;
 }
 
 interface ResearchActions {
-  // Navigation
   setStep: (step: Step) => void;
-
-  // Step 1
   setTranscript: (transcript: string) => void;
   extractICP: () => Promise<void>;
-
-  // Step 2: Strategy
   updateIcp: <K extends keyof ICPCriteria>(field: K, value: ICPCriteria[K]) => void;
   generateStrategy: () => Promise<void>;
   sendStrategyMessage: (message: string) => Promise<void>;
   approveStrategy: () => void;
-
-  // Step 3
   discover: () => Promise<void>;
   setSelectedCompanies: (companies: string[]) => void;
-
-  // Step 4
   research: () => Promise<void>;
   reResearchCompany: (companyName: string) => Promise<void>;
   searchPeopleAction: () => Promise<void>;
   enrichPersonAction: (personId: string, companyName: string) => Promise<void>;
-
-  // Shared
   setError: (error: string | null) => void;
   startOver: () => void;
   skipToReview: () => void;
-
-  // Email
   saveEmailSequence: (
     companyName: string,
     contactEmail: string,
     sequence: GeneratedEmailSequence
   ) => void;
   getEmailSequence: (companyName: string, contactEmail: string) => GeneratedEmailSequence | null;
-
-  // Session persistence
   saveSession: () => Promise<void>;
   setSessionName: (name: string) => void;
-
-  // Contact tracking
   loadContactedCompanies: () => Promise<void>;
   getContactedEmails: (companyName: string) => string[];
-
-  // Cross-session dedup
   loadPreviouslyResearched: () => Promise<void>;
 }
 
@@ -167,7 +123,6 @@ function buildStrategyCallbacks(
 }
 
 export const useResearchStore = create<ResearchStore>((set, get) => ({
-  // Initial state
   step: 'input',
   transcript: '',
   isExtracting: false,
@@ -196,10 +151,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   previouslyResearched: new Set(),
   icpChangedSinceDiscovery: false,
 
-  // Navigation
   setStep: (step) => set({ step }),
-
-  // Step 1: Transcript
   setTranscript: (transcript) => set({ transcript }),
 
   extractICP: async () => {
@@ -216,14 +168,12 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         isExtracting: false,
         strategyMessages: []
       });
-      // Auto-save: update session name from ICP description + save state
       const { sessionId } = get();
       if (sessionId) {
         const name = transcript.trim().slice(0, 60) || 'Untitled Session';
         set({ sessionName: name });
       }
       get().saveSession();
-      // Auto-generate strategy after ICP is parsed
       get().generateStrategy();
     } catch (err) {
       set({
@@ -233,7 +183,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     }
   },
 
-  // Step 2: Strategy
   updateIcp: (field, value) => {
     const current = get().icp;
     if (current) set({ icp: { ...current, [field]: value } });
@@ -283,7 +232,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       set({
         strategyMessages: [...updatedMessages, { role: 'assistant', content: cleanText }]
       });
-      // Check if ICP changed during strategy chat
       const icpAfter = JSON.stringify(get().icp);
       if (icpBefore !== icpAfter) {
         set({ icpChangedSinceDiscovery: true });
@@ -301,7 +249,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     get().discover();
   },
 
-  // Step 3: Discovery
   discover: async () => {
     const { icp, isDiscovering } = get();
     if (!icp || isDiscovering) return;
@@ -320,14 +267,12 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
           set({ statusMessage: event.message });
         }
       });
-      // Merge new candidates with existing — new previews overwrite old for same name
       const { candidates: existing, selectedCompanies: existingSelected } = get();
       const merged = new Map<string, DiscoveredCompanyPreview>();
       for (const c of existing) merged.set(c.name, c);
       for (const c of found) merged.set(c.name, c);
       const MAX_AUTO_SELECTED = 5;
       const mergedCandidates = [...merged.values()];
-      // Auto-select top 5 from new discoveries, preserve existing selections
       const newNames = found.map((c) => c.name);
       const selectedSet = new Set([...existingSelected, ...newNames]);
       const cappedSelected = [...selectedSet].slice(0, MAX_AUTO_SELECTED);
@@ -336,7 +281,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         selectedCompanies: cappedSelected,
         isDiscovering: false
       });
-      // Auto-save after discovery
       get().saveSession();
     } catch (err) {
       set({
@@ -348,16 +292,13 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
 
   setSelectedCompanies: (companies) => set({ selectedCompanies: companies }),
 
-  // Step 4: Research
   research: async () => {
     const { icp, isResearching, selectedCompanies, candidates, results: existingResults } = get();
     if (!icp || isResearching || selectedCompanies.length === 0) return;
 
-    // Only research companies that don't already have results
     const alreadyResearched = new Set(existingResults.map((r) => r.company_name));
     const newCompanies = selectedCompanies.filter((name) => !alreadyResearched.has(name));
 
-    // If all selected are already researched, just navigate to results
     if (newCompanies.length === 0) {
       set({ step: 'results' });
       return;
@@ -374,7 +315,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       abortController
     });
 
-    // Fire people search in parallel with company research
     get().searchPeopleAction();
 
     try {
@@ -396,7 +336,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
                 results: [...state.results, event.data],
                 researchingCompany: null
               }));
-              // Auto-save after each company result
               get().saveSession();
               break;
             case 'done': {
@@ -419,7 +358,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       });
     } finally {
       set({ isResearching: false, researchingCompany: null, abortController: null });
-      // Mark session completed after research
       const { sessionId } = get();
       if (sessionId) {
         updateSession(sessionId, { status: 'completed' }).catch(() => {});
@@ -432,7 +370,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     const { icp, isResearching, candidates } = get();
     if (!icp || isResearching) return;
 
-    // Remove old result for this company
     set((state) => ({
       results: state.results.filter((r) => r.company_name !== companyName),
       isResearching: true,
@@ -479,7 +416,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     }
   },
 
-  // People search
   searchPeopleAction: async () => {
     const { icp, candidates, selectedCompanies } = get();
     if (!icp) return;
@@ -489,7 +425,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       .filter((c) => selectedSet.has(c.name) && c.apollo_org_id)
       .map((c) => ({ name: c.name, apollo_org_id: c.apollo_org_id! }));
 
-    // Filter out companies that already have people results
     const existingPeople = get().peopleResults;
     const newCompaniesWithOrgIds = companiesWithOrgIds.filter((c) => !existingPeople[c.name]);
 
@@ -571,7 +506,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     }
   },
 
-  // Shared
   setError: (error) => set({ error }),
 
   startOver: () =>
@@ -603,7 +537,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     set({ step: 'review', strategyMessages: [] });
   },
 
-  // Email
   saveEmailSequence: (companyName, contactEmail, sequence) => {
     const key = `${companyName}::${contactEmail}`;
     set((state) => ({
@@ -617,7 +550,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     return get().emailSequences[key] ?? null;
   },
 
-  // Session persistence
   saveSession: async () => {
     const {
       sessionId,
@@ -659,7 +591,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
 
   setSessionName: (name: string) => set({ sessionName: name }),
 
-  // Contact tracking
   loadContactedCompanies: async () => {
     try {
       const contacts = await listContactedCompanies();
@@ -679,7 +610,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
     return get().contactedCompanies.get(companyName) ?? [];
   },
 
-  // Cross-session dedup
   loadPreviouslyResearched: async () => {
     try {
       const { sessionId } = get();

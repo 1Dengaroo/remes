@@ -295,7 +295,6 @@ export function ResultsStep() {
   const displayCompanies = useMemo(() => {
     const allActive = activeFilters.size === SIGNAL_TYPES.length;
 
-    // If all active, show everything; if none, show nothing
     const filtered = allActive
       ? allCompanies
       : allCompanies.filter((c) => {

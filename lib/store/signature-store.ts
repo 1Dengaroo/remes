@@ -48,7 +48,6 @@ export const useSignatureStore = create<SignatureStore>((set, get) => ({
     set((state) => ({
       signatures: state.signatures.map((s) => {
         if (s.id === id) return updated;
-        // If we set a new default, clear default on others
         if (updates.is_default && s.is_default) return { ...s, is_default: false };
         return s;
       })
