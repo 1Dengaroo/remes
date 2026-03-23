@@ -131,11 +131,19 @@ export function BottomNav() {
           />
           <span className="text-border hidden md:inline">&mdash;</span>
           <NavButton
-            label="4. Results"
+            label="4. Contacts"
             stepNumber={4}
             active={step === 'results'}
             enabled={hasResults || isResearching}
             onClick={() => setStep('results')}
+          />
+          <span className="text-border hidden md:inline">&mdash;</span>
+          <NavButton
+            label="5. Outreach"
+            stepNumber={5}
+            active={step === 'outreach'}
+            enabled={hasResults}
+            onClick={() => setStep('outreach')}
           />
         </div>
 
@@ -253,6 +261,17 @@ export function BottomNav() {
                   Researching...
                 </span>
               )}
+              {hasResults && !isResearching && (
+                <Button size="sm" onClick={() => setStep('outreach')}>
+                  Review Outreach
+                  <ChevronRight className="size-4" />
+                </Button>
+              )}
+            </>
+          )}
+
+          {step === 'outreach' && (
+            <>
               {hasResults ? (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

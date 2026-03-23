@@ -164,7 +164,7 @@ export function ContactList({
   rankedIds: Set<string>;
   enrichingPersonIds: string[];
   onEnrichPerson: (personId: string, companyName: string) => void;
-  onSelectContact: (params: ComposeEmailParams) => void;
+  onSelectContact?: (params: ComposeEmailParams) => void;
   contactedEmails: string[];
   nextCompanyName?: string;
   onNextCompany?: () => void;
@@ -252,7 +252,7 @@ export function ContactList({
       linkedin_url: person.linkedin_url ?? '',
       is_decision_maker: false
     };
-    onSelectContact({ company: currentResult, contact, icp: icp ?? EMPTY_ICP });
+    onSelectContact?.({ company: currentResult, contact, icp: icp ?? EMPTY_ICP });
   };
 
   return (
@@ -310,7 +310,9 @@ export function ContactList({
                 }
                 onEnrich={() => onEnrichPerson(person.apollo_person_id, companyName)}
                 onCompose={
-                  person.is_enriched && person.email ? () => composeFor(person) : undefined
+                  onSelectContact && person.is_enriched && person.email
+                    ? () => composeFor(person)
+                    : undefined
                 }
               />
             ))}

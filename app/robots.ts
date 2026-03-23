@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/settings/']
     },
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.ai'}/sitemap.xml`
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.so'}/sitemap.xml`
   };
 }

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, Pencil, LayoutGrid, Users, X } from 'lucide-react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { ChevronDown, ChevronLeft, ChevronRight, Pencil, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
@@ -11,18 +11,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { CompanyRow, GRID_COLS } from './company-card';
-import { ContactScreen } from './contact-screen.client';
+import { ContactList } from './contact-list.client';
 import { LoadingStatus } from './loading-status';
 import { useResearchStore } from '@/lib/store/research-store';
 import type { ICPCriteria, CompanyResult, DiscoveredCompanyPreview } from '@/lib/types';
-
-interface ActiveContactCompany {
-  name: string;
-  apolloOrgId: string;
-  result: CompanyResult | null;
-}
 
 const SIGNAL_TYPES = ['job_posting', 'funding', 'news', 'product_launch'] as const;
 const SIGNAL_LABELS: Record<string, string> = {
@@ -218,6 +211,97 @@ function sortCompanies(
   return sorted;
 }
 
+function ContactBrowser({
+  companies,
+  activeIndex,
+  onChangeIndex,
+  onClose
+}: {
+  companies: DiscoveredCompanyPreview[];
+  activeIndex: number;
+  onChangeIndex: (index: number) => void;
+  onClose: () => void;
+}) {
+  const company = companies[activeIndex];
+  const enrichingPersonIds = useResearchStore((s) => s.enrichingPersonIds);
+  const enrichPersonAction = useResearchStore((s) => s.enrichPersonAction);
+  const peopleResults = useResearchStore((s) => s.peopleResults);
+  const results = useResearchStore((s) => s.results);
+  const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
+  const result = results.find((r) => r.company_name === company.name) ?? null;
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && activeIndex > 0) {
+        e.preventDefault();
+        onChangeIndex(activeIndex - 1);
+      } else if (e.key === 'ArrowRight' && activeIndex < companies.length - 1) {
+        e.preventDefault();
+        onChangeIndex(activeIndex + 1);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [activeIndex, companies.length, onChangeIndex, onClose]);
+
+  return (
+    <div
+      ref={panelRef}
+      className="border-border bg-card mt-4 overflow-hidden rounded-(--card-radius) border"
+    >
+      <div className="border-border flex items-center justify-between border-b px-4 py-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onChangeIndex(activeIndex - 1)}
+            disabled={activeIndex === 0}
+            className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+          <span className="text-sm font-medium">
+            {company.name}{' '}
+            <span className="text-muted-foreground text-xs">
+              ({activeIndex + 1} of {companies.length})
+            </span>
+          </span>
+          <button
+            type="button"
+            onClick={() => onChangeIndex(activeIndex + 1)}
+            disabled={activeIndex === companies.length - 1}
+            className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+          >
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <X className="size-4" />
+        </button>
+      </div>
+
+      <div style={{ height: 'min(500px, 60vh)' }}>
+        <ContactList
+          companyName={company.name}
+          apolloOrgId={company.apollo_org_id ?? ''}
+          result={result}
+          rankedIds={new Set((peopleResults[company.name] ?? []).map((p) => p.apollo_person_id))}
+          enrichingPersonIds={enrichingPersonIds}
+          onEnrichPerson={enrichPersonAction}
+          contactedEmails={getContactedEmails(company.name)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function ResultsStep() {
   const icp = useResearchStore((s) => s.icp);
   const results = useResearchStore((s) => s.results);
@@ -236,24 +320,7 @@ export function ResultsStep() {
   const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set(SIGNAL_TYPES));
   const [sort, setSort] = useState<SortOption>('signals');
-  const [openTabs, setOpenTabs] = useState<ActiveContactCompany[]>([]);
-  const [activeTab, setActiveTab] = useState<string>('research');
-
-  const openCompanyTab = useCallback((info: ActiveContactCompany) => {
-    setOpenTabs((prev) => {
-      if (prev.some((t) => t.name === info.name)) return prev;
-      return [...prev, info];
-    });
-    setActiveTab(info.name);
-  }, []);
-
-  const closeCompanyTab = useCallback(
-    (name: string) => {
-      setOpenTabs((prev) => prev.filter((t) => t.name !== name));
-      if (activeTab === name) setActiveTab('research');
-    },
-    [activeTab]
-  );
+  const [activeCompanyIndex, setActiveCompanyIndex] = useState<number | null>(null);
 
   const resultMap = useMemo(() => {
     const map = new Map<string, CompanyResult>();
@@ -299,7 +366,7 @@ export function ResultsStep() {
       ? allCompanies
       : allCompanies.filter((c) => {
           const result = resultMap.get(c.name);
-          if (!result) return true; // show pending companies always
+          if (!result) return true;
           return result.signals.some((s) => activeFilters.has(s.type));
         });
 
@@ -318,6 +385,14 @@ export function ResultsStep() {
     });
   };
 
+  const handleViewContacts = useCallback(
+    (info: { name: string }) => {
+      const idx = displayCompanies.findIndex((c) => c.name === info.name);
+      if (idx >= 0) setActiveCompanyIndex(idx);
+    },
+    [displayCompanies]
+  );
+
   const completedCount = results.length;
   const totalCount = allCompanies.length;
 
@@ -325,171 +400,100 @@ export function ResultsStep() {
     <>
       {icp && <ICPSummary icp={icp} onEditCriteria={() => setStep('review')} />}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-4 w-full justify-start overflow-x-auto">
-          <TabsTrigger value="research">
-            <LayoutGrid className="size-3" />
-            Research
-          </TabsTrigger>
-          {openTabs.map((tab) => (
-            <TabsTrigger key={tab.name} value={tab.name} className="gap-1 pr-1.5">
-              <Users className="size-3" />
-              {tab.name}
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  closeCompanyTab(tab.name);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    closeCompanyTab(tab.name);
-                  }
-                }}
-                className={`ml-0.5 rounded p-0.5 transition-colors ${
-                  activeTab === tab.name
-                    ? 'hover:bg-primary-foreground/20'
-                    : 'hover:bg-muted-foreground/20'
-                }`}
-              >
-                <X className="size-3" />
-              </span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {error && (
+        <Card className="border-destructive/30 bg-destructive/5 mb-6">
+          <CardContent className="pt-6">
+            <p className="text-destructive text-sm">{error}</p>
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Research tab — forceMount + hidden to preserve scroll/filter state */}
-        <TabsContent value="research" forceMount className="data-[state=inactive]:hidden">
-          {error && (
-            <Card className="border-destructive/30 bg-destructive/5 mb-6">
-              <CardContent className="pt-6">
-                <p className="text-destructive text-sm">{error}</p>
-              </CardContent>
-            </Card>
-          )}
+      {isResearching && (
+        <LoadingStatus statusMessage={statusMessage} subtitle="This usually takes 30–60 seconds" />
+      )}
 
-          {isResearching && (
-            <LoadingStatus
-              statusMessage={statusMessage}
-              subtitle="This usually takes 30–60 seconds"
+      {allCompanies.length > 0 && (
+        <div>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h3 className="text-sm font-medium">
+              {isResearching
+                ? `Researching companies (${completedCount}/${totalCount})...`
+                : `${completedCount} companies researched`}
+            </h3>
+          </div>
+
+          {!isResearching && results.length > 0 && (
+            <FilterSortBar
+              activeFilters={activeFilters}
+              onToggleFilter={toggleFilter}
+              sort={sort}
+              onSortChange={setSort}
             />
           )}
 
-          {allCompanies.length > 0 && (
-            <div>
-              <div className="mb-3 flex items-baseline justify-between">
-                <h3 className="text-sm font-medium">
-                  {isResearching
-                    ? `Researching companies (${completedCount}/${totalCount})...`
-                    : `${completedCount} companies researched`}
-                </h3>
-              </div>
-
-              {!isResearching && results.length > 0 && (
-                <FilterSortBar
-                  activeFilters={activeFilters}
-                  onToggleFilter={toggleFilter}
-                  sort={sort}
-                  onSortChange={setSort}
-                />
+          <div className="border-border bg-card overflow-x-auto rounded-(--card-radius) border lg:overflow-x-auto">
+            <div className={`bg-muted/50 border-border hidden ${GRID_COLS} border-b lg:grid`}>
+              {['Company', 'Target Person', 'Buying Signal', 'Overview & Fit'].map(
+                (label, i, arr) => (
+                  <div
+                    key={label}
+                    className={`text-muted-foreground section-label min-w-0 px-4 py-2.5 ${i < arr.length - 1 ? 'border-border border-r' : ''}`}
+                  >
+                    {label}
+                  </div>
+                )
               )}
-
-              <div className="border-border bg-card overflow-x-auto rounded-(--card-radius) border lg:overflow-x-auto">
-                <div className={`bg-muted/50 border-border hidden ${GRID_COLS} border-b lg:grid`}>
-                  {['Company', 'Target Person', 'Buying Signal', 'Overview & Fit'].map(
-                    (label, i, arr) => (
-                      <div
-                        key={label}
-                        className={`text-muted-foreground section-label min-w-0 px-4 py-2.5 ${i < arr.length - 1 ? 'border-border border-r' : ''}`}
-                      >
-                        {label}
-                      </div>
-                    )
-                  )}
-                </div>
-
-                {displayCompanies.map((candidate) => {
-                  const result = resultMap.get(candidate.name) ?? null;
-                  const isCurrentlyResearching = researchingCompany === candidate.name;
-
-                  let status: 'pending' | 'researching' | 'complete' | 'error';
-                  if (result) {
-                    status = 'complete';
-                  } else if (isCurrentlyResearching) {
-                    status = 'researching';
-                  } else {
-                    status = 'pending';
-                  }
-
-                  return (
-                    <CompanyRow
-                      key={candidate.name}
-                      preview={candidate}
-                      result={result}
-                      status={status}
-                      onViewContacts={openCompanyTab}
-                      onReResearch={!isResearching ? reResearchCompany : undefined}
-                      people={peopleResults[candidate.name]}
-                      isPeopleSearching={isPeopleSearching}
-                      onEnrichPerson={enrichPersonAction}
-                      enrichingPersonIds={enrichingPersonIds}
-                      contactedEmails={getContactedEmails(candidate.name)}
-                    />
-                  );
-                })}
-              </div>
             </div>
+
+            {displayCompanies.map((candidate) => {
+              const result = resultMap.get(candidate.name) ?? null;
+              const isCurrentlyResearching = researchingCompany === candidate.name;
+
+              let status: 'pending' | 'researching' | 'complete' | 'error';
+              if (result) {
+                status = 'complete';
+              } else if (isCurrentlyResearching) {
+                status = 'researching';
+              } else {
+                status = 'pending';
+              }
+
+              return (
+                <CompanyRow
+                  key={candidate.name}
+                  preview={candidate}
+                  result={result}
+                  status={status}
+                  onViewContacts={handleViewContacts}
+                  onReResearch={!isResearching ? reResearchCompany : undefined}
+                  people={peopleResults[candidate.name]}
+                  isPeopleSearching={isPeopleSearching}
+                  onEnrichPerson={enrichPersonAction}
+                  enrichingPersonIds={enrichingPersonIds}
+                  contactedEmails={getContactedEmails(candidate.name)}
+                />
+              );
+            })}
+          </div>
+
+          {activeCompanyIndex !== null && (
+            <ContactBrowser
+              companies={displayCompanies}
+              activeIndex={activeCompanyIndex}
+              onChangeIndex={setActiveCompanyIndex}
+              onClose={() => setActiveCompanyIndex(null)}
+            />
           )}
+        </div>
+      )}
 
-          {!isResearching && !error && allCompanies.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="text-muted-foreground text-sm">
-                No matching companies found. Try editing your ICP criteria.
-              </p>
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Company contact tabs — each forceMount to preserve state */}
-        {openTabs.map((tab) => {
-          const companyIndex = displayCompanies.findIndex((c) => c.name === tab.name);
-          const nextCompany =
-            companyIndex >= 0 && companyIndex < displayCompanies.length - 1
-              ? displayCompanies[companyIndex + 1]
-              : null;
-          const nextResult = nextCompany ? (resultMap.get(nextCompany.name) ?? null) : null;
-
-          return (
-            <TabsContent
-              key={tab.name}
-              value={tab.name}
-              forceMount
-              className="data-[state=inactive]:hidden"
-            >
-              <ContactScreen
-                companyName={tab.name}
-                apolloOrgId={tab.apolloOrgId}
-                result={resultMap.get(tab.name) ?? tab.result}
-                onNextCompany={
-                  nextCompany
-                    ? () =>
-                        openCompanyTab({
-                          name: nextCompany.name,
-                          apolloOrgId: nextCompany.apollo_org_id ?? '',
-                          result: nextResult
-                        })
-                    : undefined
-                }
-                nextCompanyName={nextCompany?.name}
-              />
-            </TabsContent>
-          );
-        })}
-      </Tabs>
+      {!isResearching && !error && allCompanies.length === 0 && (
+        <div className="py-12 text-center">
+          <p className="text-muted-foreground text-sm">
+            No matching companies found. Try editing your ICP criteria.
+          </p>
+        </div>
+      )}
     </>
   );
 }

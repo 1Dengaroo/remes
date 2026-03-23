@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Building2,
   DollarSign,
@@ -14,15 +13,10 @@ import {
 } from 'lucide-react';
 import { SignalBadge } from './signal-badge';
 import { CopyButton } from './copy-button.client';
-import { EmailEditorDialog } from './email-editor-dialog.client';
 import { Button } from '@/components/ui/button';
 import { CompanyLogoWithFallback } from '@/components/shared/company-logo';
-import { useResearchStore } from '@/lib/store/research-store';
 import type {
   CompanyResult,
-  ComposeEmailParams,
-  ICPCriteria,
-  TargetContact,
   SourceLink,
   DiscoveredCompanyPreview,
   ApolloPersonPreview
@@ -198,12 +192,12 @@ function MobileCompanyCard({
         </p>
       )}
 
-      {(status === 'error' || status === 'pending') && onReResearch && (
+      {onReResearch && !isResearching && (
         <div className="flex items-center gap-2">
           {status === 'error' && <span className="text-destructive text-xs">Research failed</span>}
           <Button variant="outline" size="xs" onClick={onReResearch}>
             <RotateCw className="size-3" />
-            Retry
+            {isComplete ? 'Re-research' : 'Retry'}
           </Button>
         </div>
       )}
@@ -234,8 +228,6 @@ export function CompanyRow({
   enrichingPersonIds?: string[];
   contactedEmails?: string[];
 }) {
-  const [composeParams, setComposeParams] = useState<ComposeEmailParams | null>(null);
-  const icp = useResearchStore((s) => s.icp);
   const isComplete = status === 'complete' && result !== null;
   const isResearching = status === 'researching';
   const hasContacted = contactedEmails && contactedEmails.length > 0;
@@ -248,30 +240,6 @@ export function CompanyRow({
       apolloOrgId: preview.apollo_org_id,
       result
     });
-  };
-
-  const handleCompose = (person: ApolloPersonPreview) => {
-    if (!result || !person.is_enriched || !person.email) return;
-    const fallbackIcp: ICPCriteria = icp ?? {
-      description: '',
-      industry_keywords: [],
-      min_employees: null,
-      max_employees: null,
-      min_funding_amount: null,
-      funding_stages: [],
-      hiring_signals: [],
-      tech_keywords: [],
-      company_examples: [],
-      locations: []
-    };
-    const contact: TargetContact = {
-      name: `${person.first_name} ${person.last_name}`,
-      title: person.title ?? '',
-      email: person.email,
-      linkedin_url: person.linkedin_url ?? '',
-      is_decision_maker: false
-    };
-    setComposeParams({ company: result, contact, icp: fallbackIcp });
   };
 
   const hasPeople = people && people.length > 0;
@@ -392,14 +360,18 @@ export function CompanyRow({
             </div>
           )}
 
-          {showRetry && (
+          {onReResearch && !isResearching && (
             <div className="flex items-center gap-2 pt-1">
               {status === 'error' && (
                 <span className="text-destructive text-xs">Research failed</span>
               )}
-              <Button size="xs" onClick={() => onReResearch(preview.name)}>
+              <Button
+                variant={isComplete ? 'ghost' : 'default'}
+                size="xs"
+                onClick={() => onReResearch(preview.name)}
+              >
                 <RotateCw className="size-3" />
-                Retry Research
+                {isComplete ? 'Re-research' : 'Retry Research'}
               </Button>
             </div>
           )}
@@ -468,13 +440,9 @@ export function CompanyRow({
                         {person.is_enriched && person.email && (
                           <div className="flex items-center gap-1">
                             <AtSign className="text-muted-foreground size-3 shrink-0" />
-                            <button
-                              type="button"
-                              onClick={() => handleCompose(person)}
-                              className="text-muted-foreground hover:text-primary min-w-0 truncate text-xs transition-colors"
-                            >
+                            <span className="text-muted-foreground min-w-0 truncate text-xs">
                               {person.email}
-                            </button>
+                            </span>
                             <CopyButton text={person.email} />
                           </div>
                         )}
@@ -554,12 +522,6 @@ export function CompanyRow({
           )}
         </div>
       </div>
-
-      <EmailEditorDialog
-        open={composeParams !== null}
-        params={composeParams}
-        onClose={() => setComposeParams(null)}
-      />
     </>
   );
 }

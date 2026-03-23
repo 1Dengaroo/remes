@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.ai';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.so';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

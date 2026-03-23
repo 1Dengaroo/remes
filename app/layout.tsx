@@ -19,7 +19,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk'
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.ai';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.so';
 
 export const metadata: Metadata = {
   title: { default: 'Remes', template: '%s | Remes' },

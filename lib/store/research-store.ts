@@ -20,7 +20,7 @@ import type {
   GeneratedEmailSequence
 } from '@/lib/types';
 
-type Step = 'input' | 'review' | 'confirm' | 'results';
+type Step = 'input' | 'review' | 'confirm' | 'results' | 'outreach';
 
 const EMPTY_ICP: ICPCriteria = {
   description: '',

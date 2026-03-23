@@ -8,6 +8,7 @@ import { TranscriptStep } from './transcript-step';
 import { StrategyStep } from './strategy-step';
 import { ConfirmStep } from './confirm-step';
 import { ResultsStep } from './results-step';
+import { OutreachStep } from './outreach-step.client';
 import { BottomNav } from './bottom-nav';
 import type { ResearchSession } from '@/lib/types';
 import { MAX_WIDTH } from '@/lib/layout';
@@ -36,10 +37,12 @@ function SaveIndicator() {
   );
 }
 
-const VALID_STEPS = new Set(['input', 'review', 'confirm', 'results']);
+const VALID_STEPS = new Set(['input', 'review', 'confirm', 'results', 'outreach']);
 
-function toStep(value: string): 'input' | 'review' | 'confirm' | 'results' {
-  return VALID_STEPS.has(value) ? (value as 'input' | 'review' | 'confirm' | 'results') : 'input';
+function toStep(value: string): 'input' | 'review' | 'confirm' | 'results' | 'outreach' {
+  return VALID_STEPS.has(value)
+    ? (value as 'input' | 'review' | 'confirm' | 'results' | 'outreach')
+    : 'input';
 }
 
 function hydrateStore(session: ResearchSession) {
@@ -143,6 +146,7 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
           {step === 'review' && icp && <StrategyStep />}
           {step === 'confirm' && <ConfirmStep />}
           {step === 'results' && <ResultsStep />}
+          {step === 'outreach' && <OutreachStep />}
         </div>
       </main>
 

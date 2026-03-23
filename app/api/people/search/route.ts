@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getAuthUser } from '@/lib/supabase/server';
-import { apolloPeopleSearch } from '@/lib/services/apollo-people';
+import { apolloPeopleSearch, apolloPersonEnrich } from '@/lib/services/apollo-people';
 import { rankPeopleForCompany } from '@/lib/services/people-ranking';
 import { peopleSearchBodySchema, parseBody } from '@/lib/validation';
 import type { PeopleSearchResult } from '@/lib/types';
@@ -40,7 +40,28 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      const ranked = await rankPeopleForCompany(people, icp, company.name);
+      let ranked = await rankPeopleForCompany(people, icp, company.name);
+
+      // Auto-enrich the top-ranked person so the FE has one ready contact
+      if (ranked.length > 0 && !ranked[0].is_enriched) {
+        try {
+          const enriched = await apolloPersonEnrich(ranked[0].apollo_person_id);
+          ranked = ranked.map((p, i) =>
+            i === 0
+              ? {
+                  ...p,
+                  last_name: enriched.last_name,
+                  email: enriched.email ?? undefined,
+                  phone: enriched.phone ?? undefined,
+                  linkedin_url: enriched.linkedin_url ?? undefined,
+                  is_enriched: true
+                }
+              : p
+          );
+        } catch {
+          // enrichment is best-effort, don't fail the whole search
+        }
+      }
 
       results.push({
         company_name: company.name,
