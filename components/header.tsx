@@ -119,16 +119,43 @@ function LandingNav() {
   );
 }
 
-function AppNav() {
+function getPageTitle(pathname: string): string | null {
+  if (pathname.startsWith('/dashboard')) return 'Dashboard';
+  if (pathname.startsWith('/research')) return 'Research';
+  if (pathname.startsWith('/emails')) return 'Emails';
+  if (pathname.startsWith('/settings')) return 'Settings';
+  return null;
+}
+
+function AppNav({ pathname }: { pathname: string }) {
+  const title = getPageTitle(pathname);
+  const linkClass = (active: boolean) =>
+    `hidden md:inline-flex ${active ? 'text-foreground' : 'text-muted-foreground'}`;
+
   return (
     <>
-      <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+      <Button
+        asChild
+        variant="ghost"
+        size="sm"
+        className={linkClass(pathname.startsWith('/dashboard'))}
+      >
         <Link href="/dashboard">Dashboard</Link>
       </Button>
-      <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+      <Button
+        asChild
+        variant="ghost"
+        size="sm"
+        className={linkClass(pathname.startsWith('/research'))}
+      >
         <Link href="/research">Research</Link>
       </Button>
-      <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+      <Button
+        asChild
+        variant="ghost"
+        size="sm"
+        className={linkClass(pathname.startsWith('/emails'))}
+      >
         <Link href="/emails">Emails</Link>
       </Button>
     </>
@@ -159,7 +186,12 @@ export function Header() {
               Beta
             </span>
           </Link>
-          {isLanding ? <LandingNav /> : <AppNav />}
+          {!isLanding && (
+            <span className="text-muted-foreground text-sm font-medium md:hidden">
+              / {getPageTitle(pathname)}
+            </span>
+          )}
+          {isLanding ? <LandingNav /> : <AppNav pathname={pathname} />}
         </div>
         <div className="flex items-center gap-2">
           <UserAvatar />
