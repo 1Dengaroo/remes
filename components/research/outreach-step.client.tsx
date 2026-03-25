@@ -1,12 +1,18 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { Mail, Check, Square, CheckSquare, Send } from 'lucide-react';
+import { Mail, Check, Square, CheckSquare, Send, Users, Loader2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EmailEditorInline } from './email-editor-inline.client';
 import { BulkSendDialog } from './bulk-send-dialog.client';
 import { useResearchStore } from '@/lib/store/research-store';
-import type { CompanyResult, ComposeEmailParams, TargetContact, ICPCriteria } from '@/lib/types';
+import type {
+  CompanyResult,
+  ComposeEmailParams,
+  TargetContact,
+  ICPCriteria,
+  ApolloPersonPreview
+} from '@/lib/types';
 
 const MAX_SELECTED = 5;
 
@@ -30,53 +36,150 @@ export interface ComposableContact {
   key: string;
 }
 
+interface SidebarContact {
+  companyName: string;
+  result: CompanyResult;
+  person: ApolloPersonPreview;
+  key: string;
+  isComposable: boolean;
+}
+
+function CompanyFilterBar({
+  companyNames,
+  selected,
+  onToggle,
+  onSelectAll,
+  onClearAll
+}: {
+  companyNames: string[];
+  selected: Set<string>;
+  onToggle: (name: string) => void;
+  onSelectAll: () => void;
+  onClearAll: () => void;
+}) {
+  const allSelected = selected.size === companyNames.length;
+
+  if (companyNames.length <= 1) return null;
+
+  return (
+    <div className="border-border border-b px-4 py-2">
+      <div className="mb-1.5 flex items-center gap-1.5">
+        <Filter className="text-muted-foreground size-3" />
+        <span className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
+          Companies
+        </span>
+        <button
+          type="button"
+          onClick={allSelected ? onClearAll : onSelectAll}
+          className="text-primary ml-auto text-[10px] font-medium"
+        >
+          {allSelected ? 'Clear' : 'All'}
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {companyNames.map((name) => (
+          <button
+            key={name}
+            type="button"
+            onClick={() => onToggle(name)}
+            className={`rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${
+              selected.has(name)
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {name.length > 20 ? name.slice(0, 20) + '...' : name}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function OutreachStep() {
   const results = useResearchStore((s) => s.results);
   const peopleResults = useResearchStore((s) => s.peopleResults);
   const allPeopleResults = useResearchStore((s) => s.allPeopleResults);
   const icp = useResearchStore((s) => s.icp);
   const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
+  const enrichPersonAction = useResearchStore((s) => s.enrichPersonAction);
+  const enrichingPersonIds = useResearchStore((s) => s.enrichingPersonIds);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [bulkSendOpen, setBulkSendOpen] = useState(false);
+  const [filteredCompanies, setFilteredCompanies] = useState<Set<string> | null>(null);
 
-  const contacts = useMemo(() => {
-    const list: ComposableContact[] = [];
+  const sidebarContacts = useMemo(() => {
+    const list: SidebarContact[] = [];
     for (const result of results) {
       const people = [
         ...(peopleResults[result.company_name] ?? []),
         ...(allPeopleResults[result.company_name] ?? [])
       ];
-      const seen = new Set<string>();
+      const seenIds = new Set<string>();
       for (const person of people) {
-        if (!person.is_enriched || !person.email || seen.has(person.email)) continue;
-        seen.add(person.email);
+        if (seenIds.has(person.apollo_person_id)) continue;
+        seenIds.add(person.apollo_person_id);
+        const isComposable = !!person.is_enriched && !!person.email;
         list.push({
           companyName: result.company_name,
           result,
-          contact: {
-            name: `${person.first_name} ${person.last_name}`,
-            title: person.title ?? '',
-            email: person.email,
-            linkedin_url: person.linkedin_url ?? '',
-            is_decision_maker: false
-          },
-          key: `${result.company_name}::${person.email}`
+          person,
+          key: isComposable
+            ? `${result.company_name}::${person.email}`
+            : `${result.company_name}::${person.apollo_person_id}`,
+          isComposable
         });
       }
     }
     return list;
   }, [results, peopleResults, allPeopleResults]);
 
+  const companyNames = useMemo(() => {
+    const names: string[] = [];
+    const seen = new Set<string>();
+    for (const c of sidebarContacts) {
+      if (!seen.has(c.companyName)) {
+        seen.add(c.companyName);
+        names.push(c.companyName);
+      }
+    }
+    return names;
+  }, [sidebarContacts]);
+
+  const activeFilterSet = filteredCompanies ?? new Set(companyNames);
+
   const grouped = useMemo(() => {
-    const map = new Map<string, ComposableContact[]>();
-    for (const c of contacts) {
+    const map = new Map<string, SidebarContact[]>();
+    for (const c of sidebarContacts) {
+      if (!activeFilterSet.has(c.companyName)) continue;
       const list = map.get(c.companyName) ?? [];
       list.push(c);
       map.set(c.companyName, list);
     }
     return map;
-  }, [contacts]);
+  }, [sidebarContacts, activeFilterSet]);
+
+  const composableContacts = useMemo(
+    () =>
+      sidebarContacts
+        .filter((c) => c.isComposable)
+        .map(
+          (c): ComposableContact => ({
+            companyName: c.companyName,
+            result: c.result,
+            contact: {
+              name: `${c.person.first_name} ${c.person.last_name}`,
+              title: c.person.title ?? '',
+              email: c.person.email!,
+              linkedin_url: c.person.linkedin_url ?? '',
+              is_decision_maker: false
+            },
+            key: c.key
+          })
+        ),
+    [sidebarContacts]
+  );
 
   const toggleContact = useCallback(
     (key: string) => {
@@ -100,27 +203,43 @@ export function OutreachStep() {
   );
 
   const selectAll = useCallback(() => {
-    const keys = new Set(contacts.slice(0, MAX_SELECTED).map((c) => c.key));
+    const keys = new Set(composableContacts.slice(0, MAX_SELECTED).map((c) => c.key));
     setSelectedKeys(keys);
-    setActiveKey(contacts[0]?.key ?? null);
-  }, [contacts]);
+    setActiveKey(composableContacts[0]?.key ?? null);
+  }, [composableContacts]);
 
   const selectedContacts = useMemo(
-    () => contacts.filter((c) => selectedKeys.has(c.key)),
-    [contacts, selectedKeys]
+    () => composableContacts.filter((c) => selectedKeys.has(c.key)),
+    [composableContacts, selectedKeys]
   );
 
-  const activeContact = contacts.find((c) => c.key === activeKey) ?? null;
+  const activeContact = composableContacts.find((c) => c.key === activeKey) ?? null;
   const composeParams: ComposeEmailParams | null = activeContact
     ? { company: activeContact.result, contact: activeContact.contact, icp: icp ?? EMPTY_ICP }
     : null;
 
-  if (contacts.length === 0) {
+  const toggleCompanyFilter = useCallback(
+    (name: string) => {
+      setFilteredCompanies((prev) => {
+        const current = prev ?? new Set(companyNames);
+        const next = new Set(current);
+        if (next.has(name)) {
+          next.delete(name);
+        } else {
+          next.add(name);
+        }
+        return next;
+      });
+    },
+    [companyNames]
+  );
+
+  if (sidebarContacts.length === 0) {
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground text-sm">
-          No enriched contacts yet. Go back to Contacts to unlock contact info, then return here to
-          compose outreach.
+          No contacts found yet. Go back to Contacts to discover people, then return here to compose
+          outreach.
         </p>
         <Button
           variant="outline"
@@ -142,16 +261,18 @@ export function OutreachStep() {
           <p className="text-xs font-medium">
             {selectedKeys.size}/{MAX_SELECTED} selected
           </p>
-          {contacts.length <= MAX_SELECTED && selectedKeys.size === 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-primary h-7 text-xs font-medium"
-              onClick={selectAll}
-            >
-              Select All
-            </Button>
-          )}
+          {composableContacts.length > 0 &&
+            composableContacts.length <= MAX_SELECTED &&
+            selectedKeys.size === 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-primary h-7 text-xs font-medium"
+                onClick={selectAll}
+              >
+                Select All
+              </Button>
+            )}
           {selectedKeys.size > 0 && (
             <Button
               variant="ghost"
@@ -175,6 +296,15 @@ export function OutreachStep() {
             Send All
           </Button>
         </div>
+
+        <CompanyFilterBar
+          companyNames={companyNames}
+          selected={activeFilterSet}
+          onToggle={toggleCompanyFilter}
+          onSelectAll={() => setFilteredCompanies(null)}
+          onClearAll={() => setFilteredCompanies(new Set())}
+        />
+
         <div className="divide-border divide-y">
           {[...grouped.entries()].map(([companyName, companyContacts]) => {
             const contactedEmails = getContactedEmails(companyName);
@@ -184,7 +314,41 @@ export function OutreachStep() {
                   <p className="text-muted-foreground text-xs font-medium">{companyName}</p>
                 </div>
                 {companyContacts.map((c) => {
-                  const isSent = contactedEmails.includes(c.contact.email ?? '');
+                  if (!c.isComposable) {
+                    const isEnriching = enrichingPersonIds.includes(c.person.apollo_person_id);
+                    const displayName = `${c.person.first_name} ${c.person.last_name_obfuscated}`;
+                    return (
+                      <div
+                        key={c.key}
+                        className="flex w-full items-center gap-2 px-4 py-2.5 text-left"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-muted-foreground truncate text-sm">{displayName}</p>
+                          <p className="text-muted-foreground/60 truncate text-xs">
+                            {c.person.title}
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          className="shrink-0"
+                          disabled={isEnriching}
+                          onClick={() =>
+                            enrichPersonAction(c.person.apollo_person_id, c.companyName)
+                          }
+                        >
+                          {isEnriching ? (
+                            <Loader2 className="size-3 animate-spin" />
+                          ) : (
+                            <Users className="size-3" />
+                          )}
+                          {isEnriching ? 'Loading...' : 'Get Contact'}
+                        </Button>
+                      </div>
+                    );
+                  }
+
+                  const isSent = contactedEmails.includes(c.person.email ?? '');
                   const isSelected = selectedKeys.has(c.key);
                   const isAtLimit = selectedKeys.size >= MAX_SELECTED && !isSelected;
                   return (
@@ -203,8 +367,10 @@ export function OutreachStep() {
                         <Square className="text-muted-foreground/40 size-4 shrink-0" />
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{c.contact.name}</p>
-                        <p className="text-muted-foreground truncate text-xs">{c.contact.title}</p>
+                        <p className="truncate text-sm font-medium">
+                          {c.person.first_name} {c.person.last_name}
+                        </p>
+                        <p className="text-muted-foreground truncate text-xs">{c.person.title}</p>
                       </div>
                       {isSent && (
                         <span className="text-muted-foreground flex items-center gap-0.5 text-[10px]">

@@ -22,12 +22,6 @@ import type {
   ApolloPersonPreview
 } from '@/lib/types';
 
-interface ViewContactsInfo {
-  name: string;
-  apolloOrgId: string;
-  result: CompanyResult | null;
-}
-
 export const GRID_COLS = 'lg:min-w-[900px] grid-cols-[1fr_1fr_1.5fr_1.5fr]';
 
 type RowStatus = 'pending' | 'researching' | 'complete' | 'error';
@@ -74,16 +68,81 @@ function PendingColumn({ isResearching }: { isResearching: boolean }) {
   );
 }
 
+function getTopContact(people?: ApolloPersonPreview[]): ApolloPersonPreview | null {
+  if (!people || people.length === 0) return null;
+  return people.find((p) => p.is_enriched) ?? people[0];
+}
+
+function SingleContact({
+  person,
+  companyName,
+  onEnrichPerson,
+  enrichingPersonIds
+}: {
+  person: ApolloPersonPreview;
+  companyName: string;
+  onEnrichPerson?: (personId: string, companyName: string) => void;
+  enrichingPersonIds?: string[];
+}) {
+  const displayName = person.is_enriched
+    ? `${person.first_name} ${person.last_name}`
+    : `${person.first_name} ${person.last_name_obfuscated}`;
+  const isEnriching = enrichingPersonIds?.includes(person.apollo_person_id);
+
+  return (
+    <div className="space-y-0.5">
+      <div className="flex items-center gap-1.5">
+        {person.has_email && <Mail className="text-primary size-3 shrink-0" />}
+        <span className="truncate text-sm font-medium">{displayName}</span>
+        {person.is_enriched && person.linkedin_url && (
+          <a
+            href={person.linkedin_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Linkedin className="size-3" />
+          </a>
+        )}
+        {!person.is_enriched && (
+          <Button
+            variant="outline"
+            size="icon-xs"
+            className="ml-auto shrink-0"
+            disabled={isEnriching}
+            label={isEnriching ? 'Loading...' : 'Get Contact'}
+            onClick={() => onEnrichPerson?.(person.apollo_person_id, companyName)}
+          >
+            {isEnriching ? (
+              <Loader2 className="size-3 animate-spin" />
+            ) : (
+              <Users className="size-3" />
+            )}
+          </Button>
+        )}
+      </div>
+      <p className="text-muted-foreground text-xs">{person.title}</p>
+      {person.is_enriched && person.email && (
+        <div className="flex items-center gap-1">
+          <AtSign className="text-muted-foreground size-3 shrink-0" />
+          <span className="text-muted-foreground min-w-0 truncate text-xs">{person.email}</span>
+          <CopyButton text={person.email} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MobileCompanyCard({
   preview,
   result,
   status,
   isComplete,
   isResearching,
-  hasContacted,
   people,
   isPeopleSearching,
-  onViewContacts,
+  onEnrichPerson,
+  enrichingPersonIds,
   onReResearch
 }: {
   preview: DiscoveredCompanyPreview;
@@ -91,13 +150,13 @@ function MobileCompanyCard({
   status: RowStatus;
   isComplete: boolean;
   isResearching: boolean;
-  hasContacted: boolean;
   people?: ApolloPersonPreview[];
   isPeopleSearching?: boolean;
-  onViewContacts?: () => void;
+  onEnrichPerson?: (personId: string, companyName: string) => void;
+  enrichingPersonIds?: string[];
   onReResearch?: () => void;
 }) {
-  const hasPeople = people && people.length > 0;
+  const topContact = getTopContact(people);
 
   return (
     <div className="bg-card border-border space-y-3 border-b p-4 last:border-b-0 lg:hidden">
@@ -126,11 +185,6 @@ function MobileCompanyCard({
             <Linkedin className="size-3" />
           </a>
         )}
-        {hasContacted && (
-          <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium">
-            Contacted
-          </span>
-        )}
       </div>
 
       {/* Industry + funding */}
@@ -158,30 +212,21 @@ function MobileCompanyCard({
         </div>
       )}
 
-      {/* Contact */}
+      {/* Contact — top 1 only */}
       {isPeopleSearching || isResearching ? (
         <div className="flex items-center gap-2">
           <Loader2 className="text-muted-foreground size-3 animate-spin" />
           <span className="text-muted-foreground text-xs">Researching...</span>
         </div>
-      ) : (isComplete || hasPeople) && preview.apollo_org_id ? (
-        <div className="space-y-2">
-          {hasPeople &&
-            (people ?? []).slice(0, 3).map((person) => (
-              <div key={person.apollo_person_id} className="flex items-center gap-1.5">
-                {person.has_email && <Mail className="text-primary size-3 shrink-0" />}
-                <span className="truncate text-sm font-medium">
-                  {person.is_enriched
-                    ? `${person.first_name} ${person.last_name}`
-                    : `${person.first_name} ${person.last_name_obfuscated}`}
-                </span>
-              </div>
-            ))}
-          <Button size="xs" onClick={() => onViewContacts?.()} className="w-full">
-            <Users className="size-3" />
-            View Contacts
-          </Button>
-        </div>
+      ) : topContact ? (
+        <SingleContact
+          person={topContact}
+          companyName={preview.name}
+          onEnrichPerson={onEnrichPerson}
+          enrichingPersonIds={enrichingPersonIds}
+        />
+      ) : (isComplete || people) && !preview.apollo_org_id ? (
+        <p className="text-muted-foreground text-xs">No contacts available</p>
       ) : null}
 
       {/* Overview */}
@@ -209,40 +254,26 @@ export function CompanyRow({
   preview,
   result,
   status,
-  onViewContacts,
   onReResearch,
   people,
   isPeopleSearching,
   onEnrichPerson,
-  enrichingPersonIds,
-  contactedEmails
+  enrichingPersonIds
 }: {
   preview: DiscoveredCompanyPreview;
   result: CompanyResult | null;
   status: RowStatus;
-  onViewContacts?: (info: ViewContactsInfo) => void;
   onReResearch?: (companyName: string) => void;
   people?: ApolloPersonPreview[];
   isPeopleSearching?: boolean;
   onEnrichPerson?: (personId: string, companyName: string) => void;
   enrichingPersonIds?: string[];
-  contactedEmails?: string[];
 }) {
   const isComplete = status === 'complete' && result !== null;
   const isResearching = status === 'researching';
-  const hasContacted = contactedEmails && contactedEmails.length > 0;
   const showRetry = !isComplete && !isResearching && onReResearch;
 
-  const handleViewContacts = () => {
-    if (!preview.apollo_org_id) return;
-    onViewContacts?.({
-      name: preview.name,
-      apolloOrgId: preview.apollo_org_id,
-      result
-    });
-  };
-
-  const hasPeople = people && people.length > 0;
+  const topContact = getTopContact(people);
 
   const allSources = result
     ? [...result.sources.funding, ...result.sources.news, ...result.sources.jobs]
@@ -257,10 +288,10 @@ export function CompanyRow({
         status={status}
         isComplete={isComplete}
         isResearching={isResearching}
-        hasContacted={!!hasContacted}
         people={people}
         isPeopleSearching={isPeopleSearching}
-        onViewContacts={handleViewContacts}
+        onEnrichPerson={onEnrichPerson}
+        enrichingPersonIds={enrichingPersonIds}
         onReResearch={onReResearch ? () => onReResearch(preview.name) : undefined}
       />
       {/* Desktop grid row */}
@@ -303,11 +334,6 @@ export function CompanyRow({
                 >
                   <ExternalLink className="size-3" />
                 </a>
-              )}
-              {hasContacted && (
-                <span className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-[10px] font-medium">
-                  Contacted
-                </span>
               )}
             </div>
 
@@ -377,87 +403,24 @@ export function CompanyRow({
           )}
         </div>
 
+        {/* Target Person — top 1 contact only */}
         <div className="border-border min-w-0 border-r">
           {showRetry ? (
             <div className="p-4" />
           ) : isPeopleSearching ? (
             <PendingColumn isResearching={true} />
-          ) : !preview.apollo_org_id && !hasPeople ? (
+          ) : !preview.apollo_org_id && !topContact ? (
             <div className="flex items-center p-4">
               <p className="text-muted-foreground text-xs">No contacts available</p>
             </div>
-          ) : isComplete || hasPeople ? (
-            <div className="space-y-3 p-4">
-              {hasPeople && (
-                <div className="space-y-2">
-                  {(people ?? []).slice(0, 7).map((person) => {
-                    const displayName = person.is_enriched
-                      ? `${person.first_name} ${person.last_name}`
-                      : `${person.first_name} ${person.last_name_obfuscated}`;
-                    const isEnriching = enrichingPersonIds?.includes(person.apollo_person_id);
-                    return (
-                      <div key={person.apollo_person_id} className="space-y-0.5">
-                        <div className="flex items-center gap-1.5">
-                          {person.has_email && <Mail className="text-primary size-3 shrink-0" />}
-                          <span className="truncate text-sm font-medium">{displayName}</span>
-                          {person.is_enriched && person.linkedin_url && (
-                            <a
-                              href={person.linkedin_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              <Linkedin className="size-3" />
-                            </a>
-                          )}
-                          {person.is_enriched &&
-                            person.email &&
-                            contactedEmails?.includes(person.email) && (
-                              <span className="text-muted-foreground bg-muted rounded px-1 py-0.5 text-[10px] font-medium">
-                                Sent
-                              </span>
-                            )}
-                          {!person.is_enriched && (
-                            <Button
-                              variant="outline"
-                              size="icon-xs"
-                              className="ml-auto shrink-0"
-                              disabled={isEnriching}
-                              label={isEnriching ? 'Loading...' : 'Get Contact'}
-                              onClick={() =>
-                                onEnrichPerson?.(person.apollo_person_id, preview.name)
-                              }
-                            >
-                              {isEnriching ? (
-                                <Loader2 className="size-3 animate-spin" />
-                              ) : (
-                                <Users className="size-3" />
-                              )}
-                            </Button>
-                          )}
-                        </div>
-                        <p className="text-muted-foreground text-xs">{person.title}</p>
-                        {person.is_enriched && person.email && (
-                          <div className="flex items-center gap-1">
-                            <AtSign className="text-muted-foreground size-3 shrink-0" />
-                            <span className="text-muted-foreground min-w-0 truncate text-xs">
-                              {person.email}
-                            </span>
-                            <CopyButton text={person.email} />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {preview.apollo_org_id && (
-                <Button size="xs" onClick={handleViewContacts} className="w-full">
-                  <Users className="size-3" />
-                  View Contacts
-                </Button>
-              )}
+          ) : topContact ? (
+            <div className="p-4">
+              <SingleContact
+                person={topContact}
+                companyName={preview.name}
+                onEnrichPerson={onEnrichPerson}
+                enrichingPersonIds={enrichingPersonIds}
+              />
             </div>
           ) : (
             <PendingColumn isResearching={isResearching} />

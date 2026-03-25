@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, Pencil, X } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { ChevronDown, Pencil } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
@@ -12,7 +12,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { CompanyRow, GRID_COLS } from './company-card';
-import { ContactList } from './contact-list.client';
 import { LoadingStatus } from './loading-status';
 import { useResearchStore } from '@/lib/store/research-store';
 import type { ICPCriteria, CompanyResult, DiscoveredCompanyPreview } from '@/lib/types';
@@ -211,97 +210,6 @@ function sortCompanies(
   return sorted;
 }
 
-function ContactBrowser({
-  companies,
-  activeIndex,
-  onChangeIndex,
-  onClose
-}: {
-  companies: DiscoveredCompanyPreview[];
-  activeIndex: number;
-  onChangeIndex: (index: number) => void;
-  onClose: () => void;
-}) {
-  const company = companies[activeIndex];
-  const enrichingPersonIds = useResearchStore((s) => s.enrichingPersonIds);
-  const enrichPersonAction = useResearchStore((s) => s.enrichPersonAction);
-  const peopleResults = useResearchStore((s) => s.peopleResults);
-  const results = useResearchStore((s) => s.results);
-  const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
-  const result = results.find((r) => r.company_name === company.name) ?? null;
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' && activeIndex > 0) {
-        e.preventDefault();
-        onChangeIndex(activeIndex - 1);
-      } else if (e.key === 'ArrowRight' && activeIndex < companies.length - 1) {
-        e.preventDefault();
-        onChangeIndex(activeIndex + 1);
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [activeIndex, companies.length, onChangeIndex, onClose]);
-
-  return (
-    <div
-      ref={panelRef}
-      className="border-border bg-card mt-4 overflow-hidden rounded-(--card-radius) border"
-    >
-      <div className="border-border flex items-center justify-between border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onChangeIndex(activeIndex - 1)}
-            disabled={activeIndex === 0}
-            className="text-muted-foreground hover:text-foreground disabled:opacity-30"
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <span className="text-sm font-medium">
-            {company.name}{' '}
-            <span className="text-muted-foreground text-xs">
-              ({activeIndex + 1} of {companies.length})
-            </span>
-          </span>
-          <button
-            type="button"
-            onClick={() => onChangeIndex(activeIndex + 1)}
-            disabled={activeIndex === companies.length - 1}
-            className="text-muted-foreground hover:text-foreground disabled:opacity-30"
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <X className="size-4" />
-        </button>
-      </div>
-
-      <div style={{ height: 'min(500px, 60vh)' }}>
-        <ContactList
-          companyName={company.name}
-          apolloOrgId={company.apollo_org_id ?? ''}
-          result={result}
-          rankedIds={new Set((peopleResults[company.name] ?? []).map((p) => p.apollo_person_id))}
-          enrichingPersonIds={enrichingPersonIds}
-          onEnrichPerson={enrichPersonAction}
-          contactedEmails={getContactedEmails(company.name)}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function ResultsStep() {
   const icp = useResearchStore((s) => s.icp);
   const results = useResearchStore((s) => s.results);
@@ -320,7 +228,6 @@ export function ResultsStep() {
   const getContactedEmails = useResearchStore((s) => s.getContactedEmails);
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set(SIGNAL_TYPES));
   const [sort, setSort] = useState<SortOption>('signals');
-  const [activeCompanyIndex, setActiveCompanyIndex] = useState<number | null>(null);
 
   const resultMap = useMemo(() => {
     const map = new Map<string, CompanyResult>();
@@ -384,14 +291,6 @@ export function ResultsStep() {
       return next;
     });
   };
-
-  const handleViewContacts = useCallback(
-    (info: { name: string }) => {
-      const idx = displayCompanies.findIndex((c) => c.name === info.name);
-      if (idx >= 0) setActiveCompanyIndex(idx);
-    },
-    [displayCompanies]
-  );
 
   const completedCount = results.length;
   const totalCount = allCompanies.length;
@@ -464,26 +363,15 @@ export function ResultsStep() {
                   preview={candidate}
                   result={result}
                   status={status}
-                  onViewContacts={handleViewContacts}
                   onReResearch={!isResearching ? reResearchCompany : undefined}
                   people={peopleResults[candidate.name]}
                   isPeopleSearching={isPeopleSearching}
                   onEnrichPerson={enrichPersonAction}
                   enrichingPersonIds={enrichingPersonIds}
-                  contactedEmails={getContactedEmails(candidate.name)}
                 />
               );
             })}
           </div>
-
-          {activeCompanyIndex !== null && (
-            <ContactBrowser
-              companies={displayCompanies}
-              activeIndex={activeCompanyIndex}
-              onChangeIndex={setActiveCompanyIndex}
-              onClose={() => setActiveCompanyIndex(null)}
-            />
-          )}
         </div>
       )}
 
