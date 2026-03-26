@@ -120,7 +120,6 @@ export interface PeopleSearchResult {
   company_name: string;
   apollo_org_id: string;
   ranked_people: ApolloPersonPreview[];
-  all_people: ApolloPersonPreview[];
 }
 
 export interface StrategyMessage {

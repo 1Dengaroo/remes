@@ -47,7 +47,11 @@ function isApolloPersonMatchResponse(value: unknown): value is ApolloPersonMatch
 /**
  * Search for people at a single organization via Apollo mixed_people search.
  */
-async function searchPeopleForOrg(orgId: string, apiKey: string): Promise<ApolloPersonPreview[]> {
+async function searchPeopleForOrg(
+  orgId: string,
+  apiKey: string,
+  perPage: number = 25
+): Promise<ApolloPersonPreview[]> {
   const response = await fetch(`${serviceConfig.apolloBaseUrl}/mixed_people/api_search`, {
     method: 'POST',
     headers: {
@@ -57,7 +61,7 @@ async function searchPeopleForOrg(orgId: string, apiKey: string): Promise<Apollo
     },
     body: JSON.stringify({
       organization_ids: [orgId],
-      per_page: 25,
+      per_page: perPage,
       page: 1
     })
   });
@@ -102,12 +106,13 @@ async function searchPeopleForOrg(orgId: string, apiKey: string): Promise<Apollo
  * Makes one request per org so each company gets a full page of results.
  */
 export async function apolloPeopleSearch(
-  orgIds: string[]
+  orgIds: string[],
+  perPage: number = 25
 ): Promise<Map<string, ApolloPersonPreview[]>> {
   const apiKey = process.env.APOLLO_API_KEY;
   if (!apiKey) throw new Error('APOLLO_API_KEY is not set');
 
-  const results = await Promise.all(orgIds.map((id) => searchPeopleForOrg(id, apiKey)));
+  const results = await Promise.all(orgIds.map((id) => searchPeopleForOrg(id, apiKey, perPage)));
 
   const grouped = new Map<string, ApolloPersonPreview[]>();
   for (const people of results) {

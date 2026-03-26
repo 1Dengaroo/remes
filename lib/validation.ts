@@ -258,6 +258,17 @@ export const peopleSearchBodySchema = z.object({
     .max(200)
 });
 
+export const peopleBulkBodySchema = z.object({
+  companies: z
+    .array(
+      z.object({
+        name: shortStr,
+        apollo_org_id: shortStr
+      })
+    )
+    .max(200)
+});
+
 export const peopleEnrichBodySchema = z.object({
   person_id: shortStr.min(1)
 });

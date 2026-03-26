@@ -1,7 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Building2,
+  ChevronLeft,
+  ChevronRight,
   DollarSign,
   ExternalLink,
   Linkedin,
@@ -68,67 +71,106 @@ function PendingColumn({ isResearching }: { isResearching: boolean }) {
   );
 }
 
-function getTopContact(people?: ApolloPersonPreview[]): ApolloPersonPreview | null {
-  if (!people || people.length === 0) return null;
-  return people.find((p) => p.is_enriched) ?? people[0];
+function sortPeopleEnrichedFirst(people: ApolloPersonPreview[]): ApolloPersonPreview[] {
+  return [...people].sort((a, b) => {
+    if (a.is_enriched && !b.is_enriched) return -1;
+    if (!a.is_enriched && b.is_enriched) return 1;
+    return 0;
+  });
 }
 
-function SingleContact({
-  person,
+function ContactCarousel({
+  people,
   companyName,
   onEnrichPerson,
   enrichingPersonIds
 }: {
-  person: ApolloPersonPreview;
+  people: ApolloPersonPreview[];
   companyName: string;
   onEnrichPerson?: (personId: string, companyName: string) => void;
   enrichingPersonIds?: string[];
 }) {
-  const displayName = person.is_enriched
+  const sorted = sortPeopleEnrichedFirst(people);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const person = sorted[activeIndex];
+  if (!person) return null;
+
+  const isEnriched = !!person.is_enriched;
+  const displayName = isEnriched
     ? `${person.first_name} ${person.last_name}`
     : `${person.first_name} ${person.last_name_obfuscated}`;
   const isEnriching = enrichingPersonIds?.includes(person.apollo_person_id);
 
   return (
-    <div className="space-y-0.5">
-      <div className="flex items-center gap-1.5">
-        {person.has_email && <Mail className="text-primary size-3 shrink-0" />}
-        <span className="truncate text-sm font-medium">{displayName}</span>
-        {person.is_enriched && person.linkedin_url && (
-          <a
-            href={person.linkedin_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Linkedin className="size-3" />
-          </a>
-        )}
-        {!person.is_enriched && (
-          <Button
-            variant="outline"
-            size="icon-xs"
-            className="ml-auto shrink-0"
-            disabled={isEnriching}
-            label={isEnriching ? 'Loading...' : 'Get Contact'}
-            onClick={() => onEnrichPerson?.(person.apollo_person_id, companyName)}
-          >
-            {isEnriching ? (
-              <Loader2 className="size-3 animate-spin" />
-            ) : (
-              <Users className="size-3" />
-            )}
-          </Button>
-        )}
-      </div>
-      <p className="text-muted-foreground text-xs">{person.title}</p>
-      {person.is_enriched && person.email && (
-        <div className="flex items-center gap-1">
-          <AtSign className="text-muted-foreground size-3 shrink-0" />
-          <span className="text-muted-foreground min-w-0 truncate text-xs">{person.email}</span>
-          <CopyButton text={person.email} />
+    <div className="space-y-1">
+      {/* Navigation header */}
+      {sorted.length > 1 && (
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground text-[10px]">
+            {activeIndex + 1} of {sorted.length}
+          </span>
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => setActiveIndex((i) => i - 1)}
+              disabled={activeIndex === 0}
+              className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+            >
+              <ChevronLeft className="size-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveIndex((i) => i + 1)}
+              disabled={activeIndex === sorted.length - 1}
+              className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+            >
+              <ChevronRight className="size-3.5" />
+            </button>
+          </div>
         </div>
       )}
+
+      {/* Contact info */}
+      <div className="space-y-0.5">
+        <div className="flex items-center gap-1.5">
+          {person.has_email && <Mail className="text-primary size-3 shrink-0" />}
+          <span className="truncate text-sm font-medium">{displayName}</span>
+          {isEnriched && person.linkedin_url && (
+            <a
+              href={person.linkedin_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Linkedin className="size-3" />
+            </a>
+          )}
+          {!isEnriched && (
+            <Button
+              variant="outline"
+              size="icon-xs"
+              className="ml-auto shrink-0"
+              disabled={isEnriching}
+              label={isEnriching ? 'Loading...' : 'Get Contact'}
+              onClick={() => onEnrichPerson?.(person.apollo_person_id, companyName)}
+            >
+              {isEnriching ? (
+                <Loader2 className="size-3 animate-spin" />
+              ) : (
+                <Users className="size-3" />
+              )}
+            </Button>
+          )}
+        </div>
+        <p className="text-muted-foreground text-xs">{person.title}</p>
+        {isEnriched && person.email && (
+          <div className="flex items-center gap-1">
+            <AtSign className="text-muted-foreground size-3 shrink-0" />
+            <span className="text-muted-foreground min-w-0 truncate text-xs">{person.email}</span>
+            <CopyButton text={person.email} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -156,7 +198,7 @@ function MobileCompanyCard({
   enrichingPersonIds?: string[];
   onReResearch?: () => void;
 }) {
-  const topContact = getTopContact(people);
+  const hasPeople = people && people.length > 0;
 
   return (
     <div className="bg-card border-border space-y-3 border-b p-4 last:border-b-0 lg:hidden">
@@ -212,15 +254,15 @@ function MobileCompanyCard({
         </div>
       )}
 
-      {/* Contact — top 1 only */}
+      {/* Contact carousel */}
       {isPeopleSearching || isResearching ? (
         <div className="flex items-center gap-2">
           <Loader2 className="text-muted-foreground size-3 animate-spin" />
           <span className="text-muted-foreground text-xs">Researching...</span>
         </div>
-      ) : topContact ? (
-        <SingleContact
-          person={topContact}
+      ) : hasPeople ? (
+        <ContactCarousel
+          people={people}
           companyName={preview.name}
           onEnrichPerson={onEnrichPerson}
           enrichingPersonIds={enrichingPersonIds}
@@ -273,7 +315,7 @@ export function CompanyRow({
   const isResearching = status === 'researching';
   const showRetry = !isComplete && !isResearching && onReResearch;
 
-  const topContact = getTopContact(people);
+  const hasPeople = people && people.length > 0;
 
   const allSources = result
     ? [...result.sources.funding, ...result.sources.news, ...result.sources.jobs]
@@ -403,20 +445,20 @@ export function CompanyRow({
           )}
         </div>
 
-        {/* Target Person — top 1 contact only */}
+        {/* Target Person — contact carousel */}
         <div className="border-border min-w-0 border-r">
           {showRetry ? (
             <div className="p-4" />
           ) : isPeopleSearching ? (
             <PendingColumn isResearching={true} />
-          ) : !preview.apollo_org_id && !topContact ? (
+          ) : !preview.apollo_org_id && !hasPeople ? (
             <div className="flex items-center p-4">
               <p className="text-muted-foreground text-xs">No contacts available</p>
             </div>
-          ) : topContact ? (
+          ) : hasPeople ? (
             <div className="p-4">
-              <SingleContact
-                person={topContact}
+              <ContactCarousel
+                people={people}
                 companyName={preview.name}
                 onEnrichPerson={onEnrichPerson}
                 enrichingPersonIds={enrichingPersonIds}

@@ -259,7 +259,7 @@ User clicks "Get Contact"
 
 ### POST `/api/research` (SSE Stream)
 
-- **maxDuration**: 300s
+- **maxDuration**: 900s
 - **Two phases based on request body**:
 
 **Phase 1 — Discovery** (no `companies` in body):

@@ -34,8 +34,7 @@ export async function POST(req: NextRequest) {
         results.push({
           company_name: company.name,
           apollo_org_id: company.apollo_org_id,
-          ranked_people: [],
-          all_people: []
+          ranked_people: []
         });
         continue;
       }
@@ -66,8 +65,7 @@ export async function POST(req: NextRequest) {
       results.push({
         company_name: company.name,
         apollo_org_id: company.apollo_org_id,
-        ranked_people: ranked,
-        all_people: people
+        ranked_people: ranked
       });
     }
 

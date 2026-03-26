@@ -7,6 +7,7 @@ import {
   researchCompanies,
   searchPeople,
   enrichPerson,
+  fetchOutreachContacts,
   updateSession,
   listContactedCompanies,
   listResearchedCompanies
@@ -51,6 +52,7 @@ interface ResearchState {
   peopleResults: Record<string, ApolloPersonPreview[]>;
   allPeopleResults: Record<string, ApolloPersonPreview[]>;
   isPeopleSearching: boolean;
+  isOutreachLoading: boolean;
   enrichingPersonIds: string[];
   statusMessage: string;
   error: string | null;
@@ -78,6 +80,7 @@ interface ResearchActions {
   research: () => Promise<void>;
   reResearchCompany: (companyName: string) => Promise<void>;
   searchPeopleAction: () => Promise<void>;
+  fetchOutreachContactsAction: () => Promise<void>;
   enrichPersonAction: (personId: string, companyName: string) => Promise<void>;
   setError: (error: string | null) => void;
   startOver: () => void;
@@ -138,6 +141,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   peopleResults: {},
   allPeopleResults: {},
   isPeopleSearching: false,
+  isOutreachLoading: false,
   enrichingPersonIds: [],
   statusMessage: '',
   error: null,
@@ -339,11 +343,15 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
               get().saveSession();
               break;
             case 'done': {
-              const totalCount = get().results.length;
-              set({
-                statusMessage: `Research complete. ${totalCount} companies researched.`,
-                researchingCompany: null
-              });
+              const { results: doneResults, selectedCompanies: allSel } = get();
+              const doneSet = new Set(doneResults.map((r) => r.company_name));
+              const stillRemaining = allSel.some((name) => !doneSet.has(name));
+              if (!stillRemaining) {
+                set({
+                  statusMessage: `Research complete. ${doneResults.length} companies researched.`,
+                  researchingCompany: null
+                });
+              }
               break;
             }
           }
@@ -353,16 +361,25 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       );
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      set({
-        error: err instanceof Error ? err.message : 'Something went wrong'
-      });
+      // Swallow stream errors — timeout or network drops are handled by auto-retry below
     } finally {
       set({ isResearching: false, researchingCompany: null, abortController: null });
-      const { sessionId } = get();
-      if (sessionId) {
-        updateSession(sessionId, { status: 'completed' }).catch(() => {});
-      }
       get().saveSession();
+
+      // Auto-retry remaining companies if the stream ended before finishing all
+      const { selectedCompanies: allSelected, results: currentResults } = get();
+      const researched = new Set(currentResults.map((r) => r.company_name));
+      const remaining = allSelected.filter((name) => !researched.has(name));
+
+      if (remaining.length > 0) {
+        // Re-trigger seamlessly — research() checks for unresearched companies
+        get().research();
+      } else {
+        const { sessionId } = get();
+        if (sessionId) {
+          updateSession(sessionId, { status: 'completed' }).catch(() => {});
+        }
+      }
     }
   },
 
@@ -439,18 +456,59 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       const newPeopleResults = Object.fromEntries(
         results.map((r) => [r.company_name, r.ranked_people])
       );
-      const newAllPeopleResults = Object.fromEntries(
-        results.map((r) => [r.company_name, r.all_people])
-      );
       set((state) => ({
         peopleResults: { ...state.peopleResults, ...newPeopleResults },
-        allPeopleResults: { ...state.allPeopleResults, ...newAllPeopleResults },
         isPeopleSearching: false
       }));
       get().saveSession();
     } catch (err) {
       console.error('People search failed:', err);
       set({ isPeopleSearching: false });
+    }
+  },
+
+  fetchOutreachContactsAction: async () => {
+    const { candidates, selectedCompanies, allPeopleResults, peopleResults } = get();
+    const selectedSet = new Set(selectedCompanies);
+    const companiesWithOrgIds = candidates
+      .filter((c) => selectedSet.has(c.name) && c.apollo_org_id && !allPeopleResults[c.name])
+      .map((c) => ({ name: c.name, apollo_org_id: c.apollo_org_id! }));
+
+    if (companiesWithOrgIds.length === 0) return;
+
+    set({ isOutreachLoading: true });
+
+    try {
+      const results = await fetchOutreachContacts(companiesWithOrgIds);
+
+      // Merge enrichment status from ranked people so already-enriched contacts stay enriched
+      const newAllPeople: Record<string, ApolloPersonPreview[]> = {};
+      for (const r of results) {
+        const enrichedIds = new Set(
+          (peopleResults[r.company_name] ?? [])
+            .filter((p) => p.is_enriched)
+            .map((p) => p.apollo_person_id)
+        );
+        const enrichedMap = new Map(
+          (peopleResults[r.company_name] ?? [])
+            .filter((p) => p.is_enriched)
+            .map((p) => [p.apollo_person_id, p])
+        );
+
+        newAllPeople[r.company_name] = r.people.map((person) =>
+          enrichedIds.has(person.apollo_person_id)
+            ? { ...person, ...enrichedMap.get(person.apollo_person_id) }
+            : person
+        );
+      }
+
+      set((state) => ({
+        allPeopleResults: { ...state.allPeopleResults, ...newAllPeople },
+        isOutreachLoading: false
+      }));
+    } catch (err) {
+      console.error('Outreach contacts fetch failed:', err);
+      set({ isOutreachLoading: false });
     }
   },
 
@@ -521,6 +579,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       peopleResults: {},
       allPeopleResults: {},
       isPeopleSearching: false,
+      isOutreachLoading: false,
       enrichingPersonIds: [],
       error: null,
       statusMessage: '',

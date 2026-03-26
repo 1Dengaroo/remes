@@ -3,6 +3,7 @@ import type {
   DiscoveredCompanyPreview,
   ResearchStreamEvent,
   PeopleSearchResult,
+  ApolloPersonPreview,
   StrategyMessage,
   GeneratedEmailSequence,
   CompanyResult,
@@ -210,6 +211,18 @@ export async function searchPeople(
     signal
   );
   const data = (await response.json()) as { results: PeopleSearchResult[] };
+  return data.results;
+}
+
+/** Fetch bulk contacts for outreach (free Apollo search, 10 per company) */
+export async function fetchOutreachContacts(
+  companies: { name: string; apollo_org_id: string }[],
+  signal?: AbortSignal
+): Promise<{ company_name: string; people: ApolloPersonPreview[] }[]> {
+  const response = await postJson('/api/people/bulk', { companies }, signal);
+  const data = (await response.json()) as {
+    results: { company_name: string; people: ApolloPersonPreview[] }[];
+  };
   return data.results;
 }
 

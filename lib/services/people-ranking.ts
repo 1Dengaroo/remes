@@ -30,7 +30,7 @@ ${icp.description}
 **People at ${companyName}:**
 ${peopleSummaries}
 
-Pick the top 3 people most likely to be decision makers or influencers for this ICP. Prefer:
+Pick the top 5 people most likely to be decision makers or influencers for this ICP. Prefer:
 1. Titles that match hiring signals (e.g. if hiring for "data engineer", the VP of Data is ideal)
 2. C-suite, VP, Director, Head of relevant departments
 3. People with verified emails over those without
@@ -46,14 +46,14 @@ function isIndexArray(value: unknown): value is number[] {
 
 /**
  * Uses Claude (Haiku) to rank people at a company by ICP fit.
- * Returns top 3 sorted by relevance.
+ * Returns top 5 sorted by relevance.
  */
 export async function rankPeopleForCompany(
   people: ApolloPersonPreview[],
   icp: ICPCriteria,
   companyName: string
 ): Promise<ApolloPersonPreview[]> {
-  if (people.length <= 3) return people;
+  if (people.length <= 5) return people;
 
   const client = getClient();
 
@@ -67,18 +67,18 @@ export async function rankPeopleForCompany(
   const jsonMatch = text.match(/\[[\s\S]*\]/);
 
   if (!jsonMatch) {
-    return people.slice(0, 3);
+    return people.slice(0, 5);
   }
 
   const parsed: unknown = JSON.parse(jsonMatch[0]);
   if (!isIndexArray(parsed)) {
-    return people.slice(0, 3);
+    return people.slice(0, 5);
   }
 
   const ranked = parsed
     .filter((idx) => idx >= 0 && idx < people.length)
-    .slice(0, 3)
+    .slice(0, 5)
     .map((idx) => people[idx]);
 
-  return ranked.length > 0 ? ranked : people.slice(0, 3);
+  return ranked.length > 0 ? ranked : people.slice(0, 5);
 }
