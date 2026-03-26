@@ -343,11 +343,15 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
               get().saveSession();
               break;
             case 'done': {
-              const totalCount = get().results.length;
-              set({
-                statusMessage: `Research complete. ${totalCount} companies researched.`,
-                researchingCompany: null
-              });
+              const { results: doneResults, selectedCompanies: allSel } = get();
+              const doneSet = new Set(doneResults.map((r) => r.company_name));
+              const stillRemaining = allSel.some((name) => !doneSet.has(name));
+              if (!stillRemaining) {
+                set({
+                  statusMessage: `Research complete. ${doneResults.length} companies researched.`,
+                  researchingCompany: null
+                });
+              }
               break;
             }
           }
@@ -357,16 +361,25 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       );
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      set({
-        error: err instanceof Error ? err.message : 'Something went wrong'
-      });
+      // Swallow stream errors — timeout or network drops are handled by auto-retry below
     } finally {
       set({ isResearching: false, researchingCompany: null, abortController: null });
-      const { sessionId } = get();
-      if (sessionId) {
-        updateSession(sessionId, { status: 'completed' }).catch(() => {});
-      }
       get().saveSession();
+
+      // Auto-retry remaining companies if the stream ended before finishing all
+      const { selectedCompanies: allSelected, results: currentResults } = get();
+      const researched = new Set(currentResults.map((r) => r.company_name));
+      const remaining = allSelected.filter((name) => !researched.has(name));
+
+      if (remaining.length > 0) {
+        // Re-trigger seamlessly — research() checks for unresearched companies
+        get().research();
+      } else {
+        const { sessionId } = get();
+        if (sessionId) {
+          updateSession(sessionId, { status: 'completed' }).catch(() => {});
+        }
+      }
     }
   },
 
