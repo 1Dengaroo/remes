@@ -60,11 +60,16 @@ function hydrateStore(session: ResearchSession) {
     selectedCompanies: session.selected_companies || [],
     results: session.results || [],
     peopleResults: session.people_results || {},
-    allPeopleResults: session.all_people_results || {},
     emailSequences: session.email_sequences || {},
     lastSavedAt: session.updated_at,
     error: null
   });
+
+  // Re-fetch all contacts from Apollo (free) since we only persist enriched/ranked ones
+  const hasOrgIds = (session.candidates || []).some((c) => c.apollo_org_id);
+  if (hasOrgIds && session.icp) {
+    useResearchStore.getState().searchPeopleAction();
+  }
 }
 
 export function ResearchDashboard({ session }: { session: ResearchSession }) {

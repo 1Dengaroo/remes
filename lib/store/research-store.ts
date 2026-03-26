@@ -425,8 +425,10 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       .filter((c) => selectedSet.has(c.name) && c.apollo_org_id)
       .map((c) => ({ name: c.name, apollo_org_id: c.apollo_org_id! }));
 
-    const existingPeople = get().peopleResults;
-    const newCompaniesWithOrgIds = companiesWithOrgIds.filter((c) => !existingPeople[c.name]);
+    const { peopleResults: existingPeople, allPeopleResults: existingAll } = get();
+    const newCompaniesWithOrgIds = companiesWithOrgIds.filter(
+      (c) => !existingPeople[c.name] || !existingAll[c.name]
+    );
 
     if (newCompaniesWithOrgIds.length === 0) return;
 
@@ -562,7 +564,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       selectedCompanies,
       results,
       peopleResults,
-      allPeopleResults,
       emailSequences,
       sessionName
     } = get();
@@ -580,7 +581,6 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         selected_companies: selectedCompanies,
         results,
         people_results: peopleResults,
-        all_people_results: allPeopleResults,
         email_sequences: emailSequences
       });
       set({ lastSavedAt: new Date().toISOString() });

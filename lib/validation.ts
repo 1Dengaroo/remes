@@ -186,7 +186,6 @@ export const sessionCreateBodySchema = z.object({
   selected_companies: strArray(200).optional(),
   results: z.array(companyResultLoose).max(200).optional(),
   people_results: z.record(recordKey, z.array(apolloPersonLoose).max(100)).optional(),
-  all_people_results: z.record(recordKey, z.array(apolloPersonLoose).max(100)).optional(),
   email_sequences: z.record(recordKey, emailSequenceLoose).optional()
 });
 
@@ -200,7 +199,6 @@ export const sessionUpdateBodySchema = z.object({
   selected_companies: strArray(200).optional(),
   results: z.array(companyResultLoose).max(200).optional(),
   people_results: z.record(recordKey, z.array(apolloPersonLoose).max(100)).optional(),
-  all_people_results: z.record(recordKey, z.array(apolloPersonLoose).max(100)).optional(),
   email_sequences: z.record(recordKey, emailSequenceLoose).optional(),
   status: z.enum(['in_progress', 'completed']).optional()
 });
