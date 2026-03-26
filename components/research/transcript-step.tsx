@@ -54,10 +54,10 @@ function ICPPicker() {
             <DropdownMenuItem
               key={savedIcp.id}
               onClick={() => handleSelect(savedIcp)}
-              className="flex-col items-start gap-0"
+              className="max-w-full min-w-0 flex-col items-start gap-0"
             >
-              <span className="truncate text-sm font-medium">{savedIcp.name}</span>
-              <span className="text-muted-foreground truncate text-xs">
+              <span className="w-full truncate text-sm font-medium">{savedIcp.name}</span>
+              <span className="text-muted-foreground w-full truncate text-xs">
                 {savedIcp.icp.description.slice(0, 80)}...
               </span>
             </DropdownMenuItem>
@@ -86,7 +86,7 @@ export function TranscriptStep() {
 
       {error && <p className="text-destructive mb-4 text-sm">{error}</p>}
 
-      <Card className="!gap-0 !py-0">
+      <Card className="gap-0! py-0!">
         <div className="bg-card border-border flex items-center justify-between border-b px-4 py-2.5">
           <span className="text-muted-foreground section-label">Customer Profile</span>
           {transcript.trim() && (
