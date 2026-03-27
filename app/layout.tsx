@@ -4,7 +4,6 @@ import '@/styles/globals.css';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
 import { FontProvider } from '@/lib/theme/font-provider';
-import { Header } from '@/components/header';
 import { AuthProvider } from '@/components/auth/auth-provider.client';
 import { AuthModal } from '@/components/auth/auth-modal.client';
 import { ProfileModal } from '@/components/settings/profile-modal.client';
@@ -61,7 +60,6 @@ export default function RootLayout({
           <FontProvider>
             <TooltipProvider>
               <AuthProvider>
-                <Header />
                 <AuthModal />
                 <ProfileModal />
                 {children}

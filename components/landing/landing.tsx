@@ -16,6 +16,7 @@ import {
 import { useAuthStore } from '@/lib/store/auth-store';
 import { MAX_WIDTH } from '@/lib/layout';
 import { AuroraCanvas } from './aurora-canvas';
+import { LandingHeader } from './landing-header.client';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -433,6 +434,7 @@ export function Landing() {
 
   return (
     <div ref={pageRef} className="relative flex flex-col" style={{ background: '#08080c' }}>
+      <LandingHeader />
       {/* ── Hero ── */}
       <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
         <div className="absolute inset-0">

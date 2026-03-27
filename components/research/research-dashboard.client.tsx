@@ -12,7 +12,6 @@ import { OutreachStep } from './outreach-step.client';
 import { BottomNav } from './bottom-nav';
 import { EditableName } from '@/components/shared/editable-name.client';
 import type { ResearchSession, ICPCriteria } from '@/lib/types';
-import { MAX_WIDTH } from '@/lib/layout';
 
 function SaveIndicator() {
   const isSaving = useResearchStore((s) => s.isSaving);
@@ -150,8 +149,8 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
   ]);
 
   return (
-    <div className="bg-background min-h-dvh">
-      <main className={`mx-auto ${MAX_WIDTH} px-4 pt-10 pb-24 md:px-6`}>
+    <div className="flex min-h-[calc(100dvh-3rem)] flex-col">
+      <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 pt-10 pb-24 md:px-6">
         {sessionId && (
           <div className="mb-6 flex items-end justify-between gap-4">
             <div className="min-w-0">

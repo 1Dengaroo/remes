@@ -27,7 +27,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { useResearchStore } from '@/lib/store/research-store';
-import { MAX_WIDTH } from '@/lib/layout';
+import { useSidebar } from '@/components/ui/sidebar';
 
 type StepStatus = 'pending' | 'in-progress' | 'completed';
 
@@ -102,6 +102,7 @@ function NavButton({
 
 export function BottomNav() {
   const router = useRouter();
+  const { state, isMobile } = useSidebar();
   const step = useResearchStore((s) => s.step);
   const setStep = useResearchStore((s) => s.setStep);
   const isExtracting = useResearchStore((s) => s.isExtracting);
@@ -129,16 +130,19 @@ export function BottomNav() {
 
   return (
     <div
-      className="fixed right-0 bottom-0 left-0 border-t"
+      className="fixed right-0 bottom-0 z-10 border-t transition-[left] duration-200 ease-linear"
       style={{
+        left: isMobile
+          ? 0
+          : state === 'expanded'
+            ? 'var(--sidebar-width, 0px)'
+            : 'var(--sidebar-width-icon, 3rem)',
         backgroundColor: 'var(--chrome)',
         borderColor: 'var(--bottom-nav-border, hsl(var(--border)))',
         backdropFilter: 'var(--bottom-nav-backdrop, none)'
       }}
     >
-      <div
-        className={`mx-auto flex ${MAX_WIDTH} items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6`}
-      >
+      <div className="mx-auto flex max-w-[1500px] items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6">
         {/* Left: step navigation */}
         <div className="flex items-center gap-1 text-xs">
           <NavButton

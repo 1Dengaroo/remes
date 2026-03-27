@@ -15,10 +15,3 @@ export function insertSentEmail(supabase: SupabaseClient, data: Record<string, u
 export function insertFailedEmail(supabase: SupabaseClient, data: Record<string, unknown>) {
   return supabase.from('sent_emails').insert(data);
 }
-
-export function getSentEmailsForDashboard(supabase: SupabaseClient, userId: string) {
-  return supabase
-    .from('sent_emails')
-    .select('id, status, company_name, created_at')
-    .eq('user_id', userId);
-}

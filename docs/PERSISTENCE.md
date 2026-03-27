@@ -46,7 +46,7 @@ Save state is shown via a `SaveIndicator` component (spinner while saving, check
 ## Contact Tracking
 
 - When an email is sent via `/api/emails/send`, the route upserts into `contacted_companies`.
-- On dashboard mount, `loadContactedCompanies()` fetches all contacts and builds a `Map<company_name, email[]>`.
+- On mount, `loadContactedCompanies()` fetches all contacts and builds a `Map<company_name, email[]>`.
 - `CompanyRow` receives `contactedEmails` prop — shows "Contacted" badge on company header, "Sent" indicator on specific contacts.
 
 ## Signature Management

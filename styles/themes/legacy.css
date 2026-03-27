@@ -134,12 +134,12 @@
   --chart-5: hsl(12 55% 50%);
 
   /* Sidebar */
-  --sidebar-background: #ffffff;
-  --sidebar-foreground: #7a7774;
+  --sidebar-background: #faf9f8;
+  --sidebar-foreground: #5a5754;
   --sidebar-primary: #6f42d6;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f4f2;
+  --sidebar-accent: #f0eeec;
   --sidebar-accent-foreground: rgba(0, 0, 0, 0.87);
-  --sidebar-border: #e8e6e3;
+  --sidebar-border: #e4e1dd;
   --sidebar-ring: #6f42d6;
 }

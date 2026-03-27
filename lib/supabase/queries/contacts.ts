@@ -13,7 +13,3 @@ export function upsertContact(supabase: SupabaseClient, data: Record<string, unk
     .from('contacted_companies')
     .upsert(data, { onConflict: 'user_id,company_name,contact_email' });
 }
-
-export function getContactedCompaniesForDashboard(supabase: SupabaseClient, userId: string) {
-  return supabase.from('contacted_companies').select('company_name').eq('user_id', userId);
-}

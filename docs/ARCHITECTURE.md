@@ -7,7 +7,6 @@
 ```
 /app                    Routing shell only (server-only)
 ├── page.tsx            Landing
-├── dashboard/          Analytics dashboard (server-fetched)
 ├── research/           Sessions list (server-fetched)
 │   └── [id]/           Session dashboard (server-fetched, hydrated to client)
 ├── emails/             Sent emails history
@@ -26,7 +25,6 @@
 
 /components             UI layer (feature-organized)
 ├── research/           Pipeline UI (steps 1-4)
-├── dashboard/          Dashboard charts and widgets
 ├── emails/             Sent emails table
 ├── settings/           Settings tabs + profile modal
 ├── auth/               Login/signup modals + auth provider

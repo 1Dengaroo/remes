@@ -50,10 +50,3 @@ export function getResearchedCompanyResults(
 
   return query;
 }
-
-export function getSessionsForDashboard(supabase: SupabaseClient, userId: string) {
-  return supabase
-    .from('research_sessions')
-    .select('id, status, results, candidates, created_at')
-    .eq('user_id', userId);
-}

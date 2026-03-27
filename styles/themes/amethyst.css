@@ -137,12 +137,12 @@
 
   /* ── Sidebar ── */
 
-  --sidebar-background: #ffffff;
-  --sidebar-foreground: #706490;
+  --sidebar-background: #f9f7fc;
+  --sidebar-foreground: #524672;
   --sidebar-primary: #5b2ebd;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #eae5f5;
   --sidebar-accent-foreground: #16112a;
-  --sidebar-border: #d4cce6;
+  --sidebar-border: #ddd6ec;
   --sidebar-ring: #5b2ebd;
 }
