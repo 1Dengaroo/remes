@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, type RefObject } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronDown, Play } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -105,19 +105,22 @@ const SHOWCASE = [
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+    video: 'https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
   },
   {
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80'
+    video: 'https://videos.pexels.com/video-files/7579961/7579961-uhd_2560_1440_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80'
   },
   {
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
     desc: 'Every email is grounded in the signal that triggered it — relevant, timely, and personal. Not another generic template.',
-    image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'
+    video: 'https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'
   }
 ];
 
@@ -163,6 +166,105 @@ const FAQS = [
     a: "It's a reference to Hermes, the Greek god of commerce, trade, and messengers. He was the original messenger who always knew where to go, who to talk to, and exactly what to say. Fast forward to today, and the best sign that your outreach actually worked? Those two little letters in your inbox: RE:. Remes."
   }
 ];
+
+function ShowcaseSection() {
+  const [active, setActive] = useState(0);
+  const videoRefs: RefObject<HTMLVideoElement | null>[] = [
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null)
+  ];
+
+  useEffect(() => {
+    videoRefs.forEach((ref, i) => {
+      const video = ref.current;
+      if (!video) return;
+      if (i === active) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
+  const item = SHOWCASE[active];
+
+  return (
+    <section id="use-cases" className="relative scroll-mt-16 py-16 sm:py-24">
+      <div className="section-heading relative mb-10 sm:mb-14">
+        <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
+          See it in action
+        </span>
+        <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          Built for modern sales teams
+        </h2>
+      </div>
+
+      {/* Tab pills */}
+      <div className="mb-8 flex flex-wrap gap-2">
+        {SHOWCASE.map((s, i) => (
+          <button
+            key={s.label}
+            type="button"
+            onClick={() => setActive(i)}
+            className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-300 ${
+              i === active
+                ? 'bg-white text-[#08080c] shadow-lg shadow-violet-500/20'
+                : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Video + text */}
+      <div className="showcase-item flex flex-col gap-8 sm:flex-row sm:gap-12">
+        {/* Video */}
+        <div className="relative aspect-video flex-[1.4] overflow-hidden rounded-2xl border border-white/8 bg-black/40">
+          {SHOWCASE.map((s, i) => (
+            <video
+              key={s.label}
+              ref={videoRefs[i]}
+              muted
+              loop
+              playsInline
+              poster={s.poster}
+              className={`absolute inset-0 size-full object-cover transition-opacity duration-500 ${
+                i === active ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <source src={s.video} type="video/mp4" />
+            </video>
+          ))}
+
+          {/* Subtle vignette */}
+          <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
+        </div>
+
+        {/* Text */}
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="flex size-7 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300">
+              {active + 1}
+            </span>
+            <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
+              {item.label}
+            </span>
+          </div>
+          <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl lg:text-3xl">
+            {item.title}
+          </h3>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
+            {item.desc}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export function Landing() {
   const user = useAuthStore((s) => s.user);
@@ -412,61 +514,7 @@ export function Landing() {
 
         <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
           {/* ── Showcase ── */}
-          <section id="use-cases" className="relative scroll-mt-16 py-16 sm:py-24">
-            <div className="section-heading relative mb-10 sm:mb-14">
-              <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-                See it in action
-              </span>
-              <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Built for modern sales teams
-              </h2>
-            </div>
-
-            <div className="relative flex flex-col gap-24 sm:gap-32">
-              {SHOWCASE.map((item, i) => (
-                <div
-                  key={item.title}
-                  className={`showcase-item flex flex-col items-center gap-8 sm:gap-12 ${i % 2 === 1 ? 'sm:flex-row-reverse' : 'sm:flex-row'}`}
-                >
-                  {/* Text */}
-                  <div className="showcase-text flex-1">
-                    <div className="mb-3 flex items-center gap-3">
-                      <span className="flex size-7 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300">
-                        {i + 1}
-                      </span>
-                      <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
-                        {item.label}
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-                      {item.desc}
-                    </p>
-                  </div>
-
-                  {/* Image */}
-                  <div className="showcase-image group relative flex aspect-video w-full flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/8 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-500/10">
-                    {/* Inner edge glow */}
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="absolute inset-0 size-full object-cover opacity-30 transition-opacity duration-500 group-hover:opacity-50"
-                    />
-                    <div className="relative flex flex-col items-center gap-2">
-                      <div className="flex size-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
-                        <Play className="size-5 translate-x-0.5 text-white/60" />
-                      </div>
-                      <span className="text-xs text-white/40">{item.label}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <ShowcaseSection />
 
           {/* ── FAQs ── */}
           <section

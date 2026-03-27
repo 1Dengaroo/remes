@@ -72,32 +72,37 @@ export function AuroraCanvas({ className }: { className?: string }) {
     let animId: number;
     let blobs: AuroraBlob[] = [];
     let time = 0;
+    let w = 0;
+    let h = 0;
 
     function resize() {
       if (!canvas) return;
       const dpr = Math.min(window.devicePixelRatio, 2);
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      const newW = rect.width;
+      const newH = rect.height;
+      canvas.width = newW * dpr;
+      canvas.height = newH * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = 10;
-      blobs = Array.from({ length: count }, (_, i) =>
-        createBlob(rect.width, rect.height, i, count)
-      );
+      // Only regenerate blobs on first call or significant size change
+      if (blobs.length === 0 || Math.abs(newW - w) > 100 || Math.abs(newH - h) > 100) {
+        const count = 10;
+        blobs = Array.from({ length: count }, (_, i) => createBlob(newW, newH, i, count));
+      }
+      w = newW;
+      h = newH;
     }
 
     function render() {
       if (!canvas || !ctx) return;
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
 
       time += 0.008;
 
       ctx.clearRect(0, 0, w, h);
 
       // dark base
-      ctx.fillStyle = '#0f0a1e';
+      ctx.fillStyle = '#08080c';
       ctx.fillRect(0, 0, w, h);
 
       ctx.globalCompositeOperation = 'lighter';
