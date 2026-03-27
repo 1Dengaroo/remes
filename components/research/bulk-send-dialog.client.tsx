@@ -203,7 +203,7 @@ export function BulkSendDialog({
           </div>
         )}
 
-        <ScrollArea className="max-h-80">
+        <ScrollArea className="max-h-80 min-w-0">
           <div className="space-y-2 pr-4">
             {drafts.map((draft, i) => {
               const email = getEmail(draft);
