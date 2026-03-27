@@ -133,7 +133,6 @@ function getPageTitle(pathname: string): string | null {
 }
 
 function AppNav({ pathname }: { pathname: string }) {
-  const title = getPageTitle(pathname);
   const linkClass = (active: boolean) =>
     `hidden md:inline-flex ${active ? 'text-foreground' : 'text-muted-foreground'}`;
 
@@ -190,12 +189,12 @@ export function Header() {
           className="w-full transition-all duration-500 ease-out"
           style={{
             maxWidth: scrolled ? '1500px' : '100%',
-            backgroundColor: scrolled ? 'rgba(15, 10, 30, 0.7)' : 'transparent',
+            backgroundColor: scrolled ? 'rgba(8, 8, 12, 0.8)' : 'transparent',
             borderRadius: scrolled ? '9999px' : '0',
             border: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
             borderBottomColor: scrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.06)',
             backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'blur(12px)',
-            boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.3)' : 'none'
+            boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.25)' : 'none'
           }}
         >
           <div

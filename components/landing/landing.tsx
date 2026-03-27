@@ -317,7 +317,7 @@ export function Landing() {
   );
 
   return (
-    <div ref={pageRef} className="relative flex flex-col" style={{ background: '#0f0a1e' }}>
+    <div ref={pageRef} className="relative flex flex-col" style={{ background: '#08080c' }}>
       {/* ── Hero ── */}
       <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
@@ -326,7 +326,7 @@ export function Landing() {
 
         {/* Grain overlay */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-20"
+          className="pointer-events-none absolute inset-0 opacity-[0.12]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
             backgroundSize: '128px 128px'
@@ -346,7 +346,7 @@ export function Landing() {
         {/* Bottom fade */}
         <div
           className="pointer-events-none absolute right-0 bottom-0 left-0 h-[40%]"
-          style={{ background: 'linear-gradient(to bottom, transparent, #0f0a1e)' }}
+          style={{ background: 'linear-gradient(to bottom, transparent, #08080c)' }}
         />
 
         <div
@@ -364,7 +364,7 @@ export function Landing() {
             you spot <RotatingWord />
           </h1>
 
-          <p className="hero-reveal mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg sm:leading-relaxed">
+          <p className="hero-reveal mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg sm:leading-relaxed">
             Remes detects buying signals across the web and crafts personalized outreach — so you
             reach prospects at exactly the right moment.
           </p>
@@ -372,13 +372,13 @@ export function Landing() {
           <div className="hero-reveal mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
             <Button
               size="lg"
-              className="gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#0f0a1e] shadow-2xl shadow-violet-500/20 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/40"
+              className="gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#08080c] shadow-xl shadow-violet-500/15 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/25"
               onClick={handleGetStarted}
             >
               Get started
               <ArrowRight className="size-4" />
             </Button>
-            <span className="text-sm text-white/50">No credit card required</span>
+            <span className="text-sm text-white/40">No credit card required</span>
           </div>
         </div>
 
@@ -387,111 +387,149 @@ export function Landing() {
         </div>
       </section>
 
-      <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
-        {/* ── Showcase ── */}
-        <section id="use-cases" className="scroll-mt-16 py-16 sm:py-24">
-          <div className="section-heading mb-10 sm:mb-14">
-            <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-              See it in action
-            </span>
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Built for modern sales teams
-            </h2>
+      {/* ── Sections background — aurora + grain, dimmed ── */}
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 opacity-15">
+            <AuroraCanvas className="absolute inset-0" />
           </div>
+          <div
+            className="absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
+              backgroundSize: '128px 128px'
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+              backgroundSize: '60px 60px'
+            }}
+          />
+        </div>
 
-          <div className="flex flex-col gap-24 sm:gap-32">
-            {SHOWCASE.map((item, i) => (
-              <div
-                key={item.title}
-                className={`showcase-item flex flex-col items-center gap-8 sm:gap-12 ${i % 2 === 1 ? 'sm:flex-row-reverse' : 'sm:flex-row'}`}
-              >
-                {/* Text */}
-                <div className="showcase-text flex-1">
-                  <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
-                    {item.label}
-                  </span>
-                  <h3 className="mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70 sm:text-base">
-                    {item.desc}
-                  </p>
-                </div>
+        <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
+          {/* ── Showcase ── */}
+          <section id="use-cases" className="relative scroll-mt-16 py-16 sm:py-24">
+            <div className="section-heading relative mb-10 sm:mb-14">
+              <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
+                See it in action
+              </span>
+              <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Built for modern sales teams
+              </h2>
+            </div>
 
-                {/* Image */}
-                <div className="showcase-image group relative flex aspect-video w-full flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/8 bg-white/3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-500/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="absolute inset-0 size-full object-cover opacity-40 transition-opacity duration-500 group-hover:opacity-60"
-                  />
-                  <div className="relative flex flex-col items-center gap-2">
-                    <div className="flex size-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
-                      <Play className="size-5 translate-x-0.5 text-white/60" />
+            <div className="relative flex flex-col gap-24 sm:gap-32">
+              {SHOWCASE.map((item, i) => (
+                <div
+                  key={item.title}
+                  className={`showcase-item flex flex-col items-center gap-8 sm:gap-12 ${i % 2 === 1 ? 'sm:flex-row-reverse' : 'sm:flex-row'}`}
+                >
+                  {/* Text */}
+                  <div className="showcase-text flex-1">
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="flex size-7 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300">
+                        {i + 1}
+                      </span>
+                      <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
+                        {item.label}
+                      </span>
                     </div>
-                    <span className="text-xs text-white/50">{item.label}</span>
+                    <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  {/* Image */}
+                  <div className="showcase-image group relative flex aspect-video w-full flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/8 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-500/10">
+                    {/* Inner edge glow */}
+                    <div className="pointer-events-none absolute inset-0 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="absolute inset-0 size-full object-cover opacity-30 transition-opacity duration-500 group-hover:opacity-50"
+                    />
+                    <div className="relative flex flex-col items-center gap-2">
+                      <div className="flex size-12 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                        <Play className="size-5 translate-x-0.5 text-white/60" />
+                      </div>
+                      <span className="text-xs text-white/40">{item.label}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── FAQs ── */}
-        <section id="faqs" className="scroll-mt-16 border-t border-white/6 py-16 sm:py-24">
-          <div className="section-heading mb-10 sm:mb-14">
-            <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-              FAQs
-            </span>
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Frequently asked questions
-            </h2>
-          </div>
-
-          <div>
-            <Accordion type="single" collapsible className="w-full">
-              {FAQS.map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="faq-item border-white/6">
-                  <AccordionTrigger className="text-left text-white/80 hover:text-white">
-                    {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <p className="leading-relaxed text-white/60">{faq.a}</p>
-                  </AccordionContent>
-                </AccordionItem>
               ))}
-            </Accordion>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        {/* ── CTA ── */}
-        <section className="relative overflow-hidden border-t border-white/6 py-20 text-center sm:py-28">
-          {/* Glow orb */}
-          <div className="cta-glow absolute top-1/2 left-1/2 size-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/10 blur-[120px]" />
+          {/* ── FAQs ── */}
+          <section
+            id="faqs"
+            className="relative scroll-mt-16 border-t border-white/8 py-16 sm:py-24"
+          >
+            <div className="section-heading relative mb-10 text-center sm:mb-14">
+              <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
+                FAQs
+              </span>
+              <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Frequently asked questions
+              </h2>
+            </div>
 
-          <div className="final-cta relative z-10">
-            <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
-              Stop missing buying signals
-            </h2>
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-              Start detecting signals and generating outreach in minutes. No credit card required.
-            </p>
-            <Button
-              size="lg"
-              className="mt-8 gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#0f0a1e] shadow-2xl shadow-violet-500/20 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/40"
-              onClick={handleGetStarted}
-            >
-              Get started free
-              <ArrowRight className="size-4" />
-            </Button>
-          </div>
-        </section>
+            <div className="relative mx-auto max-w-2xl rounded-2xl border border-white/8 bg-white/[0.02] p-1">
+              <Accordion type="single" collapsible className="w-full">
+                {FAQS.map((faq, i) => (
+                  <AccordionItem
+                    key={i}
+                    value={`faq-${i}`}
+                    className="faq-item border-white/6 px-5"
+                  >
+                    <AccordionTrigger className="text-left text-white/80 hover:text-white">
+                      {faq.q}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <p className="leading-relaxed text-white/50">{faq.a}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </section>
 
-        {/* ── Footer ── */}
-        <footer className="border-t border-white/6 py-8">
-          <p className="text-xs text-white/50">&copy; {new Date().getFullYear()} Remes</p>
-        </footer>
+          {/* ── CTA ── */}
+          <section className="relative overflow-hidden border-t border-white/8 py-20 text-center sm:py-28">
+            {/* Glow orb — pulses via GSAP */}
+            <div className="cta-glow absolute top-1/2 left-1/2 size-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/10 blur-[120px]" />
+
+            <div className="final-cta relative z-10">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                Stop missing buying signals
+              </h2>
+              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
+                Start detecting signals and generating outreach in minutes. No credit card required.
+              </p>
+              <Button
+                size="lg"
+                className="mt-8 gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#08080c] shadow-xl shadow-violet-500/15 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/25"
+                onClick={handleGetStarted}
+              >
+                Get started free
+                <ArrowRight className="size-4" />
+              </Button>
+            </div>
+          </section>
+
+          {/* ── Footer ── */}
+          <footer className="border-t border-white/8 py-8">
+            <p className="text-xs text-white/40">&copy; {new Date().getFullYear()} Remes</p>
+          </footer>
+        </div>
       </div>
     </div>
   );
