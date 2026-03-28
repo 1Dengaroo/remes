@@ -367,10 +367,7 @@ function ShowcaseSection() {
                 playsInline
                 className="size-full rounded-2xl object-contain"
               >
-                <source
-                  src={item.video}
-                  type="video/mp4"
-                />
+                <source src={item.video} type="video/mp4" />
               </video>
               <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
             </div>
@@ -552,11 +549,11 @@ export function Landing() {
             </span>
           </div>
 
-          <h1 className="hero-reveal mt-8 max-w-5xl text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
-            Deep research. Right Contacts.
-            <br />
+          <h1 className="hero-reveal mt-8 flex max-w-4xl flex-col text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+            <span>Deep Research.</span>
+            <span>Right Contacts.</span>
             <span className="bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
-              Outreach that converts.
+              Outreach that Converts.
             </span>
           </h1>
 
@@ -586,7 +583,7 @@ export function Landing() {
       {/* ── Sections background — aurora + grain, dimmed ── */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-15">
+          <div className="absolute inset-0 opacity-15 max-md:hidden">
             <AuroraCanvas className="absolute inset-0" />
           </div>
           <div

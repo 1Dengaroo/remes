@@ -75,9 +75,11 @@ export function AuroraCanvas({ className }: { className?: string }) {
     let w = 0;
     let h = 0;
 
+    const isMobile = window.innerWidth < 768;
+
     function resize() {
       if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio, 2);
+      const dpr = Math.min(window.devicePixelRatio, isMobile ? 1 : 2);
       const rect = canvas.getBoundingClientRect();
       const newW = rect.width;
       const newH = rect.height;
@@ -87,7 +89,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
 
       // Only regenerate blobs on first call or significant size change
       if (blobs.length === 0 || Math.abs(newW - w) > 100 || Math.abs(newH - h) > 100) {
-        const count = 10;
+        const count = isMobile ? 5 : 10;
         blobs = Array.from({ length: count }, (_, i) => createBlob(newW, newH, i, count));
       }
       w = newW;
