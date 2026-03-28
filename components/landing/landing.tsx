@@ -293,7 +293,9 @@ export function Landing() {
 
           {/* ── Footer ── */}
           <footer className="border-t border-white/8 py-8">
-            <p className="text-xs text-white/40">&copy; {new Date().getFullYear()} Remes</p>
+            <p className="text-xs text-white/40">
+              &copy; {new Date().getFullYear()} Remes. All rights reserved.
+            </p>
           </footer>
         </div>
       </div>
