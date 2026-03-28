@@ -194,7 +194,7 @@ export function BottomNav() {
         {/* Right: action buttons */}
         <div className="flex items-center gap-2">
           {(isDiscovering || isResearching) && step !== 'confirm' && step !== 'results' && (
-            <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+            <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
               <Loader2 className="size-3 animate-spin" />
               {isDiscovering ? 'Discovering...' : 'Researching...'}
             </span>
@@ -208,18 +208,18 @@ export function BottomNav() {
                 onClick={skipToReview}
                 title="Start with a blank profile"
               >
-                Skip to Strategy
+                <span className="hidden md:inline">Skip to Strategy</span>
                 <ChevronRight className="size-4" />
               </Button>
               <Button size="sm" onClick={extractICP} disabled={isExtracting || !transcript.trim()}>
                 {isExtracting ? (
                   <>
                     <Loader2 className="size-3.5 animate-spin" />
-                    Analyzing...
+                    <span className="hidden md:inline">Analyzing...</span>
                   </>
                 ) : (
                   <>
-                    Analyze
+                    <span className="hidden md:inline">Analyze</span>
                     <ChevronRight className="size-4" />
                   </>
                 )}
@@ -230,7 +230,7 @@ export function BottomNav() {
           {step === 'review' && (
             <>
               {isStrategizing && (
-                <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
                   <Loader2 className="size-3 animate-spin" />
                   Thinking...
                 </span>
@@ -249,7 +249,7 @@ export function BottomNav() {
                   }}
                 >
                   <RotateCcw className="size-3.5" />
-                  Start New Search
+                  <span className="hidden md:inline">Start New Search</span>
                 </Button>
               )}
               <Button
@@ -263,7 +263,7 @@ export function BottomNav() {
                   )
                 }
               >
-                Find Companies
+                <span className="hidden md:inline">Find Companies</span>
                 <ChevronRight className="size-4" />
               </Button>
             </>
@@ -272,7 +272,7 @@ export function BottomNav() {
           {step === 'confirm' && (
             <>
               {isDiscovering && (
-                <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
                   <Loader2 className="size-3 animate-spin" />
                   Discovering...
                 </span>
@@ -285,11 +285,13 @@ export function BottomNav() {
                 {isResearching ? (
                   <>
                     <Loader2 className="size-3.5 animate-spin" />
-                    Researching...
+                    <span className="hidden md:inline">Researching...</span>
                   </>
                 ) : (
                   <>
-                    Research {selectedCount} {selectedCount === 1 ? 'Company' : 'Companies'}
+                    <span className="hidden md:inline">
+                      Research {selectedCount} {selectedCount === 1 ? 'Company' : 'Companies'}
+                    </span>
                     <ChevronRight className="size-4" />
                   </>
                 )}
@@ -300,14 +302,14 @@ export function BottomNav() {
           {step === 'results' && (
             <>
               {isResearching && (
-                <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
                   <Loader2 className="size-3.5 animate-spin" />
                   Researching...
                 </span>
               )}
               {hasResults && !isResearching && (
                 <Button size="sm" onClick={() => setStep('outreach')}>
-                  Review Outreach
+                  <span className="hidden md:inline">Review Outreach</span>
                   <ChevronRight className="size-4" />
                 </Button>
               )}

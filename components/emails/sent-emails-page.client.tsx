@@ -38,7 +38,7 @@ function MobileEmailSheet({ email, onClose }: { email: SentEmail | null; onClose
           <SheetDescription className="sr-only">Email detail view</SheetDescription>
         </SheetHeader>
         {email && (
-          <div className="overflow-y-auto px-4 pb-4">
+          <div className="flex-1 overflow-y-auto px-4 pb-4">
             <EmailDetailContent email={email} />
           </div>
         )}

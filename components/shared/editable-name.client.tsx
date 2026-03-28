@@ -81,7 +81,7 @@ export function EditableName({
         e.stopPropagation();
         setEditing(true);
       }}
-      className={`cursor-pointer truncate text-left transition-opacity hover:opacity-70 ${className}`}
+      className={`cursor-pointer text-left transition-opacity hover:opacity-70 md:truncate ${className}`}
     >
       {value}
     </button>

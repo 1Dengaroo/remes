@@ -188,7 +188,7 @@ function ICPRow({
           ) : (
             <ArrowRight className="size-3" />
           )}
-          Start Research
+          <span className="hidden md:inline">Start Research</span>
         </Button>
       </div>
     </div>
