@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { getAuthUser } from '@/lib/supabase/server';
 import { serviceConfig } from '@/lib/services/config';
 import { buildStrategyPrompt, buildStrategyRevisionPrompt } from '@/lib/prompts/strategy';
 import { strategyBodySchema, parseBody } from '@/lib/validation';
@@ -18,6 +19,9 @@ function getContentBlockType(event: Anthropic.MessageStreamEvent): string | null
 }
 
 export async function POST(req: NextRequest) {
+  const { user } = await getAuthUser();
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
   const parsed = parseBody(strategyBodySchema, await req.json());
   if (!parsed.success) return parsed.response;
 
