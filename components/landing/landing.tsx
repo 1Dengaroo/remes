@@ -1,19 +1,8 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  ArrowRight,
-  Briefcase,
-  ChevronDown,
-  FileBarChart,
-  FileText,
-  Globe,
-  Linkedin,
-  Newspaper,
-  SlidersHorizontal,
-  Users
-} from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -26,375 +15,13 @@ import {
 } from '@/components/ui/accordion';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { MAX_WIDTH } from '@/lib/layout';
+import { FAQS } from './landing-constants';
 import { AuroraCanvas } from './aurora-canvas';
 import { LandingHeader } from './landing-header.client';
+import { SignalsSection } from './signals-section.client';
+import { ShowcaseSection } from './showcase-section.client';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ROTATING_WORDS = [
-  'funding rounds',
-  'hiring surges',
-  'new launches',
-  'role changes',
-  'growth signals'
-];
-
-function RotatingWord() {
-  const [index, setIndex] = useState(0);
-  const wrapperRef = useRef<HTMLSpanElement>(null);
-  const wordRef = useRef<HTMLSpanElement>(null);
-  const measureRef = useRef<HTMLSpanElement>(null);
-
-  const cycle = useCallback(() => {
-    const word = wordRef.current;
-    const wrapper = wrapperRef.current;
-    const measure = measureRef.current;
-    if (!word || !wrapper || !measure) return;
-
-    const nextIndex = (index + 1) % ROTATING_WORDS.length;
-
-    // Measure the next word's width
-    measure.textContent = ROTATING_WORDS[nextIndex];
-    const nextWidth = measure.offsetWidth;
-
-    // Fade out current word
-    gsap.to(word, {
-      opacity: 0,
-      y: '-0.15em',
-      duration: 0.25,
-      ease: 'power2.in',
-      onComplete: () => {
-        setIndex(nextIndex);
-        gsap.set(word, { y: '0.15em' });
-        gsap.to(word, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
-      }
-    });
-
-    // Smoothly animate container width
-    gsap.to(wrapper, {
-      width: nextWidth,
-      duration: 0.4,
-      ease: 'power2.inOut'
-    });
-  }, [index]);
-
-  // Set initial width after mount
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const word = wordRef.current;
-    if (wrapper && word) {
-      wrapper.style.width = `${word.offsetWidth}px`;
-    }
-  }, []);
-
-  useEffect(() => {
-    const id = setInterval(cycle, 2800);
-    return () => clearInterval(id);
-  }, [cycle]);
-
-  return (
-    <>
-      <span
-        ref={measureRef}
-        aria-hidden
-        className="pointer-events-none invisible absolute whitespace-nowrap"
-        style={{ font: 'inherit' }}
-      />
-      <span ref={wrapperRef} className="inline-block">
-        <span
-          ref={wordRef}
-          className="inline-block bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text whitespace-nowrap text-transparent"
-        >
-          {ROTATING_WORDS[index]}
-        </span>
-      </span>
-    </>
-  );
-}
-
-const SIGNAL_CARDS = [
-  {
-    icon: Briefcase,
-    title: 'Job Openings',
-    desc: '"Currently hiring 3+ engineers with experience in Next.js"'
-  },
-  {
-    icon: Newspaper,
-    title: 'News',
-    desc: '"Faced cybersecurity attacks or data breach in the last 12 months"'
-  },
-  {
-    icon: Globe,
-    title: 'Company Website',
-    desc: '"The company is SOC 2 Type 2 compliant"'
-  },
-  {
-    icon: FileText,
-    title: 'Job Descriptions',
-    desc: '"Mentions building expense reports in Excel/Spreadsheet, in finance job openings in the past 2 years"'
-  },
-  {
-    icon: Users,
-    title: 'Employees',
-    desc: '"Onboarded Data Engineer in the last 3 months, who mentioned Snowflake on their LinkedIn profile"'
-  },
-  {
-    icon: Globe,
-    title: 'Company Website',
-    desc: '"The company offers insurance services"'
-  },
-  {
-    icon: FileBarChart,
-    title: '10-K Report',
-    desc: '"Mention HR initiatives to improve employee communication"'
-  },
-  {
-    icon: Linkedin,
-    title: 'Company LinkedIn Posts',
-    desc: '"Going to cloud technology conferences"'
-  },
-  {
-    icon: SlidersHorizontal,
-    title: 'Custom',
-    desc: null
-  }
-];
-
-function SignalsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.utils.toArray<HTMLElement>('.signal-card').forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-            delay: i * 0.06,
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 92%',
-              toggleActions: 'play none none reverse'
-            }
-          }
-        );
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  return (
-    <section ref={sectionRef} className="relative scroll-mt-16 py-16 sm:py-24">
-      <div className="section-heading relative mb-10 text-center sm:mb-14">
-        <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl xl:text-5xl">
-          Reach out the moment you spot <RotatingWord />
-        </h2>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SIGNAL_CARDS.map((card, i) => (
-          <div
-            key={`${card.title}-${i}`}
-            className="signal-card group rounded-2xl border border-white/8 bg-white/[0.03] p-6 transition-colors hover:border-violet-400/20 hover:bg-white/[0.05] sm:p-8"
-          >
-            <card.icon className="mb-6 size-10 text-violet-400 sm:size-12" strokeWidth={1.5} />
-            <h3 className="text-lg font-semibold text-white">{card.title}</h3>
-            {card.desc ? (
-              <p className="mt-2 text-sm leading-relaxed text-white/50">{card.desc}</p>
-            ) : (
-              <Button
-                variant="outline"
-                className="mt-4 gap-2 rounded-full border-violet-400/30 bg-violet-500/10 text-sm text-violet-300 hover:bg-violet-500/20 hover:text-violet-200"
-              >
-                Curate your own signal
-                <ArrowRight className="size-3.5" />
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-const SHOWCASE = [
-  {
-    label: 'Signal Detection',
-    title: 'Catch buying signals before your competitors',
-    desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
-    video: '/landing-one.mp4'
-  },
-  {
-    label: 'Contact Discovery',
-    title: 'Find the right person instantly',
-    desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    video: '/landing-two.mp4'
-  },
-  {
-    label: 'AI Outreach',
-    title: 'Emails that actually get replies',
-    desc: 'Every email is grounded in the signal that triggered it — relevant, timely, and personal. Not another generic template.',
-    video: 'https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4'
-  }
-];
-
-const FAQS = [
-  {
-    q: 'What is Remes and how does it work?',
-    a: 'Remes is an AI-powered platform that detects real-time buying signals — hiring surges, funding rounds, leadership changes, product launches — and uses them to craft deeply personalized outreach to your ideal customers. You describe your ideal customer, and Remes finds, researches, and engages them automatically.'
-  },
-  {
-    q: 'How is Remes different from other outreach tools?',
-    a: 'Most tools automate sending. Remes automates research. We detect real-time buying signals and use them to write emails that reference things happening at the prospect\'s company right now. The difference is an email that says "congrats on your funding" vs. one that knows you raised $8M from Craft to scale your GTM team.'
-  },
-  {
-    q: 'What reply rate can I expect?',
-    a: 'Reply rates vary by industry and offer, but our signal-driven approach consistently outperforms generic outreach by 3\u20135x. Most customers see meaningful pipeline activity by week 6.'
-  },
-  {
-    q: 'How much does Remes cost compared to hiring?',
-    a: 'Plans start at $1,497/month. A fully loaded sales hire costs $90K\u2013$150K/year, takes 3\u20136 months to ramp, and turns over at 39% annually. Remes starts producing pipeline in 2 weeks and never quits. One closed deal typically pays for the entire annual subscription.'
-  },
-  {
-    q: 'What are buying signals?',
-    a: 'Buying signals are real-time indicators that a company is ready to buy — things like hiring surges, funding rounds, leadership changes, product launches, headcount growth, and LinkedIn activity from key decision-makers. Remes detects these automatically so you can reach prospects at the perfect moment.'
-  },
-  {
-    q: 'What types of buying signals does Remes detect?',
-    a: 'Anything you can describe. Typical buying signals include hiring surges, specific role postings, funding rounds, leadership changes and new executive hires, product launches and company announcements, headcount growth velocity, LinkedIn posts and engagement from key decision-makers, tech stack changes, and competitive movements. You are not limited to these categories.'
-  },
-  {
-    q: 'Do you send emails from my account?',
-    a: 'Yes. Remes sends through your connected email account via official APIs. Emails appear in your Sent folder, replies come to your inbox, and everything threads naturally. Your prospects never know a tool was involved.'
-  },
-  {
-    q: 'How does Remes handle email deliverability?',
-    a: 'Remes handles the full deliverability stack: dedicated domains, automated mailbox warmup (typically 2-3 weeks for new mailboxes), reputation monitoring, and sending controls, so you land in the primary inbox, not spam.'
-  },
-  {
-    q: 'How is Remes different from ZoomInfo, Apollo, Instantly or Clay?',
-    a: 'Apollo and ZoomInfo are contact databases: they find leads but do not research or write outreach. Instantly is a campaign tool: you have to import a lead list and manually create a campaign. Clay requires building automations from scratch with a credit system that burns fast. Remes replaces Clay + Apollo + Instantly with one tool.'
-  },
-  {
-    q: 'Why is it called Remes?',
-    a: "It's a reference to Hermes, the Greek god of commerce, trade, and messengers. He was the original messenger who always knew where to go, who to talk to, and exactly what to say. Fast forward to today, and the best sign that your outreach actually worked? Those two little letters in your inbox: RE:. Remes."
-  }
-];
-
-function ShowcaseSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.utils.toArray<HTMLElement>('.showcase-item').forEach((el) => {
-        const video = el.querySelector('.showcase-video');
-        const text = el.querySelector('.showcase-text');
-        const isReversed = el.classList.contains('showcase-reversed');
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        });
-
-        // Video slides in from its side
-        if (video) {
-          tl.fromTo(
-            video,
-            { x: isReversed ? 60 : -60, opacity: 0 },
-            { x: 0, opacity: 1, duration: 1, ease: 'power3.out' },
-            0
-          );
-        }
-
-        // Text fades up with slight delay
-        if (text) {
-          tl.fromTo(
-            text,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-            0.2
-          );
-        }
-      });
-
-      // Parallax drift on videos while scrolling
-      gsap.utils.toArray<HTMLElement>('.showcase-video').forEach((el) => {
-        gsap.to(el, {
-          y: -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5
-          }
-        });
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  return (
-    <section ref={sectionRef} id="use-cases" className="relative scroll-mt-16 py-16 sm:py-24">
-      <div className="section-heading relative mb-10 sm:mb-14">
-        <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-          See it in action
-        </span>
-        <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          Built for modern sales teams
-        </h2>
-      </div>
-
-      <div className="flex flex-col gap-16 sm:gap-24">
-        {SHOWCASE.map((item, i) => (
-          <div
-            key={item.label}
-            className={`showcase-item flex flex-col gap-8 sm:gap-12 ${i % 2 === 1 ? 'showcase-reversed sm:flex-row-reverse' : 'sm:flex-row'}`}
-          >
-            {/* Video */}
-            <div className="showcase-video relative flex-[1.4] overflow-hidden rounded-2xl border border-white/8 bg-black/40">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="size-full rounded-2xl object-contain"
-              >
-                <source src={item.video} type="video/mp4" />
-              </video>
-              <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
-            </div>
-
-            {/* Text */}
-            <div className="showcase-text flex flex-1 flex-col justify-center">
-              <div className="mb-3 flex items-center gap-3">
-                <span className="flex size-7 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300">
-                  {i + 1}
-                </span>
-                <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
-                  {item.label}
-                </span>
-              </div>
-              <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl lg:text-3xl">
-                {item.title}
-              </h3>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-                {item.desc}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 export function Landing() {
   const user = useAuthStore((s) => s.user);
@@ -509,6 +136,7 @@ export function Landing() {
   return (
     <div ref={pageRef} className="relative flex flex-col" style={{ background: '#08080c' }}>
       <LandingHeader />
+
       {/* ── Hero ── */}
       <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
@@ -583,7 +211,7 @@ export function Landing() {
       {/* ── Sections background — aurora + grain, dimmed ── */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-15 max-md:hidden">
+          <div className="absolute inset-0 opacity-15">
             <AuroraCanvas className="absolute inset-0" />
           </div>
           <div
@@ -604,10 +232,7 @@ export function Landing() {
         </div>
 
         <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
-          {/* ── Signals ── */}
           <SignalsSection />
-
-          {/* ── Showcase ── */}
           <ShowcaseSection />
 
           {/* ── FAQs ── */}
@@ -646,7 +271,6 @@ export function Landing() {
 
           {/* ── CTA ── */}
           <section className="relative overflow-hidden border-t border-white/8 py-20 text-center sm:py-28">
-            {/* Glow orb — pulses via GSAP */}
             <div className="cta-glow absolute top-1/2 left-1/2 size-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/10 blur-[120px]" />
 
             <div className="final-cta relative z-10">
