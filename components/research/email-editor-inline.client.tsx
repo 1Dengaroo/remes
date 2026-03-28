@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Send, RefreshCw, Loader2, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   AlertDialog,
@@ -25,7 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { ComposeEmailParams, GeneratedEmail } from '@/lib/types';
 import { toast } from 'sonner';
-import { generateEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
+import { streamEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { useResearchStore } from '@/lib/store/research-store';
 import { useSignatureStore } from '@/lib/store/signature-store';
@@ -74,7 +74,7 @@ function EmailPreview({
           {body ? (
             renderLines(body)
           ) : (
-            <p className="text-muted-foreground italic">Email body will appear here...</p>
+            <p className="text-muted-foreground italic">Generating email...</p>
           )}
         </div>
 
@@ -118,6 +118,9 @@ export function EmailEditorInline({
   const loadSignatures = useSignatureStore((s) => s.loadSignatures);
   const selectedSignature = signatures.find((s) => s.id === selectedSignatureId) ?? null;
 
+  const abortRef = useRef<AbortController | null>(null);
+  const generationIdRef = useRef(0);
+
   useEffect(() => {
     getGmailStatus().then((s) => {
       setGmailConnected(s.connected);
@@ -130,6 +133,9 @@ export function EmailEditorInline({
   }, [loadSignatures]);
 
   useEffect(() => {
+    // Abort any in-flight generation when contact/company changes
+    abortRef.current?.abort();
+
     setToEmail(contact.email ?? '');
     const cached = useResearchStore.getState().getEmailSequence(company.company_name, contactKey);
     if (cached) {
@@ -137,6 +143,7 @@ export function EmailEditorInline({
       setSubject(cached.emails[0].subject);
       setBody(cached.emails[0].body);
       setActiveStep(0);
+      setGenerating(false);
     } else {
       handleGenerate();
     }
@@ -150,13 +157,82 @@ export function EmailEditorInline({
   };
 
   const handleGenerate = async () => {
+    // Abort any previous in-flight generation
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const currentGenId = ++generationIdRef.current;
+
     setGenerating(true);
+    setSubject('');
+    setBody('');
+
+    let parsedSubject = false;
+
+    const tryExtractFields = (accumulated: string) => {
+      if (currentGenId !== generationIdRef.current) return;
+
+      if (!parsedSubject) {
+        const subjectMatch = accumulated.match(/"subject"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+        if (subjectMatch) {
+          setSubject(subjectMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n'));
+          parsedSubject = true;
+        }
+      }
+
+      const bodyStart = accumulated.match(/"body"\s*:\s*"/);
+      if (bodyStart && bodyStart.index !== undefined) {
+        const afterBodyKey = accumulated.slice(bodyStart.index + bodyStart[0].length);
+        let bodyContent = '';
+        let i = 0;
+        while (i < afterBodyKey.length) {
+          if (afterBodyKey[i] === '\\' && i + 1 < afterBodyKey.length) {
+            const next = afterBodyKey[i + 1];
+            if (next === 'n') bodyContent += '\n';
+            else if (next === '"') bodyContent += '"';
+            else if (next === '\\') bodyContent += '\\';
+            else bodyContent += next;
+            i += 2;
+          } else if (afterBodyKey[i] === '"') {
+            break;
+          } else {
+            bodyContent += afterBodyKey[i];
+            i++;
+          }
+        }
+        setBody(bodyContent);
+      }
+    };
+
     try {
-      const seq = await generateEmailSequence(company, contact, params.icp);
+      let accumulated = '';
+      const seq = await streamEmailSequence(
+        company,
+        contact,
+        params.icp,
+        (delta) => {
+          if (currentGenId !== generationIdRef.current) return;
+          accumulated += delta;
+          const firstEmailStart = accumulated.indexOf('{', accumulated.indexOf('['));
+          if (firstEmailStart !== -1) {
+            const firstEmailText = accumulated.slice(firstEmailStart);
+            tryExtractFields(firstEmailText);
+          }
+        },
+        controller.signal
+      );
+
+      // Only apply results if this generation is still current
+      if (currentGenId !== generationIdRef.current) return;
+
       setSteps(seq.emails);
       loadStep(activeStep, seq.emails);
       useResearchStore.getState().saveEmailSequence(company.company_name, contactKey, seq);
-    } catch {
+    } catch (err) {
+      if (currentGenId !== generationIdRef.current) return;
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+
       const title = company.signals[0]?.title ?? 'Introduction';
       const fallback: EmailTriple = [
         { subject: `${title} — ${company.company_name}`, body: '' },
@@ -166,7 +242,9 @@ export function EmailEditorInline({
       setSteps(fallback);
       loadStep(0, fallback);
     } finally {
-      setGenerating(false);
+      if (currentGenId === generationIdRef.current) {
+        setGenerating(false);
+      }
     }
   };
 
@@ -261,7 +339,7 @@ export function EmailEditorInline({
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 disabled={generating}
-                placeholder={generating ? 'Generating personalized email...' : ''}
+                placeholder={generating ? 'Generating email...' : ''}
               />
             </div>
 
@@ -272,7 +350,7 @@ export function EmailEditorInline({
                 onChange={(e) => setBody(e.target.value)}
                 className="min-h-40 flex-1 resize-none"
                 disabled={generating}
-                placeholder={generating ? 'Generating personalized email sequence...' : ''}
+                placeholder={generating ? 'Generating email...' : ''}
               />
             </div>
 

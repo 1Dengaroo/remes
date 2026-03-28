@@ -4,7 +4,6 @@ import { serviceConfig } from '@/lib/services/config';
 import { buildEmailGenerationPrompt } from '@/lib/prompts/email-generation';
 import { getAuthUser } from '@/lib/supabase/server';
 import { emailGenerateBodySchema, parseBody } from '@/lib/validation';
-import type { GeneratedEmailSequence } from '@/lib/types';
 import { getProfile } from '@/lib/supabase/queries';
 
 export async function POST(req: NextRequest) {
@@ -37,26 +36,45 @@ export async function POST(req: NextRequest) {
       senderCompany
     );
 
-    const message = await anthropic.messages.create({
-      model: serviceConfig.emailModel,
-      max_tokens: serviceConfig.emailMaxTokens,
-      messages: [{ role: 'user', content: prompt }]
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          const response = anthropic.messages.stream({
+            model: serviceConfig.emailModel,
+            max_tokens: serviceConfig.emailMaxTokens,
+            messages: [{ role: 'user', content: prompt }]
+          });
+
+          for await (const event of response) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({ type: 'delta', text: event.delta.text })}\n\n`
+                )
+              );
+            }
+          }
+
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to generate email';
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ type: 'error', message })}\n\n`)
+          );
+        } finally {
+          controller.close();
+        }
+      }
     });
 
-    const text = message.content[0].type === 'text' ? message.content[0].text : '';
-
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      return Response.json({ error: 'Failed to parse email response' }, { status: 500 });
-    }
-
-    const sequence: GeneratedEmailSequence = JSON.parse(jsonMatch[0]);
-
-    if (!sequence.emails || sequence.emails.length !== 3) {
-      return Response.json({ error: 'Invalid email sequence format' }, { status: 500 });
-    }
-
-    return Response.json(sequence);
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive'
+      }
+    });
   } catch (err) {
     const errMessage = err instanceof Error ? err.message : 'Failed to generate email';
     return Response.json({ error: errMessage }, { status: 500 });
