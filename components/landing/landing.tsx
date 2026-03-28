@@ -249,19 +249,21 @@ export function Landing() {
               </h2>
             </div>
 
-            <div className="relative mx-auto max-w-2xl rounded-2xl border border-white/8 bg-white/2 p-1">
+            <div className="relative rounded-2xl border border-white/8 bg-white/2 p-1">
               <Accordion type="single" collapsible className="w-full">
                 {FAQS.map((faq, i) => (
                   <AccordionItem
                     key={i}
                     value={`faq-${i}`}
-                    className="faq-item border-white/6 px-5"
+                    className="faq-item border-white/6 px-5 sm:px-6"
                   >
-                    <AccordionTrigger className="text-left text-white/80 hover:text-white">
+                    <AccordionTrigger className="text-left text-sm text-white/80 hover:text-white sm:text-base">
                       {faq.q}
                     </AccordionTrigger>
                     <AccordionContent>
-                      <p className="leading-relaxed text-white/50">{faq.a}</p>
+                      <p className="text-xs leading-relaxed text-white/50 sm:text-sm">
+                        {faq.a}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
