@@ -35,7 +35,7 @@ COMPANY CONTEXT
 CORE RULES (apply to ALL emails)
 
 Voice & Tone
-- Write like a helpful peer, not a salesperson. Imagine you're a friend who works in the industry and noticed something relevant.
+- Write like a helpful peer, not a salesperson. Imagine you're a friend who works in the industry and noticed something relevant, but do not be presumptuous or authoritiative.
 - Casual but professional. No buzzwords, no jargon-stacking, no "synergy" or "leverage" or "unlock", no curse words.
 - Short sentences. Punchy. Conversational. The way people actually write in Slack or quick emails.
 - NEVER use exclamation marks more than once across the entire sequence.
@@ -60,7 +60,7 @@ Strategy
 EMAIL 1 — The Signal-Based Opener
 Goal: Demonstrate you've done research. Connect an observed signal to a relevant pain point. Introduce the product as a natural fit — not a pitch.
 Subject line: 4-6 words, lowercase or sentence case (never Title Case), feels like an internal email, can be a question, relates to the signal NOT the product name.
-Body: Open with the signal (what you observed about their company)- strictly keep this to 1 sentence with the relevant content with the signal and bridge to the pain point. In the next paragraph, introduce the product as a natural way to address that challenge — ONE sentence. Include exactly ONE proof point with specific numbers framed as a story. End with a soft offer in 1 sentence — NOT a meeting request. 3 short paragraphs is the absolute maximum 
+Body: Open with the signal (what you observed about their company)- strictly keep this to 1 sentence with the relevant content with the signal and potential pain point. Do not tell the prospect how to feel or act like an indsutry expert or act like you know the prospect's world. Do not sound authoritaitve. In the next paragraph, introduce the product as a natural way to address that challenge — ONE sentence. Include exactly ONE proof point with specific numbers framed as a story. End with a soft offer in 1 sentence — NOT a meeting request. 3 short paragraphs is the absolute maximum 
 Examples of a soft offer to use: "Happy to walk through it if that's helpful.", "Happy to connect if this is relevant.", "Worth a conversation?"
 Length: Strictly 60-80 words in the body (excluding greeting and sign-off). 
 Include greeting (Hey ${prospectFirst},) and sign-off (Best, ${sender}).
@@ -81,8 +81,9 @@ Return ONLY valid JSON with this exact structure — no explanation, no commenta
 {"emails":[{"subject":"...","body":"..."},{"subject":"Re: ...","body":"..."},{"subject":"Re: ...","body":"..."}]}
 
 QUALITY CHECKLIST (verify before returning)
-- Email 1 subject is 4-8 words, lowercase/sentence case, no product name
-- Email 1 opens with the prospect's world, not the product
+- Email 1 subject is 4-6 words, lowercase/sentence case, no product name
+- Email 1 opens with the prospect's world, not the product. 
+- Email 1's first paragraph does not tell the prospect how to feel or act like the sender knows the prospect's world. The first paragrah sounds confident in the observation but not authoriative on how it ties into the pain point. Simply makes an observation.
 - Email 1 has exactly ONE proof point with specific numbers
 - Email 1 is strictly 60-80 words (body only, excluding greeting/sign-off)
 - Email 1 ends with one of the soft offers listed.
@@ -93,6 +94,6 @@ QUALITY CHECKLIST (verify before returning)
 - No bullet points, bold, or HTML formatting in any email
 - Each email uses a different proof point
 - No jargon-stacking or salesy phrases
-- No em dashes: "-"
+- Strictly no em dashes in any body of the email: "-"
 - Sign-offs use first name only — no title, company, or contact info`;
 }
