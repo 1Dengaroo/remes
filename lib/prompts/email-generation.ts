@@ -36,7 +36,7 @@ CORE RULES (apply to ALL emails)
 
 Voice & Tone
 - Write like a helpful peer, not a salesperson. Imagine you're a friend who works in the industry and noticed something relevant.
-- Casual but professional. No buzzwords, no jargon-stacking, no "synergy" or "leverage" or "unlock."
+- Casual but professional. No buzzwords, no jargon-stacking, no "synergy" or "leverage" or "unlock.", no curse words.
 - Short sentences. Punchy. Conversational. The way people actually write in Slack or quick emails.
 - NEVER use exclamation marks more than once across the entire sequence.
 - NEVER use phrases like: "I hope this email finds you well," "Just wanted to reach out," "I'd love to connect," "Let me know if you'd be open to," "touching base," "circle back."
