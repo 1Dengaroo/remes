@@ -2,7 +2,18 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import {
+  ArrowRight,
+  Briefcase,
+  ChevronDown,
+  FileBarChart,
+  FileText,
+  Globe,
+  Linkedin,
+  Newspaper,
+  SlidersHorizontal,
+  Users
+} from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -101,27 +112,133 @@ function RotatingWord() {
   );
 }
 
+const SIGNAL_CARDS = [
+  {
+    icon: Briefcase,
+    title: 'Job Openings',
+    desc: '"Currently hiring 3+ engineers with experience in Next.js"'
+  },
+  {
+    icon: Newspaper,
+    title: 'News',
+    desc: '"Faced cybersecurity attacks or data breach in the last 12 months"'
+  },
+  {
+    icon: Globe,
+    title: 'Company Website',
+    desc: '"The company is SOC 2 Type 2 compliant"'
+  },
+  {
+    icon: FileText,
+    title: 'Job Descriptions',
+    desc: '"Mentions building expense reports in Excel/Spreadsheet, in finance job openings in the past 2 years"'
+  },
+  {
+    icon: Users,
+    title: 'Employees',
+    desc: '"Onboarded Data Engineer in the last 3 months, who mentioned Snowflake on their LinkedIn profile"'
+  },
+  {
+    icon: Globe,
+    title: 'Company Website',
+    desc: '"The company offers insurance services"'
+  },
+  {
+    icon: FileBarChart,
+    title: '10-K Report',
+    desc: '"Mention HR initiatives to improve employee communication"'
+  },
+  {
+    icon: Linkedin,
+    title: 'Company LinkedIn Posts',
+    desc: '"Going to cloud technology conferences"'
+  },
+  {
+    icon: SlidersHorizontal,
+    title: 'Custom',
+    desc: null
+  }
+];
+
+function SignalsSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.utils.toArray<HTMLElement>('.signal-card').forEach((el, i) => {
+        gsap.fromTo(
+          el,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: i * 0.06,
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 92%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      });
+    },
+    { scope: sectionRef }
+  );
+
+  return (
+    <section ref={sectionRef} className="relative scroll-mt-16 py-16 sm:py-24">
+      <div className="section-heading relative mb-10 text-center sm:mb-14">
+        <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl xl:text-5xl">
+          Reach out the moment you spot <RotatingWord />
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {SIGNAL_CARDS.map((card, i) => (
+          <div
+            key={`${card.title}-${i}`}
+            className="signal-card group rounded-2xl border border-white/8 bg-white/[0.03] p-6 transition-colors hover:border-violet-400/20 hover:bg-white/[0.05] sm:p-8"
+          >
+            <card.icon className="mb-6 size-10 text-violet-400 sm:size-12" strokeWidth={1.5} />
+            <h3 className="text-lg font-semibold text-white">{card.title}</h3>
+            {card.desc ? (
+              <p className="mt-2 text-sm leading-relaxed text-white/50">{card.desc}</p>
+            ) : (
+              <Button
+                variant="outline"
+                className="mt-4 gap-2 rounded-full border-violet-400/30 bg-violet-500/10 text-sm text-violet-300 hover:bg-violet-500/20 hover:text-violet-200"
+              >
+                Curate your own signal
+                <ArrowRight className="size-3.5" />
+              </Button>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const SHOWCASE = [
   {
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
-    video: 'https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4',
-    poster: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+    video: '/landing-one.mov'
   },
   {
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    video: 'https://videos.pexels.com/video-files/7579961/7579961-uhd_2560_1440_30fps.mp4',
-    poster: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80'
+    video: '/landing-two.mov'
   },
   {
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
     desc: 'Every email is grounded in the signal that triggered it — relevant, timely, and personal. Not another generic template.',
-    video: 'https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4',
-    poster: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'
+    video: 'https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4'
   }
 ];
 
@@ -242,16 +359,18 @@ function ShowcaseSection() {
             className={`showcase-item flex flex-col gap-8 sm:gap-12 ${i % 2 === 1 ? 'showcase-reversed sm:flex-row-reverse' : 'sm:flex-row'}`}
           >
             {/* Video */}
-            <div className="showcase-video relative aspect-video flex-[1.4] overflow-hidden rounded-2xl border border-white/8 bg-black/40">
+            <div className="showcase-video relative flex-[1.4] overflow-hidden rounded-2xl border border-white/8 bg-black/40">
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
-                poster={item.poster}
-                className="absolute inset-0 size-full object-cover"
+                className="size-full rounded-2xl object-contain"
               >
-                <source src={item.video} type="video/mp4" />
+                <source
+                  src={item.video}
+                  type={item.video.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'}
+                />
               </video>
               <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
             </div>
@@ -338,48 +457,6 @@ export function Landing() {
             }
           }
         );
-      });
-
-      // Showcase — text and image enter separately with offset
-      gsap.utils.toArray<HTMLElement>('.showcase-item').forEach((el) => {
-        const text = el.querySelector('.showcase-text');
-        const image = el.querySelector('.showcase-image');
-
-        if (text) {
-          gsap.fromTo(
-            text,
-            { x: -30, opacity: 0 },
-            {
-              x: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: el,
-                start: 'top 82%',
-                toggleActions: 'play none none reverse'
-              }
-            }
-          );
-        }
-        if (image) {
-          gsap.fromTo(
-            image,
-            { x: 30, opacity: 0 },
-            {
-              x: 0,
-              opacity: 1,
-              duration: 0.8,
-              delay: 0.12,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: el,
-                start: 'top 82%',
-                toggleActions: 'play none none reverse'
-              }
-            }
-          );
-        }
       });
 
       // FAQ items — stagger in individually
@@ -476,14 +553,19 @@ export function Landing() {
           </div>
 
           <h1 className="hero-reveal mt-8 max-w-4xl text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
-            Reach out the moment
+            Deep research.
             <br />
-            you spot <RotatingWord />
+            Right contacts.
+            <br />
+            <span className="bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+              Emails that convert.
+            </span>
           </h1>
 
-          <p className="hero-reveal mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg sm:leading-relaxed">
-            Remes detects buying signals across the web and crafts personalized outreach — so you
-            reach prospects at exactly the right moment.
+          <p className="hero-reveal mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg sm:leading-relaxed">
+            Remes scans the web for buying signals from companies aligned with your ideal customer,
+            maps contacts at every account, and crafts hyper-personalized outreach so you have
+            outbound on auto-pilot.
           </p>
 
           <div className="hero-reveal mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
@@ -528,6 +610,9 @@ export function Landing() {
         </div>
 
         <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
+          {/* ── Signals ── */}
+          <SignalsSection />
+
           {/* ── Showcase ── */}
           <ShowcaseSection />
 

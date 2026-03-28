@@ -29,7 +29,10 @@ function CollapsedTrigger() {
   if (isMobile || state === 'expanded') return null;
 
   return (
-    <SidebarTrigger label="Open sidebar" className="bg-sidebar hover:bg-sidebar-accent text-sidebar-foreground border-sidebar-border fixed top-4 left-16 z-50 size-8 rounded-md border shadow-sm" />
+    <SidebarTrigger
+      label="Open sidebar"
+      className="bg-sidebar hover:bg-sidebar-accent text-sidebar-foreground border-sidebar-border fixed top-4 left-16 z-50 size-8 rounded-md border shadow-sm"
+    />
   );
 }
 
