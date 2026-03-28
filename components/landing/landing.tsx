@@ -226,13 +226,13 @@ const SHOWCASE = [
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
-    video: '/landing-one.mov'
+    video: '/landing-one.mp4'
   },
   {
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    video: '/landing-two.mov'
+    video: '/landing-two.mp4'
   },
   {
     label: 'AI Outreach',
@@ -369,7 +369,7 @@ function ShowcaseSection() {
               >
                 <source
                   src={item.video}
-                  type={item.video.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'}
+                  type="video/mp4"
                 />
               </video>
               <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
