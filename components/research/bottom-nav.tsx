@@ -321,7 +321,7 @@ export function BottomNav() {
                   <AlertDialogTrigger asChild>
                     <Button size="sm" variant="outline">
                       <RotateCcw className="size-3.5" />
-                      New Research
+                      <span className="hidden md:inline">New Research</span>
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -354,7 +354,7 @@ export function BottomNav() {
                   }}
                 >
                   <RotateCcw className="size-3.5" />
-                  New Research
+                  <span className="hidden md:inline">New Research</span>
                 </Button>
               )}
               <Button asChild variant="ghost" size="sm">
