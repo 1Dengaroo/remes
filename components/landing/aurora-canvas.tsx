@@ -1,14 +1,13 @@
 'use client';
 
 const BLOBS = [
-  { color: 'rgba(99,102,241,0.2)', size: 500, x: '15%', y: '20%', duration: 22, delay: 0 },
-  { color: 'rgba(124,58,237,0.2)', size: 550, x: '70%', y: '15%', duration: 26, delay: -4 },
-  { color: 'rgba(168,85,247,0.18)', size: 480, x: '45%', y: '60%', duration: 20, delay: -8 },
-  { color: 'rgba(217,70,239,0.15)', size: 520, x: '80%', y: '70%', duration: 24, delay: -12 },
-  { color: 'rgba(236,72,153,0.15)', size: 460, x: '25%', y: '75%', duration: 28, delay: -6 },
-  { color: 'rgba(79,70,229,0.18)', size: 500, x: '60%', y: '40%', duration: 23, delay: -10 },
-  { color: 'rgba(45,212,191,0.12)', size: 440, x: '35%', y: '30%', duration: 25, delay: -3 },
-  { color: 'rgba(139,92,246,0.16)', size: 480, x: '50%', y: '85%', duration: 21, delay: -7 }
+  { color: 'rgba(86,67,204,0.22)', size: 520, x: '20%', y: '25%', duration: 22, delay: 0 },
+  { color: 'rgba(69,94,181,0.20)', size: 560, x: '70%', y: '18%', duration: 26, delay: -4 },
+  { color: 'rgba(103,63,215,0.18)', size: 480, x: '45%', y: '60%', duration: 20, delay: -8 },
+  { color: 'rgba(138,127,255,0.14)', size: 500, x: '80%', y: '65%', duration: 24, delay: -12 },
+  { color: 'rgba(70,227,183,0.10)', size: 440, x: '25%', y: '75%', duration: 28, delay: -6 },
+  { color: 'rgba(86,67,204,0.16)', size: 500, x: '60%', y: '40%', duration: 23, delay: -10 },
+  { color: 'rgba(47,122,208,0.12)', size: 460, x: '35%', y: '30%', duration: 25, delay: -3 }
 ];
 
 export function AuroraCanvas({ className }: { className?: string }) {

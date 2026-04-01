@@ -68,7 +68,14 @@ export function RotatingWord() {
       <span ref={wrapperRef} className="inline-block">
         <span
           ref={wordRef}
-          className="inline-block bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text whitespace-nowrap text-transparent"
+          className="inline-block whitespace-nowrap"
+          style={{
+            backgroundImage:
+              'linear-gradient(92.88deg, #455eb5 9.16%, #5643cc 43.89%, #673fd7 64.72%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}
         >
           {ROTATING_WORDS[index]}
         </span>

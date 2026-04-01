@@ -1,116 +1,63 @@
 'use client';
 
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SHOWCASE } from './landing-constants';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export function ShowcaseSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      gsap.utils.toArray<HTMLElement>('.showcase-item').forEach((el) => {
-        const video = el.querySelector('.showcase-video');
-        const text = el.querySelector('.showcase-text');
-        const isReversed = el.classList.contains('showcase-reversed');
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        });
-
-        // Video slides in from its side
-        if (video) {
-          tl.fromTo(
-            video,
-            { x: isReversed ? 60 : -60, opacity: 0 },
-            { x: 0, opacity: 1, duration: 1, ease: 'power3.out' },
-            0
-          );
-        }
-
-        // Text fades up with slight delay
-        if (text) {
-          tl.fromTo(
-            text,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-            0.2
-          );
-        }
-      });
-
-      // Parallax drift on videos while scrolling
-      gsap.utils.toArray<HTMLElement>('.showcase-video').forEach((el) => {
-        gsap.to(el, {
-          y: -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5
-          }
-        });
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <section ref={sectionRef} id="use-cases" className="relative scroll-mt-16 py-16 sm:py-24">
-      <div className="section-heading relative mb-10 sm:mb-14">
-        <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-          See it in action
-        </span>
-        <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+    <section id="use-cases" className="relative scroll-mt-16 py-20 sm:py-32">
+      <div className="relative mb-12 sm:mb-16">
+        <p className="mb-3 text-sm font-medium text-[#5643cc]">Features</p>
+        <h2
+          className="text-2xl font-semibold tracking-tight text-[#e4e5e9] sm:text-3xl"
+          style={{ textWrap: 'balance' }}
+        >
           Built for modern sales teams
         </h2>
       </div>
 
-      <div className="flex flex-col gap-16 sm:gap-24">
+      <div className="relative">
         {SHOWCASE.map((item, i) => (
           <div
             key={item.label}
-            className={`showcase-item flex flex-col gap-8 sm:gap-12 ${i % 2 === 1 ? 'showcase-reversed sm:flex-row-reverse' : 'sm:flex-row'}`}
+            className="stacked-card sticky top-24 mb-24 last:mb-0"
+            style={{
+              zIndex: i + 1,
+              top: `calc(6rem + ${i * 20}px)`
+            }}
           >
-            {/* Video */}
-            <div className="showcase-video relative flex-[1.4] overflow-hidden rounded-2xl border border-white/8 bg-black/40">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="size-full rounded-2xl object-contain"
-              >
-                <source src={item.video} type="video/mp4" />
-              </video>
-              <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
-            </div>
-
-            {/* Text */}
-            <div className="showcase-text flex flex-1 flex-col justify-center">
-              <div className="mb-3 flex items-center gap-3">
-                <span className="flex size-7 items-center justify-center rounded-full border border-violet-400/30 bg-violet-500/10 text-xs font-semibold text-violet-300">
-                  {i + 1}
-                </span>
-                <span className="text-xs font-medium tracking-widest text-violet-400 uppercase">
+            <div className="mx-auto max-w-7xl">
+              {/* Text above the card */}
+              <div className="mb-5 sm:mb-6">
+                <span className="text-xs font-medium tracking-wider text-[#9c9da1]/60 uppercase">
                   {item.label}
                 </span>
+                <h3
+                  className="mt-1.5 text-base font-semibold tracking-tight text-[#e4e5e9] sm:text-lg"
+                  style={{ textWrap: 'balance' }}
+                >
+                  {item.title}
+                </h3>
+                <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-[#9c9da1]/80">
+                  {item.desc}
+                </p>
               </div>
-              <h3 className="text-xl font-bold tracking-tight text-white sm:text-2xl lg:text-3xl">
-                {item.title}
-              </h3>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-                {item.desc}
-              </p>
+
+              {/* Image with clean Linear-style frame */}
+              <div className="relative">
+                {/* Subtle glow */}
+                <div className="absolute -inset-6 rounded-2xl bg-[#5643cc]/3 blur-3xl" />
+
+                {/* Card frame */}
+                <div className="relative overflow-hidden rounded-xl border border-white/6 bg-[#111214] shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+                  <img src={item.image} alt={item.label} className="w-full object-contain" />
+
+                  {/* Bottom fade */}
+                  <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-16 bg-linear-to-t from-[#111214] to-transparent" />
+                </div>
+
+                {/* Top reflection line */}
+                <div className="pointer-events-none absolute top-0 right-8 left-8 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+              </div>
             </div>
           </div>
         ))}

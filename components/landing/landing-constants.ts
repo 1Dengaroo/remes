@@ -1,15 +1,3 @@
-import {
-  Briefcase,
-  FileBarChart,
-  FileText,
-  Globe,
-  Linkedin,
-  Newspaper,
-  SlidersHorizontal,
-  Users
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
 export const ROTATING_WORDS = [
   'funding rounds',
   'hiring surges',
@@ -18,51 +6,54 @@ export const ROTATING_WORDS = [
   'growth signals'
 ];
 
-export const SIGNAL_CARDS: { icon: LucideIcon; title: string; desc: string | null }[] = [
+export const SIGNALS: { source: string; example: string; color: string }[] = [
   {
-    icon: Briefcase,
-    title: 'Job Openings',
-    desc: '"Currently hiring 3+ engineers with experience in Next.js"'
+    source: 'Job Openings',
+    example: 'Currently hiring 3+ engineers with experience in Next.js',
+    color: '#5643cc'
   },
   {
-    icon: Newspaper,
-    title: 'News',
-    desc: '"Faced cybersecurity attacks or data breach in the last 12 months"'
+    source: 'News & Press',
+    example: 'Faced cybersecurity attacks or data breach in the last 12 months',
+    color: '#e5484d'
   },
   {
-    icon: Globe,
-    title: 'Company Website',
-    desc: '"The company is SOC 2 Type 2 compliant"'
+    source: 'Company Website',
+    example: 'The company is SOC 2 Type 2 compliant',
+    color: '#46e3b7'
   },
   {
-    icon: FileText,
-    title: 'Job Descriptions',
-    desc: '"Mentions building expense reports in Excel/Spreadsheet, in finance job openings in the past 2 years"'
+    source: 'Job Descriptions',
+    example:
+      'Mentions building expense reports in Excel/Spreadsheet, in finance job openings in the past 2 years',
+    color: '#f7c12b'
   },
   {
-    icon: Users,
-    title: 'Employees',
-    desc: '"Onboarded Data Engineer in the last 3 months, who mentioned Snowflake on their LinkedIn profile"'
+    source: 'Employee Activity',
+    example:
+      'Onboarded Data Engineer in the last 3 months, who mentioned Snowflake on their LinkedIn profile',
+    color: '#2f7ad0'
   },
   {
-    icon: Globe,
-    title: 'Company Website',
-    desc: '"The company offers insurance services"'
+    source: '10-K Reports',
+    example: 'Mention HR initiatives to improve employee communication',
+    color: '#673fd7'
   },
   {
-    icon: FileBarChart,
-    title: '10-K Report',
-    desc: '"Mention HR initiatives to improve employee communication"'
+    source: 'Funding Rounds',
+    example: 'Raised Series B of $20M+ in the last 6 months',
+    color: '#46e3b7'
   },
   {
-    icon: Linkedin,
-    title: 'Company LinkedIn Posts',
-    desc: '"Going to cloud technology conferences"'
+    source: 'LinkedIn Posts',
+    example: 'Going to cloud technology conferences',
+    color: '#455eb5'
   },
   {
-    icon: SlidersHorizontal,
-    title: 'Custom',
-    desc: null
+    source: 'Custom Signals',
+    example:
+      'Define any buying signal you can imagine — if you can describe it, Remes can detect it',
+    color: 'custom'
   }
 ];
 
@@ -71,19 +62,19 @@ export const SHOWCASE = [
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
-    video: '/landing-one.mp4'
+    image: '/research-step-one.png'
   },
   {
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    video: '/landing-two.mp4'
+    image: '/research-step-three.png'
   },
   {
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
     desc: 'Every email is grounded in the signal that triggered it — relevant, timely, and personal. Not another generic template.',
-    video: 'https://videos.pexels.com/video-files/5752729/5752729-uhd_2560_1440_30fps.mp4'
+    image: '/research-step-five.png'
   }
 ];
 

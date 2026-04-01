@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
+import { MAX_WIDTH } from '@/lib/layout';
 
 function UserAvatar() {
   const user = useAuthStore((s) => s.user);
@@ -17,10 +18,10 @@ function UserAvatar() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-white/60 hover:bg-white/10 hover:text-white"
+        className="text-sm font-medium text-[#9c9da1] transition-colors duration-150 hover:bg-transparent hover:text-[#e4e5e9]"
         onClick={openAuthModal}
       >
-        Sign in
+        Log in
       </Button>
     );
   }
@@ -29,7 +30,7 @@ function UserAvatar() {
     <button
       type="button"
       onClick={() => openProfile()}
-      className="hover:ring-primary/30 rounded-full transition-all hover:ring-2"
+      className="rounded-full transition-opacity duration-150 hover:opacity-80"
     >
       {user.user_metadata?.avatar_url ? (
         // eslint-disable-next-line @next/next/no-img-element -- external Google avatar URL
@@ -40,7 +41,7 @@ function UserAvatar() {
           referrerPolicy="no-referrer"
         />
       ) : (
-        <div className="bg-primary/10 text-primary flex size-7 items-center justify-center rounded-full text-xs font-medium">
+        <div className="flex size-7 items-center justify-center rounded-full bg-[#5643cc]/20 text-xs font-medium text-[#8a8fff]">
           {(user.email?.[0] ?? '?').toUpperCase()}
         </div>
       )}
@@ -51,22 +52,20 @@ function UserAvatar() {
 function LandingNav() {
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="hidden text-white/60 hover:bg-white/10 hover:text-white md:inline-flex"
+      <button
+        type="button"
+        className="hidden text-sm text-[#9c9da1] transition-colors duration-150 hover:text-[#e4e5e9] md:inline-block"
         onClick={() => document.getElementById('use-cases')?.scrollIntoView({ behavior: 'smooth' })}
       >
-        Use Cases
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="hidden text-white/60 hover:bg-white/10 hover:text-white md:inline-flex"
+        Features
+      </button>
+      <button
+        type="button"
+        className="hidden text-sm text-[#9c9da1] transition-colors duration-150 hover:text-[#e4e5e9] md:inline-block"
         onClick={() => document.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' })}
       >
         FAQs
-      </Button>
+      </button>
     </>
   );
 }
@@ -84,37 +83,32 @@ export function LandingHeader() {
   return (
     <div
       className="fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out"
-      style={{ padding: scrolled ? '10px 16px 0' : '0' }}
+      style={{ padding: scrolled ? '10px 24px 0' : '0' }}
     >
       <header
         className="w-full transition-all duration-500 ease-out"
         style={{
-          maxWidth: scrolled ? '1500px' : '100%',
-          backgroundColor: scrolled ? 'rgba(8, 8, 12, 0.8)' : 'transparent',
+          maxWidth: scrolled ? '64rem' : '100%',
+          backgroundColor: scrolled ? 'rgba(8, 9, 10, 0.85)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
-          border: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
-          borderBottomColor: scrolled ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.06)',
-          backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'blur(12px)',
-          boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.25)' : 'none'
+          border: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+          borderBottomColor: scrolled ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.04)',
+          backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
+          boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : 'none'
         }}
       >
         <div
-          className="flex items-center justify-between transition-all duration-500 ease-out"
-          style={{ padding: scrolled ? '8px 20px' : '12px 24px' }}
+          className={`mx-auto flex w-full ${MAX_WIDTH} items-center justify-between px-6 transition-all duration-500 ease-out`}
+          style={{ padding: scrolled ? '8px 20px' : '14px 24px' }}
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2.5">
-              <Image src="/remes-logo.png" alt="Remes" width={24} height={24} className="rounded" />
-              <span className="text-sm font-semibold tracking-widest text-white uppercase">
-                Remes
-              </span>
-              <span className="rounded-sm bg-white/10 px-1.5 py-0.5 text-[10px] leading-none font-medium tracking-wide text-white/60 uppercase">
-                Beta
-              </span>
+              <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
+              <span className="text-sm font-semibold tracking-wide text-[#e4e5e9]">Remes</span>
             </Link>
             <LandingNav />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <UserAvatar />
           </div>
         </div>
