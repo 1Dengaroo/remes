@@ -27,12 +27,12 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'dark',
     name: 'Dark',
-    description: 'Purple and sand on charcoal',
+    description: 'Neutral dark with purple accents — clean, focused',
     isDark: true,
     previewColors: {
-      bg: '#121110',
-      primary: '#a48efa',
-      secondary: '#7a7774',
+      bg: '#101010',
+      primary: '#9b7af0',
+      secondary: '#848484',
       tertiary: 'hsl(220, 50%, 58%)'
     }
   },
@@ -87,12 +87,12 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'periwinkle-dark',
     name: 'Periwinkle Dark',
-    description: 'Deep blue-violet — midnight twilight, dreamy',
+    description: 'Neutral dark with periwinkle accents — clean, focused',
     isDark: true,
     previewColors: {
-      bg: '#0f0e1a',
+      bg: '#0e0e0e',
       primary: '#8b8ef8',
-      secondary: '#7e7c9a',
+      secondary: '#7e7e7e',
       tertiary: '#a78bfa'
     }
   },

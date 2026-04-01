@@ -1,42 +1,41 @@
 /*
- * DARK — Purple & Frost (Dark)
- * Dark counterpart of the light "Purple & Frost" theme.
- * Same purple personality, inverted onto deep violet-tinted surfaces.
+ * DARK — Neutral dark with purple accents
+ * Clean gray/black base, purple primary personality.
  */
 
 [data-theme='dark'] body {
-  background-color: #110f18;
+  background-color: #101010;
 }
 
 [data-theme='dark'] {
   /* Semantic tokens (oklch L C H) */
 
-  /* Same purple hue family as light, lifted for dark bg */
+  /* Purple accents — lifted for dark bg */
   --accent-primary: 0.7 0.18 288;
   --accent-secondary: 0.6 0.03 280;
   --accent-tertiary: 0.65 0.12 265;
 
-  /* Deep purple-tinted surfaces */
-  --surface-primary: 0.14 0.01 288;
-  --surface-secondary: 0.17 0.012 286;
-  --surface-elevated: 0.21 0.014 288;
-  --surface-overlay: 0.07 0.008 288;
+  /* Neutral gray surfaces */
+  --surface-primary: 0.14 0 0;
+  --surface-secondary: 0.17 0 0;
+  --surface-elevated: 0.21 0 0;
+  --surface-overlay: 0.07 0 0;
 
-  /* Purple-tinted borders */
-  --border-default: 0.24 0.015 288;
-  --border-subtle: 0.2 0.01 288;
-  --border-strong: 0.34 0.02 288;
+  /* Neutral gray borders */
+  --border-default: 0.24 0 0;
+  --border-subtle: 0.2 0 0;
+  --border-strong: 0.34 0 0;
 
-  /* Purple-cool text (matching light hue) */
-  --text-primary: 0.93 0.006 288;
-  --text-secondary: 0.68 0.008 288;
-  --text-muted: 0.48 0.006 288;
-  --text-inverse: 0.14 0.012 288;
+  /* Neutral text */
+  --text-primary: 0.93 0 0;
+  --text-secondary: 0.68 0 0;
+  --text-muted: 0.48 0 0;
+  --text-inverse: 0.14 0 0;
 
-  /* Purple-tinted elevations */
-  --elevation-sm: 0 2px 10px rgba(40, 20, 80, 0.5), 0 1px 4px rgba(40, 20, 80, 0.3);
-  --elevation-md: 0 6px 22px rgba(40, 20, 80, 0.55), 0 2px 6px rgba(40, 20, 80, 0.3);
-  --elevation-lg: 0 14px 40px rgba(40, 20, 80, 0.6), 0 4px 10px rgba(40, 20, 80, 0.35);
+  /* Neutral black elevations */
+  --elevation-sm: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.25);
+  --elevation-md: 0 6px 22px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --elevation-lg: 0 14px 40px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
 
   /* Tag tokens — matching light theme */
   --tag-radius: 6px;
@@ -78,10 +77,10 @@
   --button-radius: 0.5rem;
 
   /* Chrome — header & bottom nav */
-  --chrome: #1a1726;
-  --header-border: #2d2740;
+  --chrome: #1a1a1a;
+  --header-border: #2c2c2c;
   --header-backdrop: none;
-  --bottom-nav-border: #2d2740;
+  --bottom-nav-border: #2c2c2c;
   --bottom-nav-backdrop: none;
 
   /* Signal badges — same hues as light, lifted for dark */
@@ -97,32 +96,32 @@
   --signal-other-text: hsl(265 10% 72%);
 
   /* shadcn bridge tokens */
-  --background: #110f18;
-  --foreground: #e6e2ef;
-  --card: #1a1726;
-  --card-foreground: #e6e2ef;
-  --popover: #1a1726;
-  --popover-foreground: #e6e2ef;
-  --modal: #1a1726;
-  --modal-foreground: #e6e2ef;
-  --dropdown: #1e1a2d;
-  --dropdown-foreground: #e6e2ef;
-  --sheet: #1a1726;
-  --sheet-foreground: #e6e2ef;
-  --tabs: #1a1726;
-  --input-surface: #1a1726;
+  --background: #101010;
+  --foreground: #e4e4e4;
+  --card: #1a1a1a;
+  --card-foreground: #e4e4e4;
+  --popover: #1a1a1a;
+  --popover-foreground: #e4e4e4;
+  --modal: #1a1a1a;
+  --modal-foreground: #e4e4e4;
+  --dropdown: #1e1e1e;
+  --dropdown-foreground: #e4e4e4;
+  --sheet: #1a1a1a;
+  --sheet-foreground: #e4e4e4;
+  --tabs: #1a1a1a;
+  --input-surface: #1a1a1a;
   --primary: #9b7af0;
-  --primary-foreground: #0e0c15;
-  --secondary: #231f33;
-  --secondary-foreground: #c8c1d8;
-  --muted: #1e1a2c;
-  --muted-foreground: #847a9e;
-  --accent: #231f33;
-  --accent-foreground: #e6e2ef;
+  --primary-foreground: #101010;
+  --secondary: #232323;
+  --secondary-foreground: #c6c6c6;
+  --muted: #1e1e1e;
+  --muted-foreground: #848484;
+  --accent: #232323;
+  --accent-foreground: #e4e4e4;
   --destructive: hsl(0 65% 55%);
   --destructive-foreground: #ffffff;
-  --border: #2d2740;
-  --input: #2d2740;
+  --border: #2c2c2c;
+  --input: #2c2c2c;
   --ring: #9b7af0;
   --radius: 0.625rem;
 
@@ -134,12 +133,12 @@
   --chart-5: hsl(18 55% 58%);
 
   /* Sidebar */
-  --sidebar-background: #100e18;
-  --sidebar-foreground: #a89ebe;
+  --sidebar-background: #0e0e0e;
+  --sidebar-foreground: #a0a0a0;
   --sidebar-primary: #9b7af0;
-  --sidebar-primary-foreground: #0e0c15;
-  --sidebar-accent: #1c1828;
-  --sidebar-accent-foreground: #eeecf4;
-  --sidebar-border: #241f34;
+  --sidebar-primary-foreground: #101010;
+  --sidebar-accent: #1c1c1c;
+  --sidebar-accent-foreground: #ececec;
+  --sidebar-border: #242424;
   --sidebar-ring: #9b7af0;
 }

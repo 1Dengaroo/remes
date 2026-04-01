@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
@@ -20,6 +20,7 @@ import { AuroraCanvas } from './aurora-canvas';
 import { LandingHeader } from './landing-header.client';
 import { SignalsSection } from './signals-section.client';
 import { ShowcaseSection } from './showcase-section.client';
+import { DemoModal } from './demo-modal.client';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,7 @@ export function Landing() {
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
   const router = useRouter();
   const pageRef = useRef<HTMLDivElement>(null);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   const handleGetStarted = () => {
     if (user) {
@@ -42,8 +44,8 @@ export function Landing() {
       // Hero text stagger
       gsap.fromTo(
         '.hero-reveal',
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: 'power4.out', stagger: 0.15, delay: 0.2 }
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'power3.out', stagger: 0.12, delay: 0.15 }
       );
 
       // Scroll indicator — bounce + fade out on scroll
@@ -68,11 +70,11 @@ export function Landing() {
       gsap.utils.toArray<HTMLElement>('.section-heading').forEach((el) => {
         gsap.fromTo(
           el,
-          { y: 30, opacity: 0 },
+          { y: 24, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
+            duration: 0.7,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: el,
@@ -87,13 +89,13 @@ export function Landing() {
       gsap.utils.toArray<HTMLElement>('.faq-item').forEach((el, i) => {
         gsap.fromTo(
           el,
-          { y: 20, opacity: 0 },
+          { y: 16, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.5,
+            duration: 0.45,
             ease: 'power2.out',
-            delay: i * 0.06,
+            delay: i * 0.05,
             scrollTrigger: {
               trigger: el,
               start: 'top 90%',
@@ -106,11 +108,11 @@ export function Landing() {
       // CTA reveal
       gsap.fromTo(
         '.final-cta',
-        { y: 40, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 0.7,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: '.final-cta',
@@ -122,11 +124,11 @@ export function Landing() {
 
       // CTA glow pulse
       gsap.to('.cta-glow', {
-        scale: 1.15,
-        opacity: 0.08,
+        scale: 1.1,
+        opacity: 0.06,
         repeat: -1,
         yoyo: true,
-        duration: 3,
+        duration: 4,
         ease: 'sine.inOut'
       });
     },
@@ -134,7 +136,11 @@ export function Landing() {
   );
 
   return (
-    <div ref={pageRef} className="relative flex flex-col overflow-x-hidden" style={{ background: '#08080c' }}>
+    <div
+      ref={pageRef}
+      className="relative flex flex-col overflow-x-hidden"
+      style={{ background: '#08090a' }}
+    >
       <LandingHeader />
 
       {/* ── Hero ── */}
@@ -143,92 +149,79 @@ export function Landing() {
           <AuroraCanvas className="absolute inset-0" />
         </div>
 
-        {/* Grain overlay */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.12]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
-            backgroundSize: '128px 128px'
-          }}
-        />
-
-        {/* Grid lines */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-3"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px'
-          }}
-        />
-
         {/* Bottom fade */}
         <div
           className="pointer-events-none absolute right-0 bottom-0 left-0 h-[40%]"
-          style={{ background: 'linear-gradient(to bottom, transparent, #08080c)' }}
+          style={{ background: 'linear-gradient(to bottom, transparent, #08090a)' }}
         />
 
         <div
-          className={`relative z-10 mx-auto flex w-full ${MAX_WIDTH} flex-col items-center px-6 pt-32 pb-20 text-center sm:pt-40 sm:pb-28`}
+          className={`relative z-10 mx-auto flex w-full ${MAX_WIDTH} flex-col items-start px-6 pt-32 pb-20 sm:pt-40 sm:pb-28`}
         >
           <div className="hero-reveal">
-            <span className="inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
+            <span className="inline-block rounded-full border border-[#5643cc]/30 bg-[#5643cc]/10 px-4 py-1.5 text-xs font-medium tracking-widest text-[#8a8fff] uppercase">
               Outbound on Auto-Pilot
             </span>
           </div>
 
-          <h1 className="hero-reveal mt-8 flex max-w-4xl flex-col text-4xl leading-tight font-bold tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+          <h1
+            className="hero-reveal mt-8 flex max-w-3xl flex-col text-3xl leading-[1.1] font-medium tracking-tight text-[#e4e5e9] sm:text-4xl lg:text-5xl xl:text-6xl"
+            style={{ textWrap: 'balance' }}
+          >
             <span>Deep Research.</span>
             <span>Right Contacts.</span>
-            <span className="bg-linear-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+            <span
+              style={{
+                backgroundImage:
+                  'linear-gradient(92.88deg, #455eb5 9.16%, #5643cc 43.89%, #673fd7 64.72%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
               Outreach that Converts.
             </span>
           </h1>
 
-          <p className="hero-reveal mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg sm:leading-relaxed">
-            Remes scans for buying signals from companies using your ideal customer criteria,
-            maps contacts at every account, and crafts hyper-personalized outreach.
+          <p
+            className="hero-reveal mt-6 max-w-xl text-sm leading-relaxed text-[#9c9da1] sm:text-base sm:leading-relaxed"
+            style={{ textWrap: 'balance' }}
+          >
+            Remes scans for buying signals from companies using your ideal customer criteria, maps
+            contacts at every account, and crafts hyper-personalized outreach.
           </p>
 
-          <div className="hero-reveal mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+          <div className="hero-reveal mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
             <Button
               size="lg"
-              className="gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#08080c] shadow-xl shadow-violet-500/15 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/25"
+              className="gap-2 rounded-full bg-[#e4e5e9] px-8 py-6 text-sm font-semibold text-[#08090a] transition-all duration-200 hover:scale-[1.02] hover:bg-white"
               onClick={handleGetStarted}
             >
               Get started
               <ArrowRight className="size-4" />
             </Button>
-            <span className="text-sm text-white/40">No credit card required</span>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="rounded-full border border-white/8 px-8 py-6 text-sm font-medium text-[#9c9da1] transition-all duration-200 hover:border-white/12 hover:bg-white/3 hover:text-[#e4e5e9]"
+              onClick={() => setDemoOpen(true)}
+            >
+              Book a demo
+            </Button>
           </div>
         </div>
 
         <div className="scroll-indicator absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
-          <ChevronDown className="size-5 text-white/20" />
+          <ChevronDown className="size-5 text-[#9c9da1]/30" />
         </div>
       </section>
 
-      {/* ── Sections background — aurora + grain, dimmed ── */}
+      {/* ── Sections ── */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-15">
+          <div className="absolute inset-0 opacity-10">
             <AuroraCanvas className="absolute inset-0" />
           </div>
-          <div
-            className="absolute inset-0 opacity-[0.08]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
-              backgroundSize: '128px 128px'
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.015]"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-              backgroundSize: '60px 60px'
-            }}
-          />
         </div>
 
         <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
@@ -238,69 +231,91 @@ export function Landing() {
           {/* ── FAQs ── */}
           <section
             id="faqs"
-            className="relative scroll-mt-16 border-t border-white/8 py-16 sm:py-24"
+            className="relative scroll-mt-16 border-t border-white/4 py-20 sm:py-32"
           >
-            <div className="section-heading relative mb-10 text-center sm:mb-14">
-              <span className="mb-3 inline-block rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium tracking-widest text-violet-300 uppercase backdrop-blur-sm">
-                FAQs
-              </span>
-              <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Frequently asked questions
-              </h2>
-            </div>
+            <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
+              {/* Left — heading */}
+              <div className="section-heading lg:sticky lg:top-32 lg:self-start">
+                <p className="mb-3 text-sm font-medium text-[#5643cc]">Support</p>
+                <h2
+                  className="text-2xl font-semibold tracking-tight text-[#e4e5e9] sm:text-3xl"
+                  style={{ textWrap: 'balance' }}
+                >
+                  Frequently asked questions
+                </h2>
+                <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#9c9da1]/70">
+                  Everything you need to know about Remes and how it fits into your sales workflow.
+                </p>
+              </div>
 
-            <div className="relative rounded-2xl border border-white/8 bg-white/2 p-1">
-              <Accordion type="single" collapsible className="w-full">
-                {FAQS.map((faq, i) => (
-                  <AccordionItem
-                    key={i}
-                    value={`faq-${i}`}
-                    className="faq-item border-white/6 px-5 sm:px-6"
-                  >
-                    <AccordionTrigger className="text-left text-sm text-white/80 hover:text-white sm:text-base">
-                      {faq.q}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <p className="text-xs leading-relaxed text-white/50 sm:text-sm">
-                        {faq.a}
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              {/* Right — accordion */}
+              <div>
+                <Accordion type="single" collapsible className="w-full">
+                  {FAQS.map((faq, i) => (
+                    <AccordionItem key={i} value={`faq-${i}`} className="faq-item border-white/6">
+                      <AccordionTrigger className="py-5 text-left text-[15px] leading-snug font-normal text-[#e4e5e9]/90 no-underline transition-colors duration-150 hover:text-[#e4e5e9] hover:no-underline [&>svg]:text-[#9c9da1]/40">
+                        {faq.q}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <p className="pb-2 text-sm leading-[1.7] text-[#9c9da1]">{faq.a}</p>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
             </div>
           </section>
 
           {/* ── CTA ── */}
-          <section className="relative overflow-hidden border-t border-white/8 py-20 text-center sm:py-28">
-            <div className="cta-glow absolute top-1/2 left-1/2 size-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/10 blur-[120px]" />
+          <section className="relative overflow-hidden border-t border-white/4 py-16 sm:py-20">
+            {/* Glow */}
+            <div className="cta-glow pointer-events-none absolute top-1/2 left-1/2 size-100 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5643cc]/6 blur-[120px]" />
 
-            <div className="final-cta relative z-10">
-              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            {/* Top gradient line */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
+              <div className="h-px w-2/3 bg-linear-to-r from-transparent via-[#5643cc]/20 to-transparent" />
+            </div>
+
+            <div className="final-cta relative z-10 flex flex-col items-center text-center">
+              <h2
+                className="text-2xl font-semibold tracking-tight text-[#e4e5e9] sm:text-3xl"
+                style={{ textWrap: 'balance' }}
+              >
                 Stop missing buying signals
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-                Start detecting signals and generating outreach in minutes. No credit card required.
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#9c9da1]">
+                Start detecting signals and generating outreach in minutes.
               </p>
-              <Button
-                size="lg"
-                className="mt-8 gap-2 rounded-full border border-white/10 bg-white px-8 py-6 text-base font-semibold text-[#08080c] shadow-xl shadow-violet-500/15 transition-all duration-300 hover:bg-white/90 hover:shadow-violet-500/25"
-                onClick={handleGetStarted}
-              >
-                Get started free
-                <ArrowRight className="size-4" />
-              </Button>
+              <div className="mt-7 flex items-center gap-4">
+                <Button
+                  size="lg"
+                  className="gap-2 rounded-full bg-[#e4e5e9] px-8 py-6 text-sm font-semibold text-[#08090a] transition-all duration-200 hover:scale-[1.02] hover:bg-white"
+                  onClick={handleGetStarted}
+                >
+                  Get started free
+                  <ArrowRight className="size-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="rounded-full border border-white/8 px-8 py-6 text-sm font-medium text-[#9c9da1] transition-all duration-200 hover:border-white/12 hover:bg-white/3 hover:text-[#e4e5e9]"
+                  onClick={() => setDemoOpen(true)}
+                >
+                  Book a demo
+                </Button>
+              </div>
             </div>
           </section>
 
           {/* ── Footer ── */}
-          <footer className="border-t border-white/8 py-8">
-            <p className="text-xs text-white/40">
+          <footer className="border-t border-white/4 py-8">
+            <p className="text-xs text-[#9c9da1]/50">
               &copy; {new Date().getFullYear()} Remes. All rights reserved.
             </p>
           </footer>
         </div>
       </div>
+      <DemoModal open={demoOpen} onOpenChange={setDemoOpen} />
     </div>
   );
 }

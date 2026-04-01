@@ -3,8 +3,18 @@
 import { useEffect, useState } from 'react';
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { connectGmail, disconnectGmail } from '@/lib/api';
+import { disconnectGmail } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
 
 export function ConnectionsTab() {
@@ -68,9 +78,31 @@ export function ConnectionsTab() {
               Disconnect
             </Button>
           ) : (
-            <Button size="sm" onClick={() => connectGmail()}>
-              Connect Gmail
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm">Connect Gmail</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Request email sending access</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Our Gmail integration is undergoing Google&apos;s CASA security verification
+                    process to ensure the highest standards of data protection. During this review
+                    period, email access is provisioned on a per-account basis. Contact{' '}
+                    <a
+                      href="mailto:kenny@remes.so"
+                      className="text-primary underline underline-offset-2"
+                    >
+                      kenny@remes.so
+                    </a>{' '}
+                    to request access.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction size="sm">Got it</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           ))}
       </div>
     </div>

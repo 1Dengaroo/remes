@@ -1,10 +1,10 @@
 /* ============================================================
    Theme: Periwinkle Dark
-   Mood:  Dreamy blue-violet — deep, hazy, midnight twilight
+   Mood:  Neutral dark with periwinkle accents — clean, focused
    ============================================================ */
 
 [data-theme='periwinkle-dark'] body {
-  background-color: #0f0e1a;
+  background-color: #0e0e0e;
 }
 
 [data-theme='periwinkle-dark'] {
@@ -16,25 +16,28 @@
   --accent-secondary: 0.64 0.04 250;
   --accent-tertiary: 0.66 0.12 290;
 
-  --surface-primary: 0.14 0.01 268;
-  --surface-secondary: 0.17 0.013 266;
-  --surface-elevated: 0.21 0.015 268;
-  --surface-overlay: 0.07 0.008 268;
+  /* Neutral gray surfaces — no purple tint */
+  --surface-primary: 0.14 0 0;
+  --surface-secondary: 0.17 0 0;
+  --surface-elevated: 0.21 0 0;
+  --surface-overlay: 0.07 0 0;
 
-  --border-default: 0.24 0.016 268;
-  --border-subtle: 0.2 0.012 268;
-  --border-strong: 0.34 0.022 268;
+  /* Neutral gray borders */
+  --border-default: 0.24 0 0;
+  --border-subtle: 0.2 0 0;
+  --border-strong: 0.34 0 0;
 
-  --text-primary: 0.93 0.007 268;
-  --text-secondary: 0.68 0.009 268;
-  --text-muted: 0.48 0.007 268;
-  --text-inverse: 0.14 0.014 268;
+  /* Neutral text */
+  --text-primary: 0.93 0 0;
+  --text-secondary: 0.68 0 0;
+  --text-muted: 0.48 0 0;
+  --text-inverse: 0.14 0 0;
 
   /* ── Elevations ── */
 
-  --elevation-sm: 0 2px 10px rgba(30, 25, 80, 0.5), 0 1px 4px rgba(30, 25, 80, 0.3);
-  --elevation-md: 0 6px 22px rgba(30, 25, 80, 0.55), 0 2px 6px rgba(30, 25, 80, 0.3);
-  --elevation-lg: 0 12px 40px rgba(30, 25, 80, 0.6), 0 4px 10px rgba(30, 25, 80, 0.35);
+  --elevation-sm: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.25);
+  --elevation-md: 0 6px 22px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --elevation-lg: 0 12px 40px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
 
   /* ── Density ── */
 
@@ -94,40 +97,40 @@
 
   /* ── Chrome ── */
 
-  --chrome: #18162a;
-  --header-border: #2a2842;
+  --chrome: #181818;
+  --header-border: #2a2a2a;
   --header-backdrop: blur(12px);
-  --bottom-nav-border: #2a2842;
+  --bottom-nav-border: #2a2a2a;
   --bottom-nav-backdrop: blur(12px);
 
   /* ── shadcn bridge tokens ── */
 
-  --background: #0f0e1a;
-  --foreground: #e4e3f0;
-  --card: #18162a;
-  --card-foreground: #e4e3f0;
-  --popover: #18162a;
-  --popover-foreground: #e4e3f0;
-  --modal: #18162a;
-  --modal-foreground: #e4e3f0;
-  --dropdown: #1c1a30;
-  --dropdown-foreground: #e4e3f0;
-  --sheet: #18162a;
-  --sheet-foreground: #e4e3f0;
-  --tabs: #18162a;
-  --input-surface: #18162a;
+  --background: #0e0e0e;
+  --foreground: #e4e4e4;
+  --card: #181818;
+  --card-foreground: #e4e4e4;
+  --popover: #181818;
+  --popover-foreground: #e4e4e4;
+  --modal: #181818;
+  --modal-foreground: #e4e4e4;
+  --dropdown: #1c1c1c;
+  --dropdown-foreground: #e4e4e4;
+  --sheet: #181818;
+  --sheet-foreground: #e4e4e4;
+  --tabs: #181818;
+  --input-surface: #181818;
   --primary: #8b8ef8;
-  --primary-foreground: #0c0b16;
-  --secondary: #22203a;
-  --secondary-foreground: #c6c4da;
-  --muted: #1c1a30;
-  --muted-foreground: #7e7c9a;
-  --accent: #22203a;
-  --accent-foreground: #e4e3f0;
+  --primary-foreground: #0e0e0e;
+  --secondary: #222222;
+  --secondary-foreground: #c6c6c6;
+  --muted: #1c1c1c;
+  --muted-foreground: #7e7e7e;
+  --accent: #222222;
+  --accent-foreground: #e4e4e4;
   --destructive: hsl(0 65% 55%);
   --destructive-foreground: #ffffff;
-  --border: #2a2842;
-  --input: #2a2842;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
   --ring: #8b8ef8;
   --radius: 0.75rem;
 
@@ -141,12 +144,12 @@
 
   /* ── Sidebar ── */
 
-  --sidebar-background: #0d0c18;
-  --sidebar-foreground: #a09ebe;
+  --sidebar-background: #0c0c0c;
+  --sidebar-foreground: #a0a0a0;
   --sidebar-primary: #8b8ef8;
-  --sidebar-primary-foreground: #0c0b16;
-  --sidebar-accent: #1c1a30;
-  --sidebar-accent-foreground: #ececf4;
-  --sidebar-border: #232140;
+  --sidebar-primary-foreground: #0e0e0e;
+  --sidebar-accent: #1c1c1c;
+  --sidebar-accent-foreground: #ececec;
+  --sidebar-border: #232323;
   --sidebar-ring: #8b8ef8;
 }
