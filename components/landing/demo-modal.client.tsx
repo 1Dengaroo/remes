@@ -26,13 +26,13 @@ export function DemoModal({
           <DialogTitle className="text-lg font-semibold text-[#e4e5e9]">Book a demo</DialogTitle>
           <DialogDescription className="text-sm leading-relaxed text-[#9c9da1]">
             Get a personalized walkthrough of how Remes can build pipeline for your team. We&apos;ll
-            show you signal detection, contact discovery, and AI outreach — tailored to your ICP.
+            show you signal detection, contact discovery, and AI outreach tailored to your ICP.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
           <p className="text-sm leading-relaxed text-[#9c9da1]">
-            Reach out to schedule a time — most demos are booked within 24 hours.
+            Reach out to schedule a time. Most demos are booked within 24 hours.
           </p>
 
           <a

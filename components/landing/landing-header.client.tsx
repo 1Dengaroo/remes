@@ -18,7 +18,7 @@ function UserAvatar() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-sm font-medium text-[#9c9da1] transition-colors duration-150 hover:bg-transparent hover:text-[#e4e5e9]"
+        className="text-sm font-medium text-white/40 transition-colors duration-150 hover:bg-transparent hover:text-white/80"
         onClick={openAuthModal}
       >
         Log in
@@ -54,14 +54,14 @@ function LandingNav() {
     <>
       <button
         type="button"
-        className="hidden text-sm text-[#9c9da1] transition-colors duration-150 hover:text-[#e4e5e9] md:inline-block"
+        className="hidden text-sm text-white/40 transition-colors duration-150 hover:text-white/80 md:inline-block"
         onClick={() => document.getElementById('use-cases')?.scrollIntoView({ behavior: 'smooth' })}
       >
         Features
       </button>
       <button
         type="button"
-        className="hidden text-sm text-[#9c9da1] transition-colors duration-150 hover:text-[#e4e5e9] md:inline-block"
+        className="hidden text-sm text-white/40 transition-colors duration-150 hover:text-white/80 md:inline-block"
         onClick={() => document.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' })}
       >
         FAQs
@@ -88,13 +88,13 @@ export function LandingHeader() {
       <header
         className="w-full transition-all duration-500 ease-out"
         style={{
-          maxWidth: scrolled ? '64rem' : '100%',
-          backgroundColor: scrolled ? 'rgba(8, 9, 10, 0.85)' : 'transparent',
+          maxWidth: scrolled ? '80rem' : '100%',
+          backgroundColor: scrolled ? 'rgba(8, 9, 10, 0.8)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
-          border: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
-          borderBottomColor: scrolled ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.04)',
-          backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
-          boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : 'none'
+          border: scrolled ? '1px solid rgba(255,255,255,0.04)' : '1px solid transparent',
+          borderBottomColor: scrolled ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.03)',
+          backdropFilter: scrolled ? 'blur(24px) saturate(1.3)' : 'none',
+          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.5)' : 'none'
         }}
       >
         <div
@@ -104,7 +104,7 @@ export function LandingHeader() {
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2.5">
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
-              <span className="text-sm font-semibold tracking-wide text-[#e4e5e9]">Remes</span>
+              <span className="text-sm font-semibold tracking-wide text-white/90">Remes</span>
             </Link>
             <LandingNav />
           </div>

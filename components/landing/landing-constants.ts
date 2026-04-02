@@ -52,7 +52,7 @@ export const SIGNALS: { source: string; example: string; color: string }[] = [
   {
     source: 'Custom Signals',
     example:
-      'Define any buying signal you can imagine — if you can describe it, Remes can detect it',
+      'Define any buying signal you can imagine. If you can describe it, Remes can detect it',
     color: 'custom'
   }
 ];
@@ -61,7 +61,7 @@ export const SHOWCASE = [
   {
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
-    desc: 'Remes monitors job postings, funding rounds, and product launches across the web — surfacing the companies most likely to buy right now.',
+    desc: 'Remes monitors job postings, funding rounds, and product launches across the web, surfacing the companies most likely to buy right now.',
     image: '/research-step-one.png'
   },
   {
@@ -73,7 +73,7 @@ export const SHOWCASE = [
   {
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
-    desc: 'Every email is grounded in the signal that triggered it — relevant, timely, and personal. Not another generic template.',
+    desc: 'Every email is grounded in the signal that triggered it. Relevant, timely, and personal. Not another generic template.',
     image: '/research-step-five.png'
   }
 ];
@@ -81,7 +81,7 @@ export const SHOWCASE = [
 export const FAQS = [
   {
     q: 'What is Remes and how does it work?',
-    a: 'Remes is an AI-powered platform that detects real-time buying signals — hiring surges, funding rounds, leadership changes, product launches — and uses them to craft deeply personalized outreach to your ideal customers. You describe your ideal customer, and Remes finds, researches, and engages them automatically.'
+    a: 'Remes is an AI-powered platform that detects real-time buying signals like hiring surges, funding rounds, leadership changes, and product launches, then uses them to craft deeply personalized outreach to your ideal customers. You describe your ideal customer, and Remes finds, researches, and engages them automatically.'
   },
   {
     q: 'How is Remes different from other outreach tools?',
@@ -97,7 +97,7 @@ export const FAQS = [
   },
   {
     q: 'What are buying signals?',
-    a: 'Buying signals are real-time indicators that a company is ready to buy — things like hiring surges, funding rounds, leadership changes, product launches, headcount growth, and LinkedIn activity from key decision-makers. Remes detects these automatically so you can reach prospects at the perfect moment.'
+    a: 'Buying signals are real-time indicators that a company is ready to buy. Things like hiring surges, funding rounds, leadership changes, product launches, headcount growth, and LinkedIn activity from key decision-makers. Remes detects these automatically so you can reach prospects at the perfect moment.'
   },
   {
     q: 'What types of buying signals does Remes detect?',
