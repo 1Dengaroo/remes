@@ -1,21 +1,22 @@
-/*
- * DARK — Neutral dark with purple accents
- * Clean gray/black base, purple primary personality.
- */
+/* ============================================================
+   Theme: Dark
+   Mood:  Neutral dark with periwinkle accents — clean, focused
+   ============================================================ */
 
 [data-theme='dark'] body {
-  background-color: #101010;
+  background-color: #0e0e0e;
 }
 
 [data-theme='dark'] {
-  /* Semantic tokens (oklch L C H) */
+  color-scheme: dark;
 
-  /* Purple accents — lifted for dark bg */
-  --accent-primary: 0.7 0.18 288;
-  --accent-secondary: 0.6 0.03 280;
-  --accent-tertiary: 0.65 0.12 265;
+  /* ── Semantic tokens (oklch L C H) ── */
 
-  /* Neutral gray surfaces */
+  --accent-primary: 0.7 0.16 268;
+  --accent-secondary: 0.64 0.04 250;
+  --accent-tertiary: 0.66 0.12 290;
+
+  /* Neutral gray surfaces — no purple tint */
   --surface-primary: 0.14 0 0;
   --surface-secondary: 0.17 0 0;
   --surface-elevated: 0.21 0 0;
@@ -32,113 +33,123 @@
   --text-muted: 0.48 0 0;
   --text-inverse: 0.14 0 0;
 
-  /* Neutral black elevations */
+  /* ── Elevations ── */
+
   --elevation-sm: 0 2px 10px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.25);
   --elevation-md: 0 6px 22px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
-  --elevation-lg: 0 14px 40px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --elevation-lg: 0 12px 40px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
 
-  /* Tag tokens — matching light theme */
-  --tag-radius: 6px;
+  /* ── Density ── */
+
+  --density-card-py: 1.375rem;
+  --density-card-px: 1.375rem;
+  --density-card-gap: 1rem;
+  --density-section-gap: 0.75rem;
+
+  /* ── Font scale ── */
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 0.875rem;
+
+  /* ── Shape ── */
+
+  --input-radius: 0.625rem;
+  --input-border-width: 1px;
+  --button-radius: 0.625rem;
+
+  /* ── Tags ── */
+
+  --tag-radius: 9999px;
   --tag-padding-x: 0.5rem;
   --tag-padding-y: 0.1875rem;
   --tag-font-size: 0.6875rem;
 
-  /* Section label tokens — matching light (subtle, mixed case) */
+  /* ── Section labels ── */
+
   --section-label-size: 0.6875rem;
   --section-label-tracking: 0.02em;
   --section-label-transform: none;
 
-  /* Card style tokens — matching light (shadow-based, medium radius) */
-  --card-radius: 12px;
-  --card-border-width: 0px;
-  --card-border-opacity: 0;
+  /* ── Cards ── */
+
+  --card-radius: 16px;
+  --card-border-width: 1px;
+  --card-border-opacity: 0.3;
   --card-shadow: var(--elevation-sm);
   --card-hover-shadow: var(--elevation-md);
   --card-hover-y: -1px;
   --card-accent-bar-height: 0px;
   --card-accent-bar-scale: 0;
 
-  /* Density tokens — matching light */
-  --density-card-py: 1.375rem;
-  --density-card-px: 1.375rem;
-  --density-card-gap: 1.375rem;
-  --density-section-gap: 0.75rem;
+  /* ── Signal badges ── */
 
-  /* Font size scale */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
+  --signal-job-bg: hsl(250 40% 55% / 0.12);
+  --signal-job-text: hsl(250 50% 75%);
+  --signal-funding-bg: hsl(170 36% 44% / 0.12);
+  --signal-funding-text: hsl(170 42% 68%);
+  --signal-news-bg: hsl(36 52% 50% / 0.12);
+  --signal-news-text: hsl(36 55% 72%);
+  --signal-product-bg: hsl(280 34% 52% / 0.12);
+  --signal-product-text: hsl(280 38% 75%);
+  --signal-other-bg: hsl(260 10% 52% / 0.1);
+  --signal-other-text: hsl(260 12% 72%);
 
-  /* Input/form tokens — matching light */
-  --input-radius: 0.5rem;
-  --input-border-width: 0px;
+  /* ── Chrome ── */
 
-  /* Button shape — matching light */
-  --button-radius: 0.5rem;
+  --chrome: #181818;
+  --header-border: #2a2a2a;
+  --header-backdrop: blur(12px);
+  --bottom-nav-border: #2a2a2a;
+  --bottom-nav-backdrop: blur(12px);
 
-  /* Chrome — header & bottom nav */
-  --chrome: #1a1a1a;
-  --header-border: #2c2c2c;
-  --header-backdrop: none;
-  --bottom-nav-border: #2c2c2c;
-  --bottom-nav-backdrop: none;
+  /* ── shadcn bridge tokens ── */
 
-  /* Signal badges — same hues as light, lifted for dark */
-  --signal-job-bg: hsl(240 50% 52% / 0.12);
-  --signal-job-text: hsl(240 55% 75%);
-  --signal-funding-bg: hsl(165 40% 42% / 0.12);
-  --signal-funding-text: hsl(165 45% 68%);
-  --signal-news-bg: hsl(38 60% 52% / 0.12);
-  --signal-news-text: hsl(38 60% 72%);
-  --signal-product-bg: hsl(275 40% 52% / 0.12);
-  --signal-product-text: hsl(275 40% 75%);
-  --signal-other-bg: hsl(265 10% 52% / 0.1);
-  --signal-other-text: hsl(265 10% 72%);
-
-  /* shadcn bridge tokens */
-  --background: #101010;
+  --background: #0e0e0e;
   --foreground: #e4e4e4;
-  --card: #1a1a1a;
+  --card: #181818;
   --card-foreground: #e4e4e4;
-  --popover: #1a1a1a;
+  --popover: #181818;
   --popover-foreground: #e4e4e4;
-  --modal: #1a1a1a;
+  --modal: #181818;
   --modal-foreground: #e4e4e4;
-  --dropdown: #1e1e1e;
+  --dropdown: #1c1c1c;
   --dropdown-foreground: #e4e4e4;
-  --sheet: #1a1a1a;
+  --sheet: #181818;
   --sheet-foreground: #e4e4e4;
-  --tabs: #1a1a1a;
-  --input-surface: #1a1a1a;
-  --primary: #9b7af0;
-  --primary-foreground: #101010;
-  --secondary: #232323;
+  --tabs: #181818;
+  --input-surface: #181818;
+  --primary: #8b8ef8;
+  --primary-foreground: #0e0e0e;
+  --secondary: #222222;
   --secondary-foreground: #c6c6c6;
-  --muted: #1e1e1e;
-  --muted-foreground: #848484;
-  --accent: #232323;
+  --muted: #1c1c1c;
+  --muted-foreground: #7e7e7e;
+  --accent: #222222;
   --accent-foreground: #e4e4e4;
   --destructive: hsl(0 65% 55%);
   --destructive-foreground: #ffffff;
-  --border: #2c2c2c;
-  --input: #2c2c2c;
-  --ring: #9b7af0;
-  --radius: 0.625rem;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #8b8ef8;
+  --radius: 0.75rem;
 
-  /* Chart palette — same hues as light, lifted */
-  --chart-1: #9b7af0;
-  --chart-2: hsl(240 50% 62%);
-  --chart-3: hsl(165 42% 52%);
-  --chart-4: hsl(288 42% 62%);
-  --chart-5: hsl(18 55% 58%);
+  /* ── Charts ── */
 
-  /* Sidebar */
-  --sidebar-background: #0e0e0e;
+  --chart-1: #8b8ef8;
+  --chart-2: hsl(240 48% 65%);
+  --chart-3: hsl(180 36% 52%);
+  --chart-4: hsl(300 36% 62%);
+  --chart-5: hsl(24 48% 58%);
+
+  /* ── Sidebar ── */
+
+  --sidebar-background: #0c0c0c;
   --sidebar-foreground: #a0a0a0;
-  --sidebar-primary: #9b7af0;
-  --sidebar-primary-foreground: #101010;
+  --sidebar-primary: #8b8ef8;
+  --sidebar-primary-foreground: #0e0e0e;
   --sidebar-accent: #1c1c1c;
   --sidebar-accent-foreground: #ececec;
-  --sidebar-border: #242424;
-  --sidebar-ring: #9b7af0;
+  --sidebar-border: #232323;
+  --sidebar-ring: #8b8ef8;
 }
