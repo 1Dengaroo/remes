@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, XCircle, Mail, ExternalLink, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,18 +15,7 @@ import {
 import type { SentEmail } from '@/lib/types';
 import { MAX_WIDTH } from '@/lib/layout';
 import { PageBanner } from '@/components/shared/page-banner';
-
-function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    handler({ matches: mql.matches } as MediaQueryListEvent);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, [breakpoint]);
-  return isMobile;
-}
+import { useIsMobile } from '@/hooks/use-mobile';
 
 function MobileEmailSheet({ email, onClose }: { email: SentEmail | null; onClose: () => void }) {
   const isMobile = useIsMobile();
@@ -140,7 +129,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
         ) : (
           <div className="flex gap-4">
             {/* Email list */}
-            <Card className="w-full shrink-0 !gap-0 !py-0 md:w-3/5">
+            <Card className="w-full shrink-0 gap-0 py-0 md:w-3/5">
               {emails.map((email) => (
                 <button
                   key={email.id}
@@ -188,7 +177,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
             </Card>
 
             {/* Desktop email preview */}
-            <Card className="hidden min-h-[400px] flex-1 flex-col !gap-0 !py-0 md:flex">
+            <Card className="hidden min-h-100 flex-1 flex-col gap-0 py-0 md:flex">
               {selected ? (
                 <EmailDetailContent email={selected} />
               ) : (

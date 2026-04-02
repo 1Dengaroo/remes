@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="relative flex min-h-[calc(100vh-49px)] flex-col items-center justify-center overflow-hidden px-6 text-center">
       {/* Gradient background matching hero */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        className="pointer-events-none absolute inset-0 opacity-6"
         style={{
           background:
             'radial-gradient(ellipse at 50% 40%, #7c3aed 0%, #a855f7 40%, transparent 70%)'
