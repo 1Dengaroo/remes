@@ -113,6 +113,18 @@ export function Landing() {
           }}
         />
 
+        {/* Purple glow behind hero text */}
+        <div
+          className="pointer-events-none absolute top-[45%] left-[30%] -translate-x-1/2 -translate-y-1/2"
+          style={{
+            width: 600,
+            height: 350,
+            background:
+              'radial-gradient(ellipse at center, rgba(86,67,204,0.12) 0%, rgba(86,67,204,0.04) 40%, transparent 65%)',
+            filter: 'blur(50px)'
+          }}
+        />
+
         {/* Bottom fade */}
         <div
           className="pointer-events-none absolute right-0 bottom-0 left-0 h-[40%]"
@@ -254,6 +266,36 @@ export function Landing() {
               height: 500,
               background:
                 'radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 60%)',
+              filter: 'blur(80px)'
+            }}
+          />
+          {/* White glow — between showcase and signals */}
+          <div
+            className="absolute top-[52%] left-[75%]"
+            style={{
+              width: 500,
+              height: 450,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 60%)',
+              filter: 'blur(80px)'
+            }}
+          />
+          {/* White glow — signals left */}
+          <div
+            className="absolute top-[65%] left-[10%]"
+            style={{
+              width: 450,
+              height: 450,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%)',
+              filter: 'blur(80px)'
+            }}
+          />
+          {/* White glow — FAQ right */}
+          <div
+            className="absolute top-[85%] right-[20%]"
+            style={{
+              width: 500,
+              height: 400,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%)',
               filter: 'blur(80px)'
             }}
           />
