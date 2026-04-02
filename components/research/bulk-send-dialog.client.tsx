@@ -208,14 +208,14 @@ export function BulkSendDialog({
             {drafts.map((draft, i) => {
               const email = getEmail(draft);
               return (
-                <Card key={draft.contact.key} className="bg-muted/30 !gap-0 p-3">
+                <Card key={draft.contact.key} className="bg-muted/30 gap-0! p-3">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 shrink-0">
                       {draft.status === 'sending' && (
                         <Loader2 className="text-primary size-4 animate-spin" />
                       )}
-                      {draft.status === 'sent' && <CheckCircle className="size-4 text-green-500" />}
-                      {draft.status === 'failed' && <XCircle className="size-4 text-red-500" />}
+                      {draft.status === 'sent' && <CheckCircle className="text-primary size-4" />}
+                      {draft.status === 'failed' && <XCircle className="text-destructive size-4" />}
                       {draft.status === 'pending' && (
                         <Mail className="text-muted-foreground size-4" />
                       )}
@@ -233,7 +233,9 @@ export function BulkSendDialog({
                       <p className="text-foreground mt-1 truncate text-xs">
                         {email.subject || 'No subject'}
                       </p>
-                      {draft.error && <p className="mt-1 text-xs text-red-500">{draft.error}</p>}
+                      {draft.error && (
+                        <p className="text-destructive mt-1 text-xs">{draft.error}</p>
+                      )}
                     </div>
                     {/* Per-contact step override */}
                     {draft.status === 'pending' && !isSending && draft.sequence && (
