@@ -17,7 +17,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           top: '15%',
           translate: '-50% -50%',
           background:
-            'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 35%, transparent 70%)',
+            'radial-gradient(ellipse at center, var(--landing-aurora-white) 0%, var(--landing-aurora-white-edge) 35%, transparent 70%)',
           filter: 'blur(60px)',
           animation: 'glow-pulse-0 12s ease-in-out infinite'
         }}
@@ -33,7 +33,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           top: '40%',
           translate: '-50% -50%',
           background:
-            'radial-gradient(circle, rgba(86,67,204,0.18) 0%, rgba(86,67,204,0.06) 35%, transparent 65%)',
+            'radial-gradient(circle, var(--landing-aurora-purple-l) 0%, var(--landing-aurora-purple-l-edge) 35%, transparent 65%)',
           filter: 'blur(70px)',
           animation: 'glow-pulse-1 16s ease-in-out infinite'
         }}
@@ -49,7 +49,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           top: '35%',
           translate: '-50% -50%',
           background:
-            'radial-gradient(circle, rgba(69,94,181,0.14) 0%, rgba(69,94,181,0.04) 40%, transparent 65%)',
+            'radial-gradient(circle, var(--landing-aurora-blue-r) 0%, var(--landing-aurora-blue-r-edge) 40%, transparent 65%)',
           filter: 'blur(80px)',
           animation: 'glow-pulse-2 14s ease-in-out infinite'
         }}
@@ -65,7 +65,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           top: '25%',
           translate: '-50% -50%',
           background:
-            'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 40%, transparent 70%)',
+            'radial-gradient(ellipse at center, var(--landing-aurora-white-soft) 0%, var(--landing-aurora-white-soft-edge) 40%, transparent 70%)',
           filter: 'blur(80px)',
           animation: 'glow-pulse-3 18s ease-in-out infinite'
         }}
@@ -81,7 +81,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           top: '70%',
           translate: '-50% -50%',
           background:
-            'radial-gradient(circle, rgba(103,63,215,0.14) 0%, rgba(86,67,204,0.05) 40%, transparent 65%)',
+            'radial-gradient(circle, var(--landing-aurora-deep) 0%, var(--landing-aurora-deep-edge) 40%, transparent 65%)',
           filter: 'blur(90px)',
           animation: 'glow-pulse-4 20s ease-in-out infinite'
         }}
@@ -96,7 +96,7 @@ export function AuroraCanvas({ className }: { className?: string }) {
           left: '80%',
           top: '15%',
           translate: '-50% -50%',
-          background: 'radial-gradient(circle, rgba(86,67,204,0.10) 0%, transparent 60%)',
+          background: 'radial-gradient(circle, var(--landing-aurora-accent) 0%, transparent 60%)',
           filter: 'blur(70px)',
           animation: 'glow-pulse-0 22s ease-in-out infinite'
         }}

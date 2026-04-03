@@ -5,6 +5,7 @@
 /* Theme files */
 @import './themes/light.css';
 @import './themes/dark.css';
+@import './landing.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -88,6 +89,25 @@
   --text-xs: var(--font-size-xs);
   --text-sm: var(--font-size-sm);
   --text-base: var(--font-size-base);
+
+  /* Landing page foreground colors */
+  --color-landing-fg: var(--landing-fg);
+  --color-landing-fg-secondary: var(--landing-fg-secondary);
+  --color-landing-fg-muted: var(--landing-fg-muted);
+
+  /* Landing page text sizes */
+  --text-2xs: var(--landing-text-2xs);
+  --text-xs2: var(--landing-text-xs2);
+  --text-sm2: var(--landing-text-sm2);
+  --text-md: var(--landing-text-md);
+  --text-story: var(--landing-text-story);
+
+  /* Landing page line heights */
+  --leading-hero: var(--landing-leading-hero);
+  --leading-tight2: var(--landing-leading-tight);
+  --leading-snug2: var(--landing-leading-snug);
+  --leading-normal2: var(--landing-leading-normal);
+  --leading-relaxed2: var(--landing-leading-relaxed);
 }
 
 /* Font switching via data-font attribute */
@@ -99,6 +119,29 @@
 }
 [data-font='space-grotesk'] {
   --font-active: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.04;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.06;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 @keyframes pulse-dot {
@@ -142,4 +185,8 @@
   html {
     @apply font-sans;
   }
+}
+
+html:has(.marketing) {
+  background-color: #000;
 }

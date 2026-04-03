@@ -1,56 +1,41 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import gsap from 'gsap';
 import { ROTATING_WORDS } from './landing-constants';
 
 export function RotatingWord() {
   const [index, setIndex] = useState(0);
+  const [fading, setFading] = useState(false);
   const wrapperRef = useRef<HTMLSpanElement>(null);
-  const wordRef = useRef<HTMLSpanElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
 
   const cycle = useCallback(() => {
-    const word = wordRef.current;
-    const wrapper = wrapperRef.current;
-    const measure = measureRef.current;
-    if (!word || !wrapper || !measure) return;
-
-    const nextIndex = (index + 1) % ROTATING_WORDS.length;
-
-    // Measure the next word's width
-    measure.textContent = ROTATING_WORDS[nextIndex];
-    const nextWidth = measure.offsetWidth;
-
-    // Fade out current word
-    gsap.to(word, {
-      opacity: 0,
-      y: '-0.15em',
-      duration: 0.25,
-      ease: 'power2.in',
-      onComplete: () => {
-        setIndex(nextIndex);
-        gsap.set(word, { y: '0.15em' });
-        gsap.to(word, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
-      }
-    });
-
-    // Smoothly animate container width
-    gsap.to(wrapper, {
-      width: nextWidth,
-      duration: 0.4,
-      ease: 'power2.inOut'
-    });
-  }, [index]);
+    setFading(true);
+    setTimeout(() => {
+      setIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+      setFading(false);
+    }, 250);
+  }, []);
 
   // Set initial width after mount
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    const word = wordRef.current;
-    if (wrapper && word) {
-      wrapper.style.width = `${word.offsetWidth}px`;
+    const measure = measureRef.current;
+    if (wrapper && measure) {
+      measure.textContent = ROTATING_WORDS[0];
+      wrapper.style.width = `${measure.offsetWidth}px`;
     }
   }, []);
+
+  // Animate width when index changes
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const measure = measureRef.current;
+    if (wrapper && measure) {
+      measure.textContent = ROTATING_WORDS[index];
+      wrapper.style.width = `${measure.offsetWidth}px`;
+    }
+  }, [index]);
 
   useEffect(() => {
     const id = setInterval(cycle, 2800);
@@ -65,16 +50,17 @@ export function RotatingWord() {
         className="pointer-events-none invisible absolute whitespace-nowrap"
         style={{ font: 'inherit' }}
       />
-      <span ref={wrapperRef} className="inline-block">
+      <span ref={wrapperRef} className="inline-block transition-[width] duration-400 ease-in-out">
         <span
-          ref={wordRef}
-          className="inline-block whitespace-nowrap"
+          className="inline-block whitespace-nowrap transition-all duration-250 ease-in-out"
           style={{
             backgroundImage:
-              'linear-gradient(92.88deg, #455eb5 9.16%, #5643cc 43.89%, #673fd7 64.72%)',
+              'linear-gradient(92.88deg, var(--landing-brand-1) 9.16%, var(--landing-brand-2) 43.89%, var(--landing-brand-3) 64.72%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
+            backgroundClip: 'text',
+            opacity: fading ? 0 : 1,
+            transform: fading ? 'translateY(-0.15em)' : 'translateY(0)'
           }}
         >
           {ROTATING_WORDS[index]}

@@ -43,5 +43,8 @@ export const serviceConfig = {
   emailMaxTokens: 2048
 } as const;
 
+/** Contact email shown in legal pages, footer, demo modal, etc. */
+export const CONTACT_EMAIL = 'support@remes.so';
+
 /** Example customer description shown in the ICP input placeholder */
 export const EXAMPLE_CUSTOMER_INPUT = `We sell GPU scheduling and orchestration software for ML teams. Our ideal customer is an AI-intensive startup that's scaling past the point where manual GPU management works. They've typically raised $30M+ and are hiring for MLOps, ML Platform, or GPU infrastructure roles. Key signals we look for are job postings mentioning Kubernetes GPU scheduling, distributed training, or compute cost optimization. Companies like Modal, Anyscale, and Replicate are good examples of the type of company we sell to, though they're also competitors in some ways. We mainly target VP of Infrastructure, Head of ML Platform, or CTO as the buyer.`;

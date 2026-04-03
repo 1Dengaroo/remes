@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CONTACT_EMAIL } from '@/lib/services/config';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -90,10 +91,10 @@ export function ConnectionsTab() {
                     process to ensure the highest standards of data protection. During this review
                     period, email access is provisioned on a per-account basis. Contact{' '}
                     <a
-                      href="mailto:kenny@remes.so"
+                      href={`mailto:${CONTACT_EMAIL}`}
                       className="text-primary underline underline-offset-2"
                     >
-                      kenny@remes.so
+                      {CONTACT_EMAIL}
                     </a>{' '}
                     to request access.
                   </AlertDialogDescription>
