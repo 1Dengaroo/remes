@@ -5,7 +5,7 @@ import { MAX_WIDTH } from '@/lib/layout';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="marketing" style={{ background: 'var(--landing-bg)' }}>
+    <div className="marketing bg-[#08090a]">
       <LandingHeader />
       {children}
       <div className={`mx-auto w-full ${MAX_WIDTH} px-6`}>

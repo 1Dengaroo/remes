@@ -19,9 +19,9 @@ import { ShowcaseSection } from './showcase-section.client';
 export function Landing() {
   return (
     <div className="relative flex flex-col overflow-x-hidden">
-      {/* Noise texture overlay */}
+      {/* Noise texture overlay — hidden on mobile for perf */}
       <div
-        className="pointer-events-none fixed inset-0 z-1 opacity-[0.025]"
+        className="pointer-events-none fixed inset-0 z-1 hidden opacity-[0.025] md:block"
         style={{
           backgroundImage: 'var(--landing-noise)',
           backgroundRepeat: 'repeat',
@@ -31,13 +31,14 @@ export function Landing() {
 
       {/* ── Hero ── */}
       <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
+        {/* Aurora glow — desktop only (too GPU-heavy for mobile) */}
+        <div className="absolute inset-0 hidden md:block">
           <AuroraCanvas className="absolute inset-0" />
         </div>
 
-        {/* White glow behind hero text */}
+        {/* White glow behind hero text — desktop only */}
         <div
-          className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute top-1/3 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block"
           style={{
             width: 800,
             height: 400,
@@ -47,9 +48,9 @@ export function Landing() {
           }}
         />
 
-        {/* Purple glow behind hero text */}
+        {/* Purple glow behind hero text — desktop only */}
         <div
-          className="pointer-events-none absolute top-[45%] left-[30%] -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute top-[45%] left-[30%] hidden -translate-x-1/2 -translate-y-1/2 md:block"
           style={{
             width: 600,
             height: 350,
@@ -102,8 +103,8 @@ export function Landing() {
 
       {/* ── Scroll story sections ── */}
       <div className="relative">
-        {/* Ambient glows throughout */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Ambient glows throughout — desktop only for perf */}
+        <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block">
           {/* White glow — top */}
           <div
             className="absolute top-[5%] left-1/2 -translate-x-1/2"
@@ -300,7 +301,7 @@ export function Landing() {
 
             {/* White glow behind CTA */}
             <div
-              className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-[glow-pulse_4s_ease-in-out_infinite]"
+              className="pointer-events-none absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 animate-[glow-pulse_4s_ease-in-out_infinite] md:block"
               style={{
                 width: 600,
                 height: 400,
