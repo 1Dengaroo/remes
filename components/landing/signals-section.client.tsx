@@ -30,15 +30,31 @@ export function SignalsSection() {
             return (
               <div
                 key={signal.source}
-                className="signal-card group relative col-span-full rounded-xl border border-white/8 bg-white/2 transition-all duration-300 hover:border-white/12 hover:bg-white/3 hover:shadow-[0_0_30px_rgba(255,255,255,0.03)]"
+                className="signal-card group relative col-span-full overflow-hidden rounded-xl bg-[#0c0d0f] transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.03)]"
               >
-                <div className="relative flex items-center gap-5 px-6 py-5">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/4">
-                    <Sparkles className="size-5 text-white/50" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-sm font-semibold text-white/90">{signal.source}</span>
-                    <span className="text-sm leading-relaxed text-white/50">{signal.example}</span>
+                {/* Rainbow border via inset box-shadow trick */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-xl"
+                  style={{
+                    padding: 1,
+                    background:
+                      'linear-gradient(135deg, rgba(86,67,204,0.4), rgba(229,72,77,0.3), rgba(247,193,43,0.3), rgba(70,227,183,0.3), rgba(47,122,208,0.3), rgba(103,63,215,0.4))',
+                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    maskComposite: 'exclude',
+                    WebkitMaskComposite: 'xor'
+                  }}
+                />
+                <div>
+                  <div className="relative flex items-center gap-5 px-6 py-5">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/4">
+                      <Sparkles className="size-5 text-white/50" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-semibold text-white/90">{signal.source}</span>
+                      <span className="text-sm leading-relaxed text-white/50">
+                        {signal.example}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

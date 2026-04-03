@@ -8,27 +8,31 @@ import { MockSignalDashboard, MockContactList, MockEmailPreview } from './mock-d
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* Each step has a unique CSS mask so the fade-out feels different */
 const STEPS = [
   {
     step: '01',
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web, surfacing the companies most likely to buy right now.',
-    component: MockSignalDashboard
+    Component: MockSignalDashboard,
+    mask: 'radial-gradient(ellipse 85% 80% at 50% 40%, black 60%, transparent 100%)'
   },
   {
     step: '02',
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    component: MockContactList
+    Component: MockContactList,
+    mask: 'radial-gradient(ellipse 80% 85% at 50% 45%, black 55%, transparent 100%)'
   },
   {
     step: '03',
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
-    desc: 'Every email is built on proven cold outreach frameworks. Plain text, under 80 words, one clear ask. Each opener references the exact signal that triggered it, so nothing reads like a template.',
-    component: MockEmailPreview
+    desc: 'Every email is built on proven cold outreach frameworks. Plain text, under 80 words, one clear ask. Each opener references the exact signal that triggered it.',
+    Component: MockEmailPreview,
+    mask: ''
   }
 ];
 
@@ -37,67 +41,90 @@ export function ShowcaseSection() {
 
   useGSAP(
     () => {
-      gsap.utils.toArray<HTMLElement>('.showcase-step').forEach((step) => {
-        const text = step.querySelector('.showcase-text');
-        const visual = step.querySelector('.showcase-visual');
+      const mm = gsap.matchMedia();
 
-        if (text) {
-          gsap.fromTo(
-            text,
-            { opacity: 0, x: -40 },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: step,
-                start: 'top 75%',
-                toggleActions: 'play none none reverse'
-              }
-            }
-          );
-        }
+      // Desktop: fade up with reverse
+      mm.add('(min-width: 1024px)', () => {
+        gsap.utils.toArray<HTMLElement>('.showcase-step').forEach((step) => {
+          const text = step.querySelector('.showcase-text');
+          const visual = step.querySelector('.showcase-visual');
 
-        if (visual) {
-          gsap.fromTo(
-            visual,
-            { opacity: 0, x: 40, scale: 0.97 },
-            {
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              duration: 0.8,
-              delay: 0.15,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: step,
-                start: 'top 75%',
-                toggleActions: 'play none none reverse'
+          if (text) {
+            gsap.fromTo(
+              text,
+              { autoAlpha: 0, y: 30 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                  trigger: step,
+                  start: 'top 95%',
+                  toggleActions: 'play none none reverse'
+                }
               }
-            }
-          );
-        }
+            );
+          }
+
+          if (visual) {
+            gsap.fromTo(
+              visual,
+              { autoAlpha: 0, y: 40, scale: 0.98 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.9,
+                delay: 0.1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                  trigger: step,
+                  start: 'top 90%',
+                  toggleActions: 'play none none reverse'
+                }
+              }
+            );
+          }
+        });
       });
 
-      // Animate the connecting line
-      const line = document.querySelector('.showcase-line') as HTMLElement | null;
-      if (line) {
-        gsap.fromTo(
-          line,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 60%',
-              end: 'bottom 60%',
-              scrub: true
-            }
+      // Mobile/tablet: simple fade-up, fire once
+      mm.add('(max-width: 1023px)', () => {
+        gsap.utils.toArray<HTMLElement>('.showcase-step').forEach((step) => {
+          const text = step.querySelector('.showcase-text');
+          const visual = step.querySelector('.showcase-visual');
+
+          if (text) {
+            gsap.fromTo(
+              text,
+              { autoAlpha: 0, y: 24 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: step, start: 'top 95%', once: true }
+              }
+            );
           }
-        );
-      }
+
+          if (visual) {
+            gsap.fromTo(
+              visual,
+              { autoAlpha: 0, y: 24 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.5,
+                delay: 0.1,
+                ease: 'power2.out',
+                scrollTrigger: { trigger: step, start: 'top 92%', once: true }
+              }
+            );
+          }
+        });
+      });
     },
     { scope: sectionRef }
   );
@@ -119,53 +146,44 @@ export function ShowcaseSection() {
         </p>
       </div>
 
-      <div className="relative">
-        {/* Vertical connecting line */}
-        <div className="absolute top-0 bottom-0 left-1/2 hidden -translate-x-1/2 lg:block">
-          <div className="showcase-line h-full w-px origin-top bg-linear-to-b from-white/8 via-white/4 to-transparent" />
-        </div>
-
-        <div className="flex flex-col gap-24 sm:gap-32 lg:gap-40">
-          {STEPS.map((step, i) => {
-            const isEven = i % 2 === 0;
-            const Component = step.component;
-
-            return (
-              <div
-                key={step.step}
-                className={`showcase-step relative grid items-center gap-10 lg:grid-cols-2 lg:gap-16 ${
-                  !isEven ? 'lg:[direction:rtl]' : ''
-                }`}
-              >
-                {/* Text side */}
-                <div className={`showcase-text ${!isEven ? 'lg:[direction:ltr]' : ''}`}>
-                  <div className="mb-4 flex items-center gap-3">
-                    <span className="flex size-8 items-center justify-center rounded-full border border-white/8 bg-white/3 text-xs font-medium text-white/50">
-                      {step.step}
-                    </span>
-                    <span className="text-xs font-medium tracking-wider text-white/40 uppercase">
-                      {step.label}
-                    </span>
-                  </div>
-                  <h3
-                    className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
-                    style={{ textWrap: 'balance' }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 max-w-md text-sm leading-relaxed text-white/50">{step.desc}</p>
-                </div>
-
-                {/* Visual side */}
-                <div className={`showcase-visual relative ${!isEven ? 'lg:[direction:ltr]' : ''}`}>
-                  <div className="relative">
-                    <Component />
-                  </div>
-                </div>
+      <div className="flex flex-col gap-28 sm:gap-36 lg:gap-44">
+        {STEPS.map((step) => (
+          <div key={step.step} className="showcase-step">
+            {/* Text above */}
+            <div className="showcase-text mb-10 max-w-2xl sm:mb-14">
+              <div className="mb-4">
+                <span className="text-xs font-medium tracking-wider text-white/40 uppercase">
+                  {step.label}
+                </span>
               </div>
-            );
-          })}
-        </div>
+              <h3
+                className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
+                style={{ textWrap: 'balance' }}
+              >
+                {step.title}
+              </h3>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/50">{step.desc}</p>
+            </div>
+
+            {/* Full-width interactive component with unique edge fade */}
+            <div className="showcase-visual relative">
+              {/* White glow border effect */}
+              <div
+                className="pointer-events-none absolute -inset-px z-10 rounded-xl"
+                style={{
+                  boxShadow:
+                    'inset 0 0 30px rgba(255,255,255,0.03), 0 0 40px rgba(255,255,255,0.03), 0 0 80px rgba(255,255,255,0.02)'
+                }}
+              />
+              <div
+                className="relative"
+                style={step.mask ? { maskImage: step.mask, WebkitMaskImage: step.mask } : undefined}
+              >
+                <step.Component />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
