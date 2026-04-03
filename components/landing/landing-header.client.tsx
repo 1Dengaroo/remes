@@ -18,7 +18,7 @@ function UserAvatar() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-sm font-medium text-white/40 transition-colors duration-150 hover:bg-transparent hover:text-white/80"
+        className="text-landing-fg-secondary hover:text-landing-fg text-sm font-medium transition-colors duration-150 hover:bg-transparent"
         onClick={openAuthModal}
       >
         Log in
@@ -41,7 +41,7 @@ function UserAvatar() {
           referrerPolicy="no-referrer"
         />
       ) : (
-        <div className="flex size-7 items-center justify-center rounded-full bg-[#5643cc]/20 text-xs font-medium text-[#8a8fff]">
+        <div className="flex size-7 items-center justify-center rounded-full bg-[var(--landing-accent)]/20 text-xs font-medium text-[var(--landing-accent-light)]">
           {(user.email?.[0] ?? '?').toUpperCase()}
         </div>
       )}
@@ -49,23 +49,25 @@ function UserAvatar() {
   );
 }
 
+const NAV_LINKS = [
+  { label: 'Features', href: '/#use-cases' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'FAQs', href: '/#faqs' }
+];
+
 function LandingNav() {
   return (
     <>
-      <button
-        type="button"
-        className="hidden text-sm text-white/40 transition-colors duration-150 hover:text-white/80 md:inline-block"
-        onClick={() => document.getElementById('use-cases')?.scrollIntoView({ behavior: 'smooth' })}
-      >
-        Features
-      </button>
-      <button
-        type="button"
-        className="hidden text-sm text-white/40 transition-colors duration-150 hover:text-white/80 md:inline-block"
-        onClick={() => document.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' })}
-      >
-        FAQs
-      </button>
+      {NAV_LINKS.map((link) => (
+        <Button
+          key={link.label}
+          variant="link"
+          asChild
+          className="text-landing-fg-secondary hover:text-landing-fg hidden h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline md:inline-flex"
+        >
+          <a href={link.href}>{link.label}</a>
+        </Button>
+      ))}
     </>
   );
 }
@@ -83,18 +85,20 @@ export function LandingHeader() {
   return (
     <div
       className="fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out"
-      style={{ padding: scrolled ? '10px 24px 0' : '0' }}
+      style={{ padding: scrolled ? '10px 0 0' : '0' }}
     >
       <header
         className="w-full transition-all duration-500 ease-out"
         style={{
-          maxWidth: scrolled ? '80rem' : '100%',
-          backgroundColor: scrolled ? 'rgba(8, 9, 10, 0.8)' : 'transparent',
+          maxWidth: scrolled ? '87.5rem' : '100%',
+          backgroundColor: scrolled ? 'var(--landing-header-bg)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
-          border: scrolled ? '1px solid rgba(255,255,255,0.04)' : '1px solid transparent',
-          borderBottomColor: scrolled ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.03)',
+          border: scrolled ? '1px solid var(--landing-header-border)' : '1px solid transparent',
+          borderBottomColor: scrolled
+            ? 'var(--landing-header-border)'
+            : 'var(--landing-header-border-bottom)',
           backdropFilter: scrolled ? 'blur(24px) saturate(1.3)' : 'none',
-          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.5)' : 'none'
+          boxShadow: scrolled ? 'var(--landing-shadow-header)' : 'none'
         }}
       >
         <div
@@ -104,7 +108,7 @@ export function LandingHeader() {
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2.5">
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
-              <span className="text-sm font-semibold tracking-wide text-white/90">Remes</span>
+              <span className="text-landing-fg text-sm font-semibold tracking-wide">Remes</span>
             </Link>
             <LandingNav />
           </div>
