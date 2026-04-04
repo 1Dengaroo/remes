@@ -30,9 +30,9 @@ lib/services/gmail.ts              ← Gmail OAuth + sending
 lib/store/research-store.ts        ← Zustand store (all state + actions + session persistence)
 lib/store/icp-store.ts             ← Saved ICP library state
 lib/store/signature-store.ts       ← Email signature CRUD state
-lib/store/profile-store.ts         ← Profile modal state
+lib/store/profile-store.ts         ← Profile/settings modal state + data loading
 lib/store/auth-store.ts            ← Auth modal state + user object
-lib/api.ts                         ← Client-side fetch wrappers
+lib/api/                           ← Client-side fetch wrappers (modular: data, research, emails, gmail, strategy)
 lib/validation.ts                  ← Zod schemas for API request/response validation
 lib/supabase/queries/              ← Database queries organized by domain
 middleware.ts                      ← Supabase auth + route protection + rate limiting

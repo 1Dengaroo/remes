@@ -17,6 +17,8 @@ Navigation: Cmd+Enter advances steps. Bottom nav. "New Research" navigates to se
 
 Sessions live at `/research` (list) and `/research/[id]` (individual). Sessions are created upfront, state is auto-saved, and loaded server-side on revisit (no loading flash).
 
+Saved ICP profiles are managed at `/profiles` and can also be created inline during the research flow via the Create ICP modal.
+
 ## Domain
 
 ```

@@ -72,9 +72,10 @@ Save state is shown via a `SaveIndicator` component (spinner while saving, check
 | `/api/strategy`                      | POST               | AI outreach strategy generation          |
 | `/api/people/search`                 | POST               | Apollo people search + Claude ranking    |
 | `/api/people/enrich`                 | POST               | Apollo person enrichment (1 credit)      |
+| `/api/people/bulk`                   | POST               | Bulk Apollo people search                |
 | `/api/emails/generate`               | POST               | Claude email sequence generation         |
 | `/api/emails/send`                   | POST               | Gmail send + upserts contacted_companies |
-| `/api/profile`                       | GET, PATCH         | User profile CRUD                        |
+| `/api/profile`                       | GET, PUT           | User profile CRUD                        |
 | `/api/gmail/authorize`               | GET                | Gmail OAuth initiation                   |
 | `/api/gmail/callback`                | GET                | Gmail OAuth callback                     |
 | `/api/gmail/disconnect`              | POST               | Gmail disconnection                      |

@@ -68,7 +68,7 @@ lib/prompts/
 lib/store/
 └── research-store.ts  # Zustand store — all pipeline state + actions + session persistence
 
-lib/api.ts             # Client-side fetch wrappers
+lib/api/               # Client-side fetch wrappers (modular: data, research, emails, gmail, strategy)
 lib/types.ts           # ICPCriteria, CompanyResult, CompanySignal, TargetContact, etc.
 
 app/api/icps/parse/
@@ -84,21 +84,29 @@ app/api/people/enrich/
 └── route.ts           # POST endpoint — Apollo person enrichment (1 credit)
 
 components/research/
+├── dashboard.client.tsx             # Research hub dashboard (activity feed, quick links)
 ├── research-hub.client.tsx          # Sessions list page
 ├── research-dashboard.client.tsx    # Main orchestrator (keyboard shortcuts, step routing)
 ├── transcript-step.tsx              # Step 1: textarea input
 ├── icp-panel-editable.tsx           # Step 2: ICP review/edit
+├── icp-summary.tsx                  # ICP summary display
 ├── strategy-step.tsx                # Strategy analysis panel
 ├── strategy-chat.client.tsx         # Strategy conversation UI
 ├── confirm-step.tsx                 # Step 3: company checkbox list
+├── confirm-company-row.tsx          # Individual company row in confirm step
 ├── results-step.tsx                 # Step 4: results grid
 ├── company-card.tsx                 # Grid row (company, contacts, signals, overview)
-├── contact-screen.client.tsx        # Contact panel for a company
-├── contact-list.client.tsx          # People list with enrichment
+├── mobile-company-card.tsx          # Mobile-optimized company card
+├── contact-carousel.tsx             # Contact carousel for company
+├── outreach-step.client.tsx         # Outreach/email composition step
 ├── email-editor-inline.client.tsx   # Inline email composer
-├── email-editor-dialog.client.tsx   # Dialog email composer
+├── bulk-send-dialog.client.tsx      # Bulk email send dialog
+├── filter-sort-bar.tsx              # Results filtering and sorting
+├── create-icp-modal.client.tsx      # Create/edit ICP modal
+├── save-icp-button.client.tsx       # Save ICP action button
 ├── sessions-list.client.tsx         # Sessions CRUD list
 ├── icp-list.client.tsx              # Saved ICP library
+├── getting-started.tsx              # Empty state getting started guide
 ├── loading-status.tsx               # Pipeline loading indicator
 ├── bottom-nav.tsx                   # Step progression + action buttons
 ├── signal-badge.tsx                 # Signal type badge

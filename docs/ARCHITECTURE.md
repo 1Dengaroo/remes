@@ -5,43 +5,52 @@
 ## Layers
 
 ```
-/app                    Routing shell only (server-only)
-├── page.tsx            Landing
-├── research/           Sessions list (server-fetched)
-│   └── [id]/           Session dashboard (server-fetched, hydrated to client)
-├── emails/             Sent emails history
-├── settings/           Settings page (Gmail OAuth redirect target)
-└── api/                API routes (SSE, REST)
-    ├── icps/           Saved ICP CRUD + parse
-    ├── sessions/       Session CRUD + auto-save + researched companies
-    ├── signatures/     Email signature CRUD
-    ├── contacts/       Contacted companies tracking
-    ├── emails/         Generate + send emails
-    ├── gmail/          OAuth authorize, callback, disconnect, status
-    ├── people/         Apollo people search + enrich
-    ├── profile/        User profile CRUD
-    ├── research/       Research pipeline (SSE streaming)
-    └── strategy/       AI outreach strategy generation
+/app                         Routing shell only (server-only)
+├── (marketing)/             Public pages (landing, about, pricing, legal)
+│   ├── page.tsx             Landing
+│   ├── about/               About page
+│   ├── pricing/             Pricing page
+│   ├── privacy/             Privacy policy
+│   └── terms/               Terms of service
+├── (platform)/              Authenticated app (sidebar layout)
+│   ├── research/            Sessions list (server-fetched)
+│   │   └── [id]/            Session dashboard (server-fetched, hydrated to client)
+│   ├── emails/              Sent emails history
+│   ├── profiles/            Saved ICP profiles page
+│   └── settings/            Settings page (Gmail OAuth redirect target)
+├── auth/callback/           Supabase auth callback
+└── api/                     API routes (SSE, REST)
+    ├── icps/                Saved ICP CRUD + parse
+    ├── sessions/            Session CRUD + auto-save + researched companies
+    ├── signatures/          Email signature CRUD
+    ├── contacts/            Contacted companies tracking
+    ├── emails/              Generate + send emails
+    ├── gmail/               OAuth authorize, callback, disconnect, status
+    ├── people/              Apollo people search + enrich + bulk
+    ├── profile/             User profile CRUD
+    ├── research/            Research pipeline (SSE streaming)
+    └── strategy/            AI outreach strategy generation
 
-/components             UI layer (feature-organized)
-├── research/           Pipeline UI (steps 1-4)
-├── emails/             Sent emails table
-├── settings/           Settings tabs + profile modal
-├── auth/               Login/signup modals + auth provider
-├── landing/            Marketing components
-├── shared/             Cross-feature components (company-logo)
-└── ui/                 shadcn/ui primitives
+/components                  UI layer (feature-organized)
+├── research/                Pipeline UI (steps 1-4), dashboard, sessions
+├── emails/                  Sent emails page + detail view
+├── settings/                Settings tabs + profile modal
+├── auth/                    Login/signup modals + auth provider
+├── landing/                 Marketing components (showcase, pricing, etc.)
+├── shared/                  Cross-feature components (company-logo, page-banner)
+└── ui/                      shadcn/ui primitives
 
-/lib                    Core business logic
-├── services/           Pipeline services (swappable) + config
-├── prompts/            Claude prompt templates
-├── store/              Zustand state management
-├── supabase/           Auth clients + queries/ (organized by domain)
-└── theme/              Theme + font system
+/lib                         Core business logic
+├── api/                     Client-side fetch wrappers (modular)
+├── services/                Pipeline services (swappable) + config
+├── prompts/                 Claude prompt templates
+├── store/                   Zustand state management
+├── supabase/                Auth clients + queries/ (organized by domain)
+└── theme/                   Theme + font system
 
-/styles                 Visual layer
-├── globals.css         Tailwind bridge + base
-└── themes/             Per-theme token files
+/styles                      Visual layer
+├── globals.css              Tailwind bridge + base
+└── themes/                  Per-theme token files
 ```
 
 ## Dependencies
