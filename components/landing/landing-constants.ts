@@ -1,3 +1,10 @@
+export const NAV_LINKS = [
+  { label: 'Features', href: '/#use-cases' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'FAQs', href: '/#faqs' },
+  { label: 'About', href: '/about' }
+];
+
 export const ROTATING_WORDS = [
   'funding rounds',
   'hiring surges',

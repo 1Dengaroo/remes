@@ -142,7 +142,7 @@ export function BottomNav() {
         backdropFilter: 'var(--bottom-nav-backdrop, none)'
       }}
     >
-      <div className="mx-auto flex max-w-[1500px] items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6">
+      <div className="mx-auto flex max-w-375 items-center justify-between px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-6">
         {/* Left: step navigation */}
         <div className="flex items-center gap-1 text-xs">
           <NavButton
