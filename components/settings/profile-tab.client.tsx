@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,12 +13,7 @@ export function ProfileTab() {
   const profileLoaded = useProfileStore((s) => s.profileLoaded);
   const setFullName = useProfileStore((s) => s.setFullName);
   const setCompanyName = useProfileStore((s) => s.setCompanyName);
-  const loadProfile = useProfileStore((s) => s.loadProfile);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    loadProfile();
-  }, [loadProfile]);
 
   async function handleSave() {
     setSaving(true);

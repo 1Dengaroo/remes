@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CONTACT_EMAIL } from '@/lib/services/config';
@@ -23,12 +23,7 @@ export function ConnectionsTab() {
   const gmailEmail = useProfileStore((s) => s.gmailEmail);
   const connectionsLoaded = useProfileStore((s) => s.connectionsLoaded);
   const setGmailStatus = useProfileStore((s) => s.setGmailStatus);
-  const loadConnections = useProfileStore((s) => s.loadConnections);
   const [disconnecting, setDisconnecting] = useState(false);
-
-  useEffect(() => {
-    loadConnections();
-  }, [loadConnections]);
 
   return (
     <div>

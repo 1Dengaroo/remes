@@ -104,10 +104,6 @@
   --landing-leading-normal: 1.5;
   --landing-leading-relaxed: 1.7;
 
-  /* ── Mask gradients (showcase edge fades) ── */
-  --landing-mask-1: radial-gradient(ellipse 85% 80% at 50% 40%, black 60%, transparent 100%);
-  --landing-mask-2: radial-gradient(ellipse 80% 85% at 50% 45%, black 55%, transparent 100%);
-
   /* ── Aurora glow colors ── */
   --landing-aurora-white: rgba(255, 255, 255, 0.06);
   --landing-aurora-white-edge: rgba(255, 255, 255, 0.02);

@@ -57,7 +57,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
             <p className="text-muted-foreground mx-auto mb-5 max-w-xs text-sm">
               Research companies first, then compose personalized outreach from your results.
             </p>
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="mx-auto w-fit">
               <Link href="/research">
                 <Search className="size-3.5" />
                 Start Researching

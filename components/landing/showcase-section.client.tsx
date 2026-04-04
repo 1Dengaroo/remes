@@ -3,31 +3,27 @@
 import { useRef, useEffect } from 'react';
 import { MockSignalDashboard, MockContactList, MockEmailPreview } from './mock-dashboard.client';
 
-/* Each step has a unique CSS mask so the fade-out feels different */
 const STEPS = [
   {
     step: '01',
     label: 'Signal Detection',
     title: 'Catch buying signals before your competitors',
     desc: 'Remes monitors job postings, funding rounds, and product launches across the web, surfacing the companies most likely to buy right now.',
-    Component: MockSignalDashboard,
-    mask: 'var(--landing-mask-1)'
+    Component: MockSignalDashboard
   },
   {
     step: '02',
     label: 'Contact Discovery',
     title: 'Find the right person instantly',
     desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    Component: MockContactList,
-    mask: 'var(--landing-mask-2)'
+    Component: MockContactList
   },
   {
     step: '03',
     label: 'AI Outreach',
     title: 'Emails that actually get replies',
     desc: 'Every email is built on proven cold outreach frameworks. Plain text, under 80 words, one clear ask. Each opener references the exact signal that triggered it.',
-    Component: MockEmailPreview,
-    mask: ''
+    Component: MockEmailPreview
   }
 ];
 
@@ -95,19 +91,15 @@ export function ShowcaseSection() {
               </p>
             </div>
 
-            {/* Full-width interactive component with unique edge fade */}
             <div className="relative">
               {/* White glow border effect */}
               <div
-                className="pointer-events-none absolute -inset-px z-10 rounded-xl"
+                className="pointer-events-none absolute -inset-px z-10 rounded-lg"
                 style={{
                   boxShadow: 'var(--landing-shadow-glow)'
                 }}
               />
-              <div
-                className="relative"
-                style={step.mask ? { maskImage: step.mask, WebkitMaskImage: step.mask } : undefined}
-              >
+              <div className="relative">
                 <step.Component />
               </div>
             </div>

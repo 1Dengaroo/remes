@@ -30,16 +30,8 @@ const COMPANIES = [
     score: 9,
     matchReason: 'Building out data infrastructure, posted Snowflake roles',
     signals: [
-      {
-        type: 'job_posting',
-        title: 'Data Engineer role mentions Snowflake, dbt',
-        phrases: ['Snowflake', 'dbt', 'Data Engineer']
-      },
-      {
-        type: 'funding',
-        title: 'Closed Series C with Benchmark',
-        phrases: ['Series C', 'Benchmark', '$30M']
-      }
+      { type: 'job_posting', title: 'Data Engineer role mentions Snowflake, dbt' },
+      { type: 'funding', title: 'Closed Series C with Benchmark' }
     ]
   },
   {
@@ -48,13 +40,7 @@ const COMPANIES = [
     funding: '$328M Series F',
     score: 8,
     matchReason: 'Expanding into EMEA, building new sales org from scratch',
-    signals: [
-      {
-        type: 'news',
-        title: 'Opened London office, hiring EMEA sales lead',
-        phrases: ['EMEA', 'expansion', 'sales lead']
-      }
-    ]
+    signals: [{ type: 'news', title: 'Opened London office, hiring EMEA sales lead' }]
   },
   {
     name: 'Ramp',
@@ -63,16 +49,8 @@ const COMPANIES = [
     score: 9,
     matchReason: 'Tripled headcount in 6 months, retooling outbound stack',
     signals: [
-      {
-        type: 'job_posting',
-        title: 'Posted 6 BDR roles in the last 2 weeks',
-        phrases: ['BDR', 'outbound', 'rapid hiring']
-      },
-      {
-        type: 'funding',
-        title: 'Raised $300M at $16B valuation',
-        phrases: ['Series D', '$300M', 'growth']
-      }
+      { type: 'job_posting', title: 'Posted 6 BDR roles in the last 2 weeks' },
+      { type: 'funding', title: 'Raised $300M at $16B valuation' }
     ]
   }
 ];
@@ -81,7 +59,7 @@ export function MockSignalDashboard() {
   const [selected, setSelected] = useState(0);
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+    <div className="w-full overflow-hidden rounded-lg border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <div className="flex items-center gap-3">
@@ -96,14 +74,14 @@ export function MockSignalDashboard() {
       </div>
 
       {/* Company rows */}
-      <div className="divide-y divide-white/5">
+      <div className="divide-y divide-white/5 p-3">
         {COMPANIES.map((c, i) => {
           const isSelected = selected === i;
           return (
             <button
               key={i}
               type="button"
-              className={`w-full px-6 py-5 text-left transition-colors duration-150 ${isSelected ? 'bg-white/6' : 'hover:bg-white/3'}`}
+              className={`w-full rounded-md px-4 py-4 text-left transition-colors duration-150 ${isSelected ? 'bg-white/6' : 'hover:bg-white/3'}`}
               onClick={() => setSelected(i)}
             >
               {/* Company header */}
@@ -117,8 +95,12 @@ export function MockSignalDashboard() {
                   <div className="flex items-center gap-2">
                     <span className="text-landing-fg text-sm font-medium">{c.name}</span>
                     <span className="text-2xs text-landing-fg-muted">{c.industry}</span>
+                    <span className="text-2xs text-landing-fg-muted">·</span>
+                    <span className="text-2xs text-landing-fg-muted">{c.funding}</span>
                   </div>
-                  <div className="text-xs2 text-landing-fg-muted mt-0.5">{c.funding}</div>
+                  <div className="text-xs2 text-landing-fg-secondary mt-0.5 leading-relaxed italic">
+                    {c.matchReason}
+                  </div>
                 </div>
                 <div
                   className="text-2xs flex size-7 shrink-0 items-center justify-center rounded-md font-semibold"
@@ -142,34 +124,17 @@ export function MockSignalDashboard() {
               </div>
 
               {/* Signals */}
-              <div className="mt-3 space-y-2">
+              <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5">
                 {c.signals.map((s, j) => (
-                  <div key={j} className="flex items-start gap-2.5">
+                  <div key={j} className="flex items-center gap-2">
                     <span
-                      className={`text-2xs mt-0.5 shrink-0 rounded px-1.5 py-0.5 font-medium ${SIGNAL_COLORS[s.type]}`}
+                      className={`text-2xs shrink-0 rounded px-1.5 py-0.5 font-medium ${SIGNAL_COLORS[s.type]}`}
                     >
                       {SIGNAL_LABELS[s.type]}
                     </span>
-                    <div className="min-w-0">
-                      <div className="text-landing-fg-secondary truncate text-xs">{s.title}</div>
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {s.phrases.map((p) => (
-                          <span
-                            key={p}
-                            className="text-2xs text-landing-fg-muted rounded-full bg-white/6 px-1.5 py-0.5"
-                          >
-                            {p}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                    <span className="text-landing-fg-secondary text-xs">{s.title}</span>
                   </div>
                 ))}
-              </div>
-
-              {/* Match reason — always visible */}
-              <div className="text-xs2 text-landing-fg-secondary mt-2.5 leading-relaxed italic">
-                {c.matchReason}
               </div>
             </button>
           );
@@ -242,7 +207,7 @@ export function MockContactList() {
   const enrichedCount = enriched.size;
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+    <div className="w-full overflow-hidden rounded-lg border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <span className="text-landing-fg-secondary text-xs font-medium">Contacts</span>
@@ -252,7 +217,7 @@ export function MockContactList() {
       </div>
 
       {/* Contacts */}
-      <div className="divide-y divide-white/5">
+      <div className="divide-y divide-white/5 p-3">
         {CONTACTS.map((c, i) => {
           const isEnriched = enriched.has(i);
           const wasOriginallyHidden = !c.enriched;
@@ -261,7 +226,7 @@ export function MockContactList() {
           return (
             <div
               key={i}
-              className="flex items-center gap-4 px-6 py-4 transition-colors duration-150 hover:bg-white/3"
+              className="flex items-center gap-4 rounded-md px-4 py-3 transition-colors duration-150 hover:bg-white/3"
             >
               {/* Avatar */}
               <div className="text-landing-fg-muted flex size-9 shrink-0 items-center justify-center rounded-full bg-white/8 text-xs font-medium">
@@ -420,7 +385,7 @@ export function MockEmailPreview() {
   const displayBody = streamingBody ?? email.body;
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+    <div className="w-full overflow-hidden rounded-lg border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Email header with sequence tabs */}
       <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <div className="flex items-center gap-2">

@@ -10,8 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createSession } from '@/lib/api';
+import { useProfileStore } from '@/lib/store/profile-store';
 import { formatRelativeDate } from '@/lib/utils';
 import { PageBanner } from '@/components/shared/page-banner';
+import { GettingStarted } from '@/components/research/getting-started';
 import { MAX_WIDTH } from '@/lib/layout';
 import type { ResearchSessionSummary, SentEmail, ContactedCompany, SavedICP } from '@/lib/types';
 
@@ -189,7 +191,6 @@ export function Dashboard({
   };
 
   const recentEmails = emails.slice(0, 6);
-  const sentCount = emails.filter((e) => e.status === 'sent').length;
   const greeting = userName ? `Welcome back, ${userName.split(' ')[0]}` : 'Welcome back';
 
   return (
@@ -202,11 +203,7 @@ export function Dashboard({
             <h1 className="text-foreground truncate text-2xl font-semibold tracking-tight">
               {greeting}
             </h1>
-            <p className="text-muted-foreground mt-1 text-sm">
-              {sessions.length} session{sessions.length === 1 ? '' : 's'} · {icps.length} saved
-              profile{icps.length === 1 ? '' : 's'} · {sentCount} email{sentCount === 1 ? '' : 's'}{' '}
-              sent
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm">Your research dashboard</p>
           </div>
           <Button onClick={handleCreate} disabled={isCreating}>
             {isCreating ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
@@ -214,134 +211,139 @@ export function Dashboard({
           </Button>
         </div>
 
-        {/* Two-column layout */}
-        <div className="grid min-w-0 gap-8 lg:grid-cols-[1fr_380px]">
-          {/* Left: Activity feed */}
-          <div className="min-w-0">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-medium">Recent Activity</h2>
-              {activityItems.length > 0 && (
-                <span className="text-muted-foreground text-xs">{activityItems.length} total</span>
-              )}
-            </div>
-            <Card className="p-4">
-              <ActivityFeed items={activityPagination.page} />
-            </Card>
-            <Pagination
-              pageIndex={activityPagination.pageIndex}
-              pageCount={activityPagination.pageCount}
-              hasPrev={activityPagination.hasPrev}
-              hasNext={activityPagination.hasNext}
-              onPrev={activityPagination.prev}
-              onNext={activityPagination.next}
-              onGoTo={activityPagination.goTo}
-              className="mt-3"
-            />
-          </div>
-
-          {/* Right: Emails + Profiles + Quick Links */}
-          <div className="min-w-0 space-y-6">
-            {/* Recent Emails */}
-            <div>
+        {sessions.length === 0 ? (
+          <GettingStarted onStart={handleCreate} isCreating={isCreating} />
+        ) : (
+          <div className="grid min-w-0 gap-8 lg:grid-cols-[1fr_380px]">
+            {/* Left: Activity feed */}
+            <div className="min-w-0">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-sm font-medium">Recent Emails</h2>
-                {emails.length > 0 && (
-                  <Link
-                    href="/emails"
-                    className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-                  >
-                    View all
-                  </Link>
+                <h2 className="text-sm font-medium">Recent Activity</h2>
+                {activityItems.length > 0 && (
+                  <span className="text-muted-foreground text-xs">
+                    {activityItems.length} total
+                  </span>
                 )}
               </div>
-              <Card className="!gap-0 divide-y !py-0">
-                {recentEmails.length === 0 ? (
-                  <div className="py-10 text-center">
-                    <p className="text-muted-foreground text-sm">No emails sent yet</p>
-                  </div>
-                ) : (
-                  recentEmails.map((email) => (
-                    <Link
-                      key={email.id}
-                      href={`/emails?email=${email.id}`}
-                      className="hover:bg-muted/50 flex items-center gap-3 px-4 py-3.5 transition-colors"
-                    >
-                      <div className="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
-                        {email.contact_name
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')
-                          .slice(0, 2)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="truncate text-sm font-medium">{email.contact_name}</span>
-                          {email.status === 'failed' && (
-                            <span className="bg-destructive/10 text-destructive shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
-                              Failed
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-muted-foreground mt-0.5 truncate text-xs">
-                          {email.subject}
-                        </p>
-                      </div>
-                      <span className="text-muted-foreground shrink-0 text-xs">
-                        {formatRelativeDate(email.created_at)}
-                      </span>
-                    </Link>
-                  ))
-                )}
+              <Card className="p-4">
+                <ActivityFeed items={activityPagination.page} />
               </Card>
+              <Pagination
+                pageIndex={activityPagination.pageIndex}
+                pageCount={activityPagination.pageCount}
+                hasPrev={activityPagination.hasPrev}
+                hasNext={activityPagination.hasNext}
+                onPrev={activityPagination.prev}
+                onNext={activityPagination.next}
+                onGoTo={activityPagination.goTo}
+                className="mt-3"
+              />
             </div>
 
-            {/* Saved Profiles */}
-            {icps.length > 0 && (
+            {/* Right: Emails + Profiles + Quick Links */}
+            <div className="min-w-0 space-y-6">
+              {/* Recent Emails */}
               <div>
-                <h2 className="mb-4 text-sm font-medium">Saved Profiles</h2>
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-sm font-medium">Recent Emails</h2>
+                  {emails.length > 0 && (
+                    <Link
+                      href="/emails"
+                      className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+                    >
+                      View all
+                    </Link>
+                  )}
+                </div>
                 <Card className="!gap-0 divide-y !py-0">
-                  {icps.slice(0, 4).map((icp) => (
-                    <div key={icp.id} className="px-4 py-3">
-                      <span className="text-sm font-medium">{icp.name}</span>
-                      {icp.icp.description && (
-                        <p className="text-muted-foreground mt-0.5 truncate text-xs">
-                          {icp.icp.description}
-                        </p>
-                      )}
+                  {recentEmails.length === 0 ? (
+                    <div className="py-10 text-center">
+                      <p className="text-muted-foreground text-sm">No emails sent yet</p>
                     </div>
-                  ))}
+                  ) : (
+                    recentEmails.map((email) => (
+                      <Link
+                        key={email.id}
+                        href={`/emails?email=${email.id}`}
+                        className="hover:bg-muted/50 flex items-center gap-3 px-4 py-3.5 transition-colors"
+                      >
+                        <div className="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
+                          {email.contact_name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')
+                            .slice(0, 2)}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="truncate text-sm font-medium">
+                              {email.contact_name}
+                            </span>
+                            {email.status === 'failed' && (
+                              <span className="bg-destructive/10 text-destructive shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+                                Failed
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                            {email.subject}
+                          </p>
+                        </div>
+                        <span className="text-muted-foreground shrink-0 text-xs">
+                          {formatRelativeDate(email.created_at)}
+                        </span>
+                      </Link>
+                    ))
+                  )}
                 </Card>
               </div>
-            )}
 
-            {/* Quick links */}
-            <div>
-              <h2 className="mb-4 text-sm font-medium">Quick Links</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  variant="secondary"
-                  asChild
-                  className="h-auto justify-start gap-2.5 px-4 py-3"
-                >
-                  <Link href="/emails">
-                    <Mail className="text-muted-foreground size-4" />
-                    <span className="text-sm font-medium">Sent Emails</span>
-                  </Link>
-                </Button>
-                <Button
-                  variant="secondary"
-                  asChild
-                  className="h-auto justify-start gap-2.5 px-4 py-3"
-                >
-                  <Link href="/settings">
+              {/* Saved Profiles */}
+              {icps.length > 0 && (
+                <div>
+                  <h2 className="mb-4 text-sm font-medium">Saved Profiles</h2>
+                  <Card className="!gap-0 divide-y !py-0">
+                    {icps.slice(0, 4).map((icp) => (
+                      <div key={icp.id} className="px-4 py-3">
+                        <span className="text-sm font-medium">{icp.name}</span>
+                        {icp.icp.description && (
+                          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                            {icp.icp.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </Card>
+                </div>
+              )}
+
+              {/* Quick links */}
+              <div>
+                <h2 className="mb-4 text-sm font-medium">Quick Links</h2>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="secondary"
+                    asChild
+                    className="h-auto justify-start gap-2.5 px-4 py-3"
+                  >
+                    <Link href="/emails">
+                      <Mail className="text-muted-foreground size-4" />
+                      <span className="text-sm font-medium">Sent Emails</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="h-auto justify-start gap-2.5 px-4 py-3"
+                    onClick={() => useProfileStore.getState().openProfile()}
+                  >
                     <Settings className="text-muted-foreground size-4" />
                     <span className="text-sm font-medium">Settings</span>
-                  </Link>
-                </Button>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

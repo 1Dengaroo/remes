@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAuthStore } from '@/lib/store/auth-store';
+import { useProfileStore } from '@/lib/store/profile-store';
 import { createClient } from '@/lib/supabase/client';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -19,6 +20,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
       setInitialized();
+      if (data.user) {
+        useProfileStore.getState().loadProfile();
+        useProfileStore.getState().loadConnections();
+      }
     });
 
     const {
