@@ -79,10 +79,14 @@ export function CreateICPModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="xl" showCloseButton={false} className="gap-0 p-0">
+      <DialogContent
+        size="xl"
+        showCloseButton={false}
+        className="grid-rows-[1fr] gap-0 overflow-hidden p-0"
+      >
         <DialogTitle className="sr-only">New Customer Profile</DialogTitle>
         {formStep === 'describe' && (
-          <>
+          <div className="flex max-h-[90vh] flex-col overflow-hidden">
             <div className="p-6 pb-0">
               <h2 className="text-lg font-semibold tracking-tight">Describe your customer</h2>
               <p className="text-muted-foreground mt-1 text-sm">
@@ -138,7 +142,7 @@ export function CreateICPModal({
               </Card>
             </div>
 
-            <div className="border-border flex items-center justify-end border-t px-6 py-4">
+            <div className="border-border flex shrink-0 items-center justify-end border-t px-6 py-4">
               <Button
                 size="sm"
                 onClick={handleExtract}
@@ -157,21 +161,21 @@ export function CreateICPModal({
                 )}
               </Button>
             </div>
-          </>
+          </div>
         )}
 
         {formStep === 'review' && icp && (
-          <>
-            <div className="p-6 pb-0">
+          <div className="flex max-h-[90vh] flex-col overflow-hidden">
+            <div className="shrink-0 p-6 pb-0">
               <h2 className="text-lg font-semibold tracking-tight">Review & save profile</h2>
               <p className="text-muted-foreground mt-1 text-sm">
                 Edit the extracted profile below, then save it.
               </p>
             </div>
 
-            {error && <p className="text-destructive px-6 pt-3 text-sm">{error}</p>}
+            {error && <p className="text-destructive shrink-0 px-6 pt-3 text-sm">{error}</p>}
 
-            <div className="p-6">
+            <div className="overflow-y-auto p-6">
               <div className="mb-4">
                 <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                   Profile name
@@ -190,7 +194,7 @@ export function CreateICPModal({
               <IcpPanelEditable icp={icp} onUpdate={updateIcpField} />
             </div>
 
-            <div className="border-border flex items-center justify-between border-t px-6 py-4">
+            <div className="border-border flex shrink-0 items-center justify-between border-t px-6 py-4">
               <Button
                 variant="ghost"
                 size="sm"
@@ -212,7 +216,7 @@ export function CreateICPModal({
                 )}
               </Button>
             </div>
-          </>
+          </div>
         )}
       </DialogContent>
     </Dialog>

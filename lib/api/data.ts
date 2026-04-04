@@ -2,6 +2,7 @@ import type {
   ICPCriteria,
   SavedICP,
   ResearchSession,
+  ResearchSessionSummary,
   ContactedCompany,
   EmailSignature
 } from '@/lib/types';
@@ -44,6 +45,13 @@ export async function deleteICP(id: string): Promise<void> {
 // ---------------------------------------------------------------------------
 // Research Sessions
 // ---------------------------------------------------------------------------
+
+export async function listSessions(): Promise<ResearchSessionSummary[]> {
+  const response = await fetch('/api/sessions');
+  if (!response.ok) throw new ApiError('Failed to load sessions', response.status);
+  const data = (await response.json()) as { sessions: ResearchSessionSummary[] };
+  return data.sessions;
+}
 
 export async function createSession(initial?: Partial<ResearchSession>): Promise<ResearchSession> {
   const response = await postJson('/api/sessions', initial ?? {});

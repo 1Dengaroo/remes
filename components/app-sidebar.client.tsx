@@ -1,9 +1,10 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Mail } from 'lucide-react';
+import { Search, Mail, Users, Clock } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -15,20 +16,33 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarRail,
   SidebarTrigger,
   SidebarSeparator
 } from '@/components/ui/sidebar';
 import { UserFooter } from '@/components/user-footer.client';
 import { NewSessionButton } from '@/components/new-session-button.client';
-
-const NAV_ITEMS = [
-  { href: '/research', label: 'Research Hub', icon: Search },
-  { href: '/emails', label: 'Emails', icon: Mail }
-];
+import { NewProfileButton } from '@/components/new-profile-button.client';
+import { listSessions } from '@/lib/api';
+import type { ResearchSessionSummary } from '@/lib/types';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const [recentSessions, setRecentSessions] = useState<ResearchSessionSummary[]>([]);
+
+  useEffect(() => {
+    listSessions()
+      .then((sessions) => {
+        const sorted = [...sessions].sort(
+          (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        );
+        setRecentSessions(sorted.slice(0, 5));
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
@@ -60,32 +74,94 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {NAV_ITEMS.map((item) => {
-                const isActive = pathname.startsWith(item.href);
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={item.label}>
-                      <Link href={item.href}>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
+          <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
+          <SidebarGroupContent className="space-y-1">
+            <NewSessionButton />
+            <NewProfileButton />
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarSeparator />
 
         <SidebarGroup>
-          <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
+          <SidebarGroupLabel>Research</SidebarGroupLabel>
           <SidebarGroupContent>
-            <NewSessionButton />
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/research'}
+                  tooltip="Research Hub"
+                >
+                  <Link href="/research">
+                    <Search />
+                    <span>Research Hub</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith('/profiles')}
+                  tooltip="Saved Profiles"
+                >
+                  <Link href="/profiles">
+                    <Users />
+                    <span>Saved Profiles</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {recentSessions.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Recents</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuSub>
+                    {recentSessions.map((session) => (
+                      <SidebarMenuSubItem key={session.id}>
+                        <SidebarMenuSubButton
+                          asChild
+                          size="sm"
+                          isActive={pathname === `/research/${session.id}`}
+                        >
+                          <Link href={`/research/${session.id}`}>
+                            <Clock className="size-3" />
+                            <span>{session.name}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        <SidebarSeparator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Outreach</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith('/emails')}
+                  tooltip="Emails"
+                >
+                  <Link href="/emails">
+                    <Mail />
+                    <span>Emails</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

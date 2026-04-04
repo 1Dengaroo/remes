@@ -22,6 +22,14 @@ const SIGNAL_LABELS: Record<string, string> = {
   product_launch: 'Launch'
 };
 
+function scoreStyles(score: number) {
+  const tier = score >= 9 ? 'high' : score >= 8 ? 'mid' : 'low';
+  return {
+    backgroundColor: `var(--landing-score-${tier}-bg)`,
+    color: `var(--landing-score-${tier}-text)`
+  };
+}
+
 const COMPANIES = [
   {
     name: 'Ashby',
@@ -63,7 +71,7 @@ export function MockSignalDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-green-400/70 shadow-(--landing-shadow-dot)" />
+          <div className="size-2 rounded-full bg-green-400/70 shadow-(--landing-shadow-dot)" />
           <span className="text-landing-fg-secondary text-xs font-medium">
             {COMPANIES.length} companies matched
           </span>
@@ -104,20 +112,7 @@ export function MockSignalDashboard() {
                 </div>
                 <div
                   className="text-2xs flex size-7 shrink-0 items-center justify-center rounded-md font-semibold"
-                  style={{
-                    backgroundColor:
-                      c.score >= 9
-                        ? 'var(--landing-score-high-bg)'
-                        : c.score >= 8
-                          ? 'var(--landing-score-mid-bg)'
-                          : 'var(--landing-score-low-bg)',
-                    color:
-                      c.score >= 9
-                        ? 'var(--landing-score-high-text)'
-                        : c.score >= 8
-                          ? 'var(--landing-score-mid-text)'
-                          : 'var(--landing-score-low-text)'
-                  }}
+                  style={scoreStyles(c.score)}
                 >
                   {c.score}
                 </div>
@@ -196,8 +191,8 @@ const CONTACTS = [
 ];
 
 export function MockContactList() {
-  const [enriched, setEnriched] = useState<Set<number>>(
-    new Set(CONTACTS.map((c, i) => (c.enriched ? i : -1)).filter((i) => i >= 0))
+  const [enriched, setEnriched] = useState(
+    () => new Set(CONTACTS.flatMap((c, i) => (c.enriched ? [i] : [])))
   );
 
   const handleEnrich = (idx: number) => {
@@ -416,7 +411,7 @@ export function MockEmailPreview() {
       </div>
 
       {/* Email fields */}
-      <div className="space-y-0 divide-y divide-white/5 border-b border-white/6">
+      <div className="divide-y divide-white/5 border-b border-white/6">
         <div className="flex items-center gap-3 px-6 py-3">
           <span className="text-xs2 text-landing-fg-muted">To</span>
           <span className="text-landing-fg-secondary text-xs">james.p@ramp.com</span>
@@ -456,20 +451,18 @@ export function MockEmailPreview() {
 
       {/* Actions */}
       <div className="flex items-center justify-between border-t border-white/6 px-6 py-3.5">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className={`text-2xs cursor-pointer rounded-full px-3 py-1.5 transition-colors duration-150 ${
-              isStreaming
-                ? 'text-landing-fg-muted bg-white/6 opacity-50'
-                : 'text-landing-fg-muted hover:text-landing-fg bg-white/6 hover:bg-white/10'
-            }`}
-            onClick={handleRegenerate}
-            disabled={isStreaming}
-          >
-            {isStreaming ? 'Generating...' : 'Regenerate'}
-          </button>
-        </div>
+        <button
+          type="button"
+          className={`text-2xs cursor-pointer rounded-full px-3 py-1.5 transition-colors duration-150 ${
+            isStreaming
+              ? 'text-landing-fg-muted bg-white/6 opacity-50'
+              : 'text-landing-fg-muted hover:text-landing-fg bg-white/6 hover:bg-white/10'
+          }`}
+          onClick={handleRegenerate}
+          disabled={isStreaming}
+        >
+          {isStreaming ? 'Generating...' : 'Regenerate'}
+        </button>
         <button
           type="button"
           className="text-2xs text-landing-fg-muted hover:text-landing-fg cursor-pointer rounded-full bg-white/12 px-3 py-1.5 font-medium transition-colors duration-150 hover:bg-white/18"

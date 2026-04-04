@@ -15,6 +15,7 @@ export {
   createICP,
   updateICP,
   deleteICP,
+  listSessions,
   createSession,
   updateSession,
   deleteSession,
