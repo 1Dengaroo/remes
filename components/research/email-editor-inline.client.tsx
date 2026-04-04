@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import type { ComposeEmailParams, GeneratedEmail } from '@/lib/types';
 import { toast } from 'sonner';
 import { streamEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
+import { parseStreamingEmailFields } from '@/lib/services/parse-streaming-email';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { useResearchStore } from '@/lib/store/research-store';
 import { useSignatureStore } from '@/lib/store/signature-store';
@@ -57,7 +58,7 @@ function EmailPreview({
   signatureBody: string | null;
 }) {
   return (
-    <Card className="bg-muted/30 h-full !gap-0 !py-0">
+    <Card className="bg-muted/30 h-full gap-0 py-0">
       <div className="border-border space-y-1 border-b px-4 py-3">
         <div className="flex items-baseline gap-2">
           <span className="text-muted-foreground text-xs font-medium">To:</span>
@@ -168,43 +169,6 @@ export function EmailEditorInline({
     setSubject('');
     setBody('');
 
-    let parsedSubject = false;
-
-    const tryExtractFields = (accumulated: string) => {
-      if (currentGenId !== generationIdRef.current) return;
-
-      if (!parsedSubject) {
-        const subjectMatch = accumulated.match(/"subject"\s*:\s*"((?:[^"\\]|\\.)*)"/);
-        if (subjectMatch) {
-          setSubject(subjectMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n'));
-          parsedSubject = true;
-        }
-      }
-
-      const bodyStart = accumulated.match(/"body"\s*:\s*"/);
-      if (bodyStart && bodyStart.index !== undefined) {
-        const afterBodyKey = accumulated.slice(bodyStart.index + bodyStart[0].length);
-        let bodyContent = '';
-        let i = 0;
-        while (i < afterBodyKey.length) {
-          if (afterBodyKey[i] === '\\' && i + 1 < afterBodyKey.length) {
-            const next = afterBodyKey[i + 1];
-            if (next === 'n') bodyContent += '\n';
-            else if (next === '"') bodyContent += '"';
-            else if (next === '\\') bodyContent += '\\';
-            else bodyContent += next;
-            i += 2;
-          } else if (afterBodyKey[i] === '"') {
-            break;
-          } else {
-            bodyContent += afterBodyKey[i];
-            i++;
-          }
-        }
-        setBody(bodyContent);
-      }
-    };
-
     try {
       let accumulated = '';
       const seq = await streamEmailSequence(
@@ -216,8 +180,9 @@ export function EmailEditorInline({
           accumulated += delta;
           const firstEmailStart = accumulated.indexOf('{', accumulated.indexOf('['));
           if (firstEmailStart !== -1) {
-            const firstEmailText = accumulated.slice(firstEmailStart);
-            tryExtractFields(firstEmailText);
+            const parsed = parseStreamingEmailFields(accumulated.slice(firstEmailStart));
+            if (parsed.subject !== null) setSubject(parsed.subject);
+            if (parsed.body !== null) setBody(parsed.body);
           }
         },
         controller.signal

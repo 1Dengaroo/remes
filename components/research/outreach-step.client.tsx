@@ -109,18 +109,6 @@ export function OutreachStep() {
     return list;
   }, [results, peopleResults, allPeopleResults]);
 
-  const companyNames = useMemo(() => {
-    const names: string[] = [];
-    const seen = new Set<string>();
-    for (const c of sidebarContacts) {
-      if (!seen.has(c.companyName)) {
-        seen.add(c.companyName);
-        names.push(c.companyName);
-      }
-    }
-    return names;
-  }, [sidebarContacts]);
-
   const grouped = useMemo(() => {
     const map = new Map<string, SidebarContact[]>();
     for (const c of sidebarContacts) {
@@ -131,28 +119,16 @@ export function OutreachStep() {
     return map;
   }, [sidebarContacts]);
 
-  const visibleGrouped = useMemo(() => {
-    if (hiddenCompanies.size === 0) return grouped;
-    const filtered = new Map<string, SidebarContact[]>();
-    for (const [name, contacts] of grouped) {
-      if (!hiddenCompanies.has(name)) {
-        filtered.set(name, contacts);
-      }
-    }
-    return filtered;
-  }, [grouped, hiddenCompanies]);
+  const companyNames = useMemo(() => [...grouped.keys()], [grouped]);
 
-  const toggleCompanyVisibility = useCallback((name: string) => {
+  const toggleCompanyVisibility = (name: string) => {
     setHiddenCompanies((prev) => {
       const next = new Set(prev);
-      if (next.has(name)) {
-        next.delete(name);
-      } else {
-        next.add(name);
-      }
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
       return next;
     });
-  }, []);
+  };
 
   const composableContacts = useMemo(
     () =>
@@ -296,98 +272,100 @@ export function OutreachStep() {
         )}
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          {[...visibleGrouped.entries()].map(([companyName, companyContacts]) => {
-            const contactedEmails = getContactedEmails(companyName);
-            const companyResult = companyContacts[0]?.result;
-            return (
-              <div key={companyName}>
-                <div className="bg-card border-border sticky top-0 z-10 flex items-center gap-2 border-y px-4 py-2">
-                  <CompanyLogoWithFallback
-                    name={companyName}
-                    website={companyResult?.website}
-                    logoUrl={companyResult?.logo_url}
-                    size="sm"
-                  />
-                  <span className="truncate text-xs font-semibold">{companyName}</span>
-                  <span className="text-muted-foreground text-[10px]">
-                    {companyContacts.length}
-                  </span>
-                </div>
-                {companyContacts.map((c) => {
-                  if (!c.isComposable) {
-                    const isEnriching = enrichingPersonIds.includes(c.person.apollo_person_id);
-                    const displayName = `${c.person.first_name} ${c.person.last_name_obfuscated}`;
+          {[...grouped.entries()]
+            .filter(([name]) => !hiddenCompanies.has(name))
+            .map(([companyName, companyContacts]) => {
+              const contactedEmails = getContactedEmails(companyName);
+              const companyResult = companyContacts[0]?.result;
+              return (
+                <div key={companyName}>
+                  <div className="bg-card border-border sticky top-0 z-10 flex items-center gap-2 border-y px-4 py-2">
+                    <CompanyLogoWithFallback
+                      name={companyName}
+                      website={companyResult?.website}
+                      logoUrl={companyResult?.logo_url}
+                      size="sm"
+                    />
+                    <span className="truncate text-xs font-semibold">{companyName}</span>
+                    <span className="text-muted-foreground text-[10px]">
+                      {companyContacts.length}
+                    </span>
+                  </div>
+                  {companyContacts.map((c) => {
+                    if (!c.isComposable) {
+                      const isEnriching = enrichingPersonIds.includes(c.person.apollo_person_id);
+                      const displayName = `${c.person.first_name} ${c.person.last_name_obfuscated}`;
+                      return (
+                        <div
+                          key={c.key}
+                          className="flex w-full items-center gap-2 px-4 py-2.5 text-left"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="text-muted-foreground truncate text-sm leading-none">
+                              {displayName}
+                            </p>
+                            <p className="text-muted-foreground/60 truncate text-xs leading-none">
+                              {c.person.title}
+                            </p>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="icon-xs"
+                            className="shrink-0"
+                            disabled={isEnriching}
+                            label={isEnriching ? 'Loading...' : 'Get Contact'}
+                            onClick={() =>
+                              enrichPersonAction(c.person.apollo_person_id, c.companyName)
+                            }
+                          >
+                            {isEnriching ? (
+                              <Loader2 className="size-3 animate-spin" />
+                            ) : (
+                              <Users className="size-3" />
+                            )}
+                          </Button>
+                        </div>
+                      );
+                    }
+
+                    const isSent = contactedEmails.includes(c.person.email ?? '');
+                    const isSelected = selectedKeys.has(c.key);
+                    const isAtLimit = selectedKeys.size >= MAX_SELECTED && !isSelected;
                     return (
-                      <div
+                      <button
                         key={c.key}
-                        className="flex w-full items-center gap-2 px-4 py-2.5 text-left"
+                        type="button"
+                        onClick={() => toggleContact(c.key)}
+                        disabled={isAtLimit}
+                        className={`flex w-full items-center gap-2 px-4 py-2.5 text-left transition-colors ${
+                          isSelected ? 'bg-muted' : isAtLimit ? 'opacity-40' : 'hover:bg-muted/50'
+                        }`}
                       >
+                        {isSelected ? (
+                          <CheckSquare className="text-primary size-4 shrink-0" />
+                        ) : (
+                          <Square className="text-muted-foreground/40 size-4 shrink-0" />
+                        )}
                         <div className="min-w-0 flex-1">
-                          <p className="text-muted-foreground truncate text-sm leading-none">
-                            {displayName}
+                          <p className="truncate text-sm leading-none font-medium">
+                            {c.person.first_name} {c.person.last_name}
                           </p>
-                          <p className="text-muted-foreground/60 truncate text-xs leading-none">
+                          <p className="text-muted-foreground truncate text-xs leading-none">
                             {c.person.title}
                           </p>
                         </div>
-                        <Button
-                          variant="outline"
-                          size="icon-xs"
-                          className="shrink-0"
-                          disabled={isEnriching}
-                          label={isEnriching ? 'Loading...' : 'Get Contact'}
-                          onClick={() =>
-                            enrichPersonAction(c.person.apollo_person_id, c.companyName)
-                          }
-                        >
-                          {isEnriching ? (
-                            <Loader2 className="size-3 animate-spin" />
-                          ) : (
-                            <Users className="size-3" />
-                          )}
-                        </Button>
-                      </div>
+                        {isSent && (
+                          <span className="text-muted-foreground flex items-center gap-0.5 text-[10px]">
+                            <Check className="size-3" />
+                            Sent
+                          </span>
+                        )}
+                      </button>
                     );
-                  }
-
-                  const isSent = contactedEmails.includes(c.person.email ?? '');
-                  const isSelected = selectedKeys.has(c.key);
-                  const isAtLimit = selectedKeys.size >= MAX_SELECTED && !isSelected;
-                  return (
-                    <button
-                      key={c.key}
-                      type="button"
-                      onClick={() => toggleContact(c.key)}
-                      disabled={isAtLimit}
-                      className={`flex w-full items-center gap-2 px-4 py-2.5 text-left transition-colors ${
-                        isSelected ? 'bg-muted' : isAtLimit ? 'opacity-40' : 'hover:bg-muted/50'
-                      }`}
-                    >
-                      {isSelected ? (
-                        <CheckSquare className="text-primary size-4 shrink-0" />
-                      ) : (
-                        <Square className="text-muted-foreground/40 size-4 shrink-0" />
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm leading-none font-medium">
-                          {c.person.first_name} {c.person.last_name}
-                        </p>
-                        <p className="text-muted-foreground truncate text-xs leading-none">
-                          {c.person.title}
-                        </p>
-                      </div>
-                      {isSent && (
-                        <span className="text-muted-foreground flex items-center gap-0.5 text-[10px]">
-                          <Check className="size-3" />
-                          Sent
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
+                  })}
+                </div>
+              );
+            })}
         </div>
       </Card>
 
