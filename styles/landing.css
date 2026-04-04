@@ -7,8 +7,8 @@
 :root {
   /* ── Page backgrounds ── */
   --landing-bg: #08090a;
-  --landing-bg-card: #0c0d0f;
-  --landing-bg-card-hover: #0f1012;
+  --landing-bg-card: #111318;
+  --landing-bg-card-hover: #161820;
   --landing-bg-modal: #111214;
 
   /* ── Brand gradient stops ── */
@@ -29,9 +29,9 @@
   /* ── Text ── */
   --landing-text: #e4e5e9;
   --landing-text-muted: #9c9da1;
-  --landing-fg: rgba(255, 255, 255, 0.9); /* headings, names, primary labels */
-  --landing-fg-secondary: rgba(255, 255, 255, 0.5); /* body text, descriptions */
-  --landing-fg-muted: rgba(255, 255, 255, 0.3); /* metadata, small labels, timestamps */
+  --landing-fg: rgba(255, 255, 255, 0.95); /* headings, names, primary labels */
+  --landing-fg-secondary: rgba(255, 255, 255, 0.65); /* body text, descriptions */
+  --landing-fg-muted: rgba(255, 255, 255, 0.4); /* metadata, small labels, timestamps */
 
   /* ── Signal colors (used in signal cards + mock dashboards) ── */
   --landing-signal-job: #5643cc;
@@ -44,12 +44,12 @@
   --landing-signal-linkedin: #455eb5;
 
   /* ── Score badge colors ── */
-  --landing-score-high-bg: rgba(52, 211, 153, 0.15);
-  --landing-score-high-text: rgba(52, 211, 153, 0.8);
-  --landing-score-mid-bg: rgba(96, 165, 250, 0.15);
-  --landing-score-mid-text: rgba(96, 165, 250, 0.8);
-  --landing-score-low-bg: rgba(255, 255, 255, 0.06);
-  --landing-score-low-text: rgba(255, 255, 255, 0.4);
+  --landing-score-high-bg: rgba(52, 211, 153, 0.2);
+  --landing-score-high-text: rgba(52, 211, 153, 0.9);
+  --landing-score-mid-bg: rgba(96, 165, 250, 0.2);
+  --landing-score-mid-text: rgba(96, 165, 250, 0.9);
+  --landing-score-low-bg: rgba(255, 255, 255, 0.08);
+  --landing-score-low-text: rgba(255, 255, 255, 0.5);
 
   /* ── Rainbow border (custom signal card) ── */
   --landing-rainbow-border: linear-gradient(
@@ -63,13 +63,13 @@
   );
 
   /* ── Shadows ── */
-  --landing-shadow-card: 0 0 30px rgba(255, 255, 255, 0.04), 0 0 60px rgba(255, 255, 255, 0.02);
+  --landing-shadow-card: 0 0 30px rgba(255, 255, 255, 0.06), 0 0 60px rgba(255, 255, 255, 0.03);
   --landing-shadow-btn: 0 0 20px rgba(255, 255, 255, 0.15);
   --landing-shadow-btn-hover: 0 0 30px rgba(255, 255, 255, 0.25);
   --landing-shadow-header: 0 4px 30px rgba(0, 0, 0, 0.5);
   --landing-shadow-glow:
-    inset 0 0 30px rgba(255, 255, 255, 0.03), 0 0 40px rgba(255, 255, 255, 0.03),
-    0 0 80px rgba(255, 255, 255, 0.02);
+    inset 0 0 30px rgba(255, 255, 255, 0.05), 0 0 40px rgba(255, 255, 255, 0.05),
+    0 0 80px rgba(255, 255, 255, 0.03);
   --landing-shadow-dot: 0 0 6px rgba(74, 222, 128, 0.4);
   --landing-shadow-card-hover: 0 0 30px rgba(255, 255, 255, 0.03);
 
