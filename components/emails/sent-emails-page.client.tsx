@@ -2,39 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Mail, ExternalLink, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription
-} from '@/components/ui/sheet';
 import type { SentEmail } from '@/lib/types';
 import { MAX_WIDTH } from '@/lib/layout';
 import { PageBanner } from '@/components/shared/page-banner';
-import { useIsMobile } from '@/hooks/use-mobile';
-
-function MobileEmailSheet({ email, onClose }: { email: SentEmail | null; onClose: () => void }) {
-  const isMobile = useIsMobile();
-  return (
-    <Sheet open={!!email && isMobile} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent side="bottom" className="h-[80dvh]">
-        <SheetHeader>
-          <SheetTitle className="truncate">{email?.subject ?? 'Email Detail'}</SheetTitle>
-          <SheetDescription className="sr-only">Email detail view</SheetDescription>
-        </SheetHeader>
-        {email && (
-          <div className="flex-1 overflow-y-auto px-4 pb-4">
-            <EmailDetailContent email={email} />
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
-  );
-}
+import { EmailDetailContent } from './email-detail-content';
+import { MobileEmailSheet } from './mobile-email-sheet';
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', {
@@ -45,47 +21,9 @@ function formatDate(dateStr: string) {
   });
 }
 
-function EmailDetailContent({ email }: { email: SentEmail }) {
-  return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="space-y-3">
-        <div className="space-y-1.5">
-          <label className="text-muted-foreground text-xs font-medium">To</label>
-          <div className="text-foreground bg-muted/50 border-border rounded-md border px-3 py-2 text-sm">
-            {email.recipient_email}
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-muted-foreground text-xs font-medium">Subject</label>
-          <div className="text-foreground bg-muted/50 border-border rounded-md border px-3 py-2 text-sm">
-            {email.subject}
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col space-y-1.5">
-        <label className="text-muted-foreground text-xs font-medium">Body</label>
-        <div className="text-foreground bg-muted/50 border-border flex-1 overflow-y-auto rounded-md border px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap">
-          {email.body}
-        </div>
-      </div>
-      {email.session_id && (
-        <Link
-          href={`/research/${email.session_id}`}
-          className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs transition-colors"
-        >
-          <ExternalLink className="size-3" />
-          View Session
-        </Link>
-      )}
-      {email.error_message && (
-        <p className="text-destructive text-xs">Error: {email.error_message}</p>
-      )}
-    </div>
-  );
-}
-
 export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(searchParams.get('email'));
   const selected = emails.find((e) => e.id === selectedId) ?? null;
 
   return (

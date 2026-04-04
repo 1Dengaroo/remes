@@ -1,16 +1,27 @@
 import { getAuthUser } from '@/lib/supabase/server';
-import { ResearchHub } from '@/components/research/research-hub.client';
-import { listSessions, listICPs } from '@/lib/supabase/queries';
-import type { SavedICP } from '@/lib/types';
+import { Dashboard } from '@/components/research/dashboard.client';
+import {
+  listSessions,
+  listICPs,
+  listSentEmails,
+  listContacts,
+  getProfile
+} from '@/lib/supabase/queries';
+import type { SavedICP, SentEmail, ContactedCompany } from '@/lib/types';
 
 export default async function Research() {
   const { supabase, user } = await getAuthUser();
 
-  if (!user) return <ResearchHub sessions={[]} icps={[]} />;
+  if (!user) {
+    return <Dashboard sessions={[]} emails={[]} contacts={[]} icps={[]} userName={null} />;
+  }
 
-  const [sessionsRes, icpsRes] = await Promise.all([
+  const [sessionsRes, icpsRes, emailsRes, contactsRes, profileRes] = await Promise.all([
     listSessions(supabase, user.id),
-    listICPs(supabase, user.id)
+    listICPs(supabase, user.id),
+    listSentEmails(supabase, user.id),
+    listContacts(supabase, user.id),
+    getProfile(supabase, user.id)
   ]);
 
   const sessions = (sessionsRes.data ?? []).map((row) => ({
@@ -24,5 +35,13 @@ export default async function Research() {
     updated_at: row.updated_at
   }));
 
-  return <ResearchHub sessions={sessions} icps={(icpsRes.data ?? []) as SavedICP[]} />;
+  return (
+    <Dashboard
+      sessions={sessions}
+      emails={(emailsRes.data ?? []) as SentEmail[]}
+      contacts={(contactsRes.data ?? []) as ContactedCompany[]}
+      icps={(icpsRes.data ?? []) as SavedICP[]}
+      userName={profileRes.data?.full_name ?? null}
+    />
+  );
 }
