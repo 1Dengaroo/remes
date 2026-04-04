@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
-import { useDemoStore } from '@/lib/store/demo-store';
+import { useDemoStore } from './demo-store';
 
 export function PrimaryCta({ children = 'Get started' }: { children?: React.ReactNode }) {
   const user = useAuthStore((s) => s.user);

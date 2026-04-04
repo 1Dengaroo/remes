@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useDemoStore } from '@/lib/store/demo-store';
+import { useDemoStore } from '@/components/landing/demo-store';
 
 const FOOTER_COLUMNS = [
   {

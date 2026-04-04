@@ -26,7 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import type { ComposeEmailParams, GeneratedEmail } from '@/lib/types';
 import { toast } from 'sonner';
 import { streamEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
-import { parseStreamingEmailFields } from '@/lib/services/parse-streaming-email';
+import { parseStreamingEmailFields } from './parse-streaming-email';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { useResearchStore } from '@/lib/store/research-store';
 import { useSignatureStore } from '@/lib/store/signature-store';

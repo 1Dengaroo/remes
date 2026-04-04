@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { useDemoStore } from '@/lib/store/demo-store';
+import { useDemoStore } from './demo-store';
 
 export function DemoModal() {
   const open = useDemoStore((s) => s.open);
