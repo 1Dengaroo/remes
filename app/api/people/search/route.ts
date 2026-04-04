@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { apolloPeopleSearch, apolloPersonEnrich } from '@/lib/services/apollo-people';
 import { rankPeopleForCompany } from '@/lib/services/people-ranking';
-import { peopleSearchBodySchema, parseBody } from '@/lib/validation';
+import { peopleSearchBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 import type { PeopleSearchResult } from '@/lib/types';
 
 export async function POST(req: NextRequest) {
@@ -14,13 +14,8 @@ export async function POST(req: NextRequest) {
 
   const { org_ids: orgIds, icp, companies } = parsed.data;
 
-  if (!process.env.APOLLO_API_KEY) {
-    return Response.json({ error: 'APOLLO_API_KEY is not set' }, { status: 500 });
-  }
-
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: 'ANTHROPIC_API_KEY is not set' }, { status: 500 });
-  }
+  const envError = requireEnvVars('APOLLO_API_KEY', 'ANTHROPIC_API_KEY');
+  if (envError) return envError;
 
   try {
     const peopleByOrg = await apolloPeopleSearch(orgIds);

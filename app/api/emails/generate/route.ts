@@ -3,13 +3,12 @@ import Anthropic from '@anthropic-ai/sdk';
 import { serviceConfig } from '@/lib/services/config';
 import { buildEmailGenerationPrompt } from '@/lib/prompts/email-generation';
 import { requireAuth } from '@/lib/supabase/server';
-import { emailGenerateBodySchema, parseBody } from '@/lib/validation';
+import { emailGenerateBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 import { getProfile } from '@/lib/supabase/queries';
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: 'ANTHROPIC_API_KEY is not set' }, { status: 500 });
-  }
+  const envError = requireEnvVars('ANTHROPIC_API_KEY');
+  if (envError) return envError;
 
   const parsed = parseBody(emailGenerateBodySchema, await req.json());
   if (!parsed.success) return parsed.response;

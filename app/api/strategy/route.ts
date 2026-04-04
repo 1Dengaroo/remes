@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { requireAuth } from '@/lib/supabase/server';
 import { serviceConfig } from '@/lib/services/config';
 import { buildStrategyPrompt, buildStrategyRevisionPrompt } from '@/lib/prompts/strategy';
-import { strategyBodySchema, parseBody } from '@/lib/validation';
+import { strategyBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 function getContentBlockType(event: Anthropic.MessageStreamEvent): string | null {
   if (
@@ -27,9 +27,8 @@ export async function POST(req: NextRequest) {
 
   const { icp, messages } = parsed.data;
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: 'ANTHROPIC_API_KEY is not set' }, { status: 500 });
-  }
+  const envError = requireEnvVars('ANTHROPIC_API_KEY');
+  if (envError) return envError;
 
   const isRevision = messages && messages.length > 0;
   const systemPrompt = isRevision ? buildStrategyRevisionPrompt(icp) : buildStrategyPrompt(icp);

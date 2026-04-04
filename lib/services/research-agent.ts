@@ -188,7 +188,29 @@ export const claudeResearchAgent: CompanyResearcher = {
     // Strip all <cite> tags, keep inner text
     const cleanText = fullText.replace(/<cite[^>]*>([\s\S]*?)<\/cite>/g, '$1');
 
-    const parsed = extractJson(cleanText);
+    interface RawResearch {
+      signals?: Array<{
+        type: CompanySignal['type'];
+        title: string;
+        key_phrases: string[];
+        source_url?: string;
+      }>;
+      linkedin_url?: string;
+      website?: string;
+      match_reason?: string;
+      company_overview?: string;
+      industry?: string;
+      funding_stage?: string;
+      amount_raised?: string;
+      inferred_contacts?: Array<{
+        name: string;
+        title: string;
+        email: string | null;
+        is_decision_maker: boolean;
+      }>;
+    }
+
+    const parsed = extractJson<RawResearch>(cleanText);
     if (!parsed) {
       throw new Error(`Research agent failed for ${companyName}`);
     }
@@ -197,15 +219,13 @@ export const claudeResearchAgent: CompanyResearcher = {
     const stripCites = (s: string) => s.replace(/<cite[^>]*>([\s\S]*?)<\/cite>/g, '$1');
 
     // Strip hallucinated URLs from signals
-    const signals: CompanySignal[] = (parsed.signals || []).map(
-      (s: { type: string; title: string; key_phrases: string[]; source_url?: string }) => ({
-        type: s.type,
-        title: s.title,
-        key_phrases: s.key_phrases || [],
-        source_url:
-          s.source_url && isUrlTrusted(s.source_url, verifiedUrls) ? s.source_url : undefined
-      })
-    );
+    const signals: CompanySignal[] = (parsed.signals || []).map((s) => ({
+      type: s.type,
+      title: s.title,
+      key_phrases: s.key_phrases || [],
+      source_url:
+        s.source_url && isUrlTrusted(s.source_url, verifiedUrls) ? s.source_url : undefined
+    }));
 
     // Build sources from verified URLs
     const sources: CompanyResearchResult['sources'] = { jobs: [], funding: [], news: [] };

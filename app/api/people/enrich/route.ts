@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { apolloPersonEnrich } from '@/lib/services/apollo-people';
-import { peopleEnrichBodySchema, parseBody } from '@/lib/validation';
+import { peopleEnrichBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
   const auth = await requireAuth();
@@ -12,9 +12,8 @@ export async function POST(req: NextRequest) {
 
   const { person_id: personId } = parsed.data;
 
-  if (!process.env.APOLLO_API_KEY) {
-    return Response.json({ error: 'APOLLO_API_KEY is not set' }, { status: 500 });
-  }
+  const envError = requireEnvVars('APOLLO_API_KEY');
+  if (envError) return envError;
 
   try {
     const person = await apolloPersonEnrich(personId);

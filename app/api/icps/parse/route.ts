@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
 import { claudeICPParser } from '@/lib/services/ai';
-import { parseIcpBodySchema, parseBody } from '@/lib/validation';
+import { parseIcpBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
   const auth = await requireAuth();
@@ -12,9 +12,8 @@ export async function POST(req: NextRequest) {
 
   const { input } = parsed.data;
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: 'ANTHROPIC_API_KEY is not set' }, { status: 500 });
-  }
+  const envError = requireEnvVars('ANTHROPIC_API_KEY');
+  if (envError) return envError;
 
   try {
     const icp = await claudeICPParser.parse(input.trim());

@@ -311,10 +311,8 @@ export async function streamEmailSequence(
     }
   }
 
-  const parsed = extractJson(accumulated);
-  if (!parsed) throw new ApiError('Failed to parse email response', 0);
-
-  const sequence = parsed as GeneratedEmailSequence;
+  const sequence = extractJson<GeneratedEmailSequence>(accumulated);
+  if (!sequence) throw new ApiError('Failed to parse email response', 0);
   if (!sequence.emails || sequence.emails.length !== 3) {
     throw new ApiError('Invalid email sequence format', 0);
   }

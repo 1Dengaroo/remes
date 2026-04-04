@@ -1,10 +1,10 @@
 import { requireAuth } from '@/lib/supabase/server';
 import { getGoogleAuthUrl } from '@/lib/services/gmail';
+import { requireEnvVars } from '@/lib/validation';
 
 export async function GET() {
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    return Response.json({ error: 'Gmail OAuth not configured' }, { status: 500 });
-  }
+  const envError = requireEnvVars('GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET');
+  if (envError) return envError;
 
   const auth = await requireAuth();
   if (auth instanceof Response) return auth;

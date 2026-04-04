@@ -239,6 +239,13 @@ export const parseIcpBodySchema = z.object({
   input: longStr.min(1)
 });
 
+// Helper — check required env vars, return 500 on missing
+export function requireEnvVars(...vars: string[]): Response | null {
+  const missing = vars.filter((v) => !process.env[v]);
+  if (missing.length === 0) return null;
+  return Response.json({ error: `${missing.join(', ')} not set` }, { status: 500 });
+}
+
 // Helper — parse and return 400 on failure
 export function parseBody<T>(
   schema: z.ZodType<T>,
