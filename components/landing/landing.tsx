@@ -32,6 +32,15 @@ export function Landing() {
 
       {/* ── Hero ── */}
       <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden">
+        {/* Mobile-only subtle gradient (no aurora on mobile for perf) */}
+        <div
+          className="pointer-events-none absolute inset-0 md:hidden"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 60% at 30% 40%, rgba(86, 67, 204, 0.12) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 70% 30%, rgba(69, 94, 181, 0.08) 0%, transparent 60%)'
+          }}
+        />
+
         {/* Aurora glow — desktop only (too GPU-heavy for mobile) */}
         <div className="absolute inset-0 hidden md:block">
           <AuroraCanvas className="absolute inset-0" />
@@ -97,9 +106,17 @@ export function Landing() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce">
+        <button
+          type="button"
+          aria-label="Scroll to content"
+          className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce cursor-pointer bg-transparent"
+          onClick={() => {
+            const el = document.querySelector('.story-line');
+            el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }}
+        >
           <ChevronDown className="text-landing-fg-muted size-5" />
-        </div>
+        </button>
       </section>
 
       {/* ── Scroll story sections ── */}

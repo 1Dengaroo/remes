@@ -74,14 +74,14 @@ export function IntegrationsSection() {
         <p className="text-landing-fg-muted mb-1 text-xs font-medium tracking-widest uppercase">
           Integrations
         </p>
-        <h3 className="text-landing-fg text-xl font-semibold tracking-tight sm:text-2xl">
+        <h2 className="text-landing-fg text-xl font-semibold tracking-tight sm:text-2xl">
           Powered by leading platforms
-        </h3>
+        </h2>
         <p className="text-landing-fg-secondary mt-2 max-w-md text-sm leading-relaxed">
           Remes connects to the tools you already use to research, enrich, and reach your prospects.
         </p>
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-y-6">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:flex lg:items-center lg:justify-between">
         {INTEGRATIONS.map((integration) => (
           <div
             key={integration.name}

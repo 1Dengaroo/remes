@@ -61,7 +61,7 @@ export function LandingFooter() {
 
       <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
         {/* Link columns */}
-        <div className="flex gap-16">
+        <div className="grid grid-cols-3 gap-8 sm:flex sm:gap-16">
           {FOOTER_COLUMNS.map((col) => (
             <div key={col.title}>
               <p className="text-landing-fg-muted mb-3 text-xs font-medium">{col.title}</p>
