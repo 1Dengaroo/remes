@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 /**
  * Interactive mock UI panels for the landing page.
@@ -9,10 +9,10 @@ import { useState } from 'react';
  */
 
 const SIGNAL_COLORS: Record<string, string> = {
-  job_posting: 'bg-[var(--landing-accent)]/20 text-[var(--landing-accent-light)]',
-  funding: 'bg-emerald-500/15 text-emerald-400/80',
-  news: 'bg-red-500/15 text-red-400/80',
-  product_launch: 'bg-amber-500/15 text-amber-400/80'
+  job_posting: 'bg-(--landing-accent)/25 text-(--landing-accent-light)',
+  funding: 'bg-emerald-500/20 text-emerald-400/90',
+  news: 'bg-red-500/20 text-red-400/90',
+  product_launch: 'bg-amber-500/20 text-amber-400/90'
 };
 
 const SIGNAL_LABELS: Record<string, string> = {
@@ -81,35 +81,35 @@ export function MockSignalDashboard() {
   const [selected, setSelected] = useState(0);
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/8 bg-[var(--landing-bg-card)] shadow-[var(--landing-shadow-card)]">
+    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/4 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-green-400/70 shadow-[var(--landing-shadow-dot)]" />
+          <div className="h-2 w-2 rounded-full bg-green-400/70 shadow-(--landing-shadow-dot)" />
           <span className="text-landing-fg-secondary text-xs font-medium">
             {COMPANIES.length} companies matched
           </span>
         </div>
-        <div className="text-2xs text-landing-fg-muted rounded-md bg-white/4 px-2.5 py-1">
+        <div className="text-2xs text-landing-fg-muted rounded-md bg-white/6 px-2.5 py-1">
           B2B SaaS · 50–500 employees
         </div>
       </div>
 
       {/* Company rows */}
-      <div className="divide-y divide-white/3">
+      <div className="divide-y divide-white/5">
         {COMPANIES.map((c, i) => {
           const isSelected = selected === i;
           return (
             <button
               key={i}
               type="button"
-              className={`w-full px-6 py-5 text-left transition-colors duration-150 ${isSelected ? 'bg-white/4' : 'hover:bg-white/2'}`}
+              className={`w-full px-6 py-5 text-left transition-colors duration-150 ${isSelected ? 'bg-white/6' : 'hover:bg-white/3'}`}
               onClick={() => setSelected(i)}
             >
               {/* Company header */}
               <div className="flex items-center gap-3">
                 <div
-                  className={`text-2xs flex size-8 shrink-0 items-center justify-center rounded-lg font-semibold transition-colors duration-150 ${isSelected ? 'bg-[var(--landing-accent)]/20 text-[var(--landing-accent-light)]' : 'text-landing-fg-muted bg-white/6'}`}
+                  className={`text-2xs flex size-8 shrink-0 items-center justify-center rounded-lg font-semibold transition-colors duration-150 ${isSelected ? 'bg-(--landing-accent)/25 text-(--landing-accent-light)' : 'text-landing-fg-muted bg-white/8'}`}
                 >
                   {c.name.slice(0, 2)}
                 </div>
@@ -156,7 +156,7 @@ export function MockSignalDashboard() {
                         {s.phrases.map((p) => (
                           <span
                             key={p}
-                            className="text-2xs text-landing-fg-muted rounded-full bg-white/4 px-1.5 py-0.5"
+                            className="text-2xs text-landing-fg-muted rounded-full bg-white/6 px-1.5 py-0.5"
                           >
                             {p}
                           </span>
@@ -242,9 +242,9 @@ export function MockContactList() {
   const enrichedCount = enriched.size;
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/8 bg-[var(--landing-bg-card)] shadow-[var(--landing-shadow-card)]">
+    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/4 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <span className="text-landing-fg-secondary text-xs font-medium">Contacts</span>
         <span className="text-2xs text-landing-fg-muted">
           {enrichedCount} of {CONTACTS.length} enriched
@@ -252,7 +252,7 @@ export function MockContactList() {
       </div>
 
       {/* Contacts */}
-      <div className="divide-y divide-white/3">
+      <div className="divide-y divide-white/5">
         {CONTACTS.map((c, i) => {
           const isEnriched = enriched.has(i);
           const wasOriginallyHidden = !c.enriched;
@@ -261,10 +261,10 @@ export function MockContactList() {
           return (
             <div
               key={i}
-              className="flex items-center gap-4 px-6 py-4 transition-colors duration-150 hover:bg-white/2"
+              className="flex items-center gap-4 px-6 py-4 transition-colors duration-150 hover:bg-white/3"
             >
               {/* Avatar */}
-              <div className="text-landing-fg-muted flex size-9 shrink-0 items-center justify-center rounded-full bg-white/6 text-xs font-medium">
+              <div className="text-landing-fg-muted flex size-9 shrink-0 items-center justify-center rounded-full bg-white/8 text-xs font-medium">
                 {c.name
                   .split(' ')
                   .map((n) => n[0])
@@ -307,7 +307,7 @@ export function MockContactList() {
               ) : (
                 <button
                   type="button"
-                  className="text-2xs text-landing-fg-muted hover:text-landing-fg shrink-0 cursor-pointer rounded-full bg-white/6 px-2.5 py-1 font-medium transition-all duration-150 hover:bg-white/10"
+                  className="text-2xs text-landing-fg-muted hover:text-landing-fg shrink-0 cursor-pointer rounded-full bg-white/8 px-2.5 py-1 font-medium transition-all duration-150 hover:bg-white/12"
                   onClick={() => handleEnrich(i)}
                 >
                   Get Contact
@@ -345,14 +345,84 @@ const EMAILS = [
   }
 ];
 
+const REGEN_EMAILS = [
+  {
+    subject: "ramp's outbound overhaul",
+    body: 'Hi James,\n\nNoticed Ramp just posted 6 BDR roles back to back. When teams scale that fast, the bottleneck usually shifts from hiring to pipeline quality.\n\nRemes catches buying signals like yours and drafts the first email so reps can start selling on day one instead of researching. Happy to show you how it works in 15 min.\n\nKenny'
+  },
+  {
+    subject: 'scaling bdrs at ramp',
+    body: 'Hi James,\n\nRamp tripling its BDR team caught my eye. Most orgs at that stage find their reps spend more time researching than actually reaching out.\n\nWe automate the research and first-touch for teams exactly like yours. One customer booked 47 meetings in month one. Worth a look?\n\nKenny'
+  },
+  {
+    subject: 'a faster ramp-up for ramp',
+    body: 'Hi James,\n\nWhen a team goes from 2 to 6 BDRs overnight, onboarding speed becomes the real constraint. Remes gives new reps qualified accounts and ready-to-send emails from their first day.\n\nWould it be useful to see how signal detection works for a fintech ICP?\n\nKenny'
+  },
+  {
+    subject: 're: outbound at scale',
+    body: 'Hi James,\n\nQuick thought: the biggest risk with rapid BDR hiring is inconsistent messaging. Remes keeps every first touch on-brand and signal-relevant so quality stays high even as you scale.\n\n15 min walkthrough work this week?\n\nKenny'
+  }
+];
+
+const STREAM_SPEED_MS = 12;
+
 export function MockEmailPreview() {
   const [activeEmail, setActiveEmail] = useState(0);
+  const [streamingBody, setStreamingBody] = useState<string | null>(null);
+  const [streamingSubject, setStreamingSubject] = useState<string | null>(null);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const regenIndexRef = useRef(0);
+  const rafRef = useRef<number>(0);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  const handleRegenerate = () => {
+    if (isStreaming) return;
+
+    const target = REGEN_EMAILS[regenIndexRef.current % REGEN_EMAILS.length];
+    regenIndexRef.current += 1;
+
+    setIsStreaming(true);
+    setStreamingBody('');
+    setStreamingSubject(target.subject);
+
+    let charIndex = 0;
+    let lastTime = 0;
+
+    const tick = (time: number) => {
+      if (time - lastTime < STREAM_SPEED_MS) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+      lastTime = time;
+
+      const chunkSize = target.body[charIndex] === '\n' ? 1 : Math.random() > 0.7 ? 2 : 1;
+      charIndex += chunkSize;
+
+      if (charIndex >= target.body.length) {
+        setStreamingBody(target.body);
+        setIsStreaming(false);
+        return;
+      }
+
+      setStreamingBody(target.body.slice(0, charIndex));
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
   const email = EMAILS[activeEmail];
+  const displaySubject = streamingSubject ?? email.subject;
+  const displayBody = streamingBody ?? email.body;
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-white/8 bg-[var(--landing-bg-card)] shadow-[var(--landing-shadow-card)]">
+    <div className="w-full overflow-hidden rounded-xl border border-white/12 bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
       {/* Email header with sequence tabs */}
-      <div className="flex items-center justify-between border-b border-white/4 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-white/6 px-6 py-4">
         <div className="flex items-center gap-2">
           <span className="text-landing-fg-secondary text-xs font-medium">Ramp</span>
           <span className="text-2xs text-landing-fg-muted">James Park · VP of Sales</span>
@@ -363,11 +433,16 @@ export function MockEmailPreview() {
               key={i}
               type="button"
               className={`text-2xs cursor-pointer rounded-md px-2 py-0.5 font-medium transition-all duration-150 ${
-                activeEmail === i
-                  ? 'text-landing-fg-muted bg-white/10'
-                  : 'text-landing-fg-muted hover:text-landing-fg bg-white/3 hover:bg-white/6'
+                activeEmail === i && streamingBody === null
+                  ? 'text-landing-fg-muted bg-white/12'
+                  : 'text-landing-fg-muted hover:text-landing-fg bg-white/5 hover:bg-white/8'
               }`}
-              onClick={() => setActiveEmail(i)}
+              onClick={() => {
+                if (isStreaming) return;
+                setStreamingBody(null);
+                setStreamingSubject(null);
+                setActiveEmail(i);
+              }}
             >
               Email {i + 1}
             </button>
@@ -376,57 +451,63 @@ export function MockEmailPreview() {
       </div>
 
       {/* Email fields */}
-      <div className="space-y-0 divide-y divide-white/3 border-b border-white/4">
+      <div className="space-y-0 divide-y divide-white/5 border-b border-white/6">
         <div className="flex items-center gap-3 px-6 py-3">
           <span className="text-xs2 text-landing-fg-muted">To</span>
           <span className="text-landing-fg-secondary text-xs">james.p@ramp.com</span>
         </div>
         <div className="flex items-center gap-3 px-6 py-3">
           <span className="text-xs2 text-landing-fg-muted">Subject</span>
-          <span className="text-landing-fg-secondary text-xs">{email.subject}</span>
+          <span className="text-landing-fg-secondary text-xs">{displaySubject}</span>
         </div>
       </div>
 
-      {/* Email body — grid-stack keeps height of tallest email */}
+      {/* Email body */}
       <div className="grid px-6 py-5">
+        {/* Hidden stacks for height reservation */}
         {EMAILS.map((e, i) => (
           <div
             key={i}
-            className={`leading-relaxed2 text-landing-fg-secondary col-start-1 row-start-1 text-xs whitespace-pre-line ${
-              i === activeEmail ? 'visible' : 'invisible'
-            }`}
+            className="leading-relaxed2 text-landing-fg-secondary invisible col-start-1 row-start-1 text-xs whitespace-pre-line"
           >
             {e.body}
           </div>
         ))}
+        {/* Visible body — either streaming or selected email */}
+        <div className="leading-relaxed2 text-landing-fg-secondary col-start-1 row-start-1 text-xs whitespace-pre-line">
+          {displayBody}
+          {isStreaming && (
+            <span className="ml-0.5 inline-block h-3.5 w-0.5 animate-pulse bg-white/50 align-middle" />
+          )}
+        </div>
       </div>
 
       {/* Best practices note */}
-      <div className="border-t border-white/4 px-6 py-2.5">
+      <div className="border-t border-white/6 px-6 py-2.5">
         <p className="text-2xs text-landing-fg-muted leading-relaxed">
           Plain text · Under 80 words · Signal-led opener · One clear CTA
         </p>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between border-t border-white/4 px-6 py-3.5">
+      <div className="flex items-center justify-between border-t border-white/6 px-6 py-3.5">
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="text-2xs text-landing-fg-muted hover:text-landing-fg cursor-pointer rounded-full bg-white/4 px-3 py-1.5 transition-colors duration-150 hover:bg-white/8"
-            onClick={() => setActiveEmail((activeEmail + 1) % EMAILS.length)}
+            className={`text-2xs cursor-pointer rounded-full px-3 py-1.5 transition-colors duration-150 ${
+              isStreaming
+                ? 'text-landing-fg-muted bg-white/6 opacity-50'
+                : 'text-landing-fg-muted hover:text-landing-fg bg-white/6 hover:bg-white/10'
+            }`}
+            onClick={handleRegenerate}
+            disabled={isStreaming}
           >
-            Regenerate
+            {isStreaming ? 'Generating...' : 'Regenerate'}
           </button>
-          <div className="text-2xs text-landing-fg-muted flex items-center gap-1">
-            <span>{activeEmail + 1}</span>
-            <span>/</span>
-            <span>{EMAILS.length}</span>
-          </div>
         </div>
         <button
           type="button"
-          className="text-2xs text-landing-fg-muted hover:text-landing-fg cursor-pointer rounded-full bg-white/10 px-3 py-1.5 font-medium transition-colors duration-150 hover:bg-white/15"
+          className="text-2xs text-landing-fg-muted hover:text-landing-fg cursor-pointer rounded-full bg-white/12 px-3 py-1.5 font-medium transition-colors duration-150 hover:bg-white/18"
         >
           Send
         </button>

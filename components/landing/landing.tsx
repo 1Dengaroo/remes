@@ -12,6 +12,7 @@ import { FAQS } from './landing-constants';
 import { AuroraCanvas } from './aurora-canvas';
 import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
 import { GradientText } from './gradient-text';
+import { IntegrationsSection } from './integrations-section';
 import { StorySection } from './story-section.client';
 import { SignalsSection } from './signals-section.client';
 import { ShowcaseSection } from './showcase-section.client';
@@ -235,6 +236,9 @@ export function Landing() {
 
           {/* 1. The Problem — word-by-word scroll reveal */}
           <StorySection />
+
+          {/* Integrations logo bar */}
+          <IntegrationsSection />
 
           {/* Gradient divider */}
           <div className="flex justify-center">
