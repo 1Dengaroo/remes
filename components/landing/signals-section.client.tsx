@@ -1,6 +1,7 @@
 'use client';
 
 import { Sparkles } from 'lucide-react';
+import { Focusable } from '@/components/shared/focusable';
 import { SIGNALS } from './landing-constants';
 import { RotatingWord } from './rotating-word.client';
 
@@ -11,12 +12,13 @@ export function SignalsSection() {
         <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
           Signals
         </p>
-        <h2
+        <Focusable
+          as="h2"
           className="text-landing-fg text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl xl:text-[2.75rem]"
           style={{ textWrap: 'balance' }}
         >
           Reach out the moment you spot <RotatingWord />
-        </h2>
+        </Focusable>
         <p className="text-landing-fg-secondary mt-4 max-w-lg text-sm leading-relaxed sm:text-base">
           Remes monitors dozens of data sources in real time. Here are some of the signals you can
           track.
@@ -48,11 +50,13 @@ export function SignalsSection() {
                 <div>
                   <div className="relative flex items-center gap-5 px-6 py-5">
                     <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/4">
-                      <Sparkles className="text-landing-fg-muted size-5" />
+                      <Sparkles className="size-5 text-(--landing-accent)" />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-landing-fg text-sm font-semibold">{signal.source}</span>
-                      <span className="text-landing-fg-secondary text-sm leading-relaxed">
+                      <span className="text-sm font-semibold text-(--landing-accent)">
+                        {signal.source}
+                      </span>
+                      <span className="text-landing-fg text-sm leading-relaxed">
                         {signal.example}
                       </span>
                     </div>
@@ -67,11 +71,11 @@ export function SignalsSection() {
               key={signal.source}
               className="signal-card group relative overflow-hidden rounded-xl border border-white/6 bg-white/2 transition-all duration-300 hover:border-white/10 hover:bg-white/3 hover:shadow-(--landing-shadow-card-hover)"
             >
-              {/* Top accent line — white glow */}
+              {/* Top accent line — colored per signal */}
               <div
-                className="h-px w-full opacity-30 transition-opacity duration-300 group-hover:opacity-60"
+                className="h-px w-full opacity-30 transition-opacity duration-300 group-hover:opacity-70"
                 style={{
-                  background: `linear-gradient(90deg, transparent, var(--landing-glow-white-accent-line), transparent)`
+                  background: `linear-gradient(90deg, transparent, ${signal.color}90, transparent)`
                 }}
               />
 

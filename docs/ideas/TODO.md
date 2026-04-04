@@ -4,7 +4,7 @@ Features to extend the UI so Remes feels like a complete sales operating system.
 
 ## High Priority
 
-- [ ] **Pipeline Dashboard** — Replace session-list hub with a real home screen: activity timeline, companies in play, recent contacts, recent sessions. The "open the app and see your world" screen.
+- [ ] **Email Signup Not Working** — Not getting verification emails from supabase. Need to investigate the root cause and if there are any settings we need to flip.
 - [ ] **Persistent Contact Book** — `/contacts` page aggregating all enriched contacts across sessions. Searchable, filterable, shows enrichment status, email history, originating session.
 - [ ] **Company Watchlist** — Bookmark companies to a persistent `/pipeline` view. Group by stage (Researched / Contacted / Replied). Kanban or table with stage badges.
 

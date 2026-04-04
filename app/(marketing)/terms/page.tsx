@@ -1,3 +1,4 @@
+import { Focusable } from '@/components/shared/focusable';
 import { MAX_WIDTH } from '@/lib/layout';
 import { CONTACT_EMAIL } from '@/lib/services/config';
 import { createMetadata } from '@/lib/metadata';
@@ -84,15 +85,20 @@ export default function TermsPage() {
         <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
           Legal
         </p>
-        <h1 className="text-landing-fg max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+        <Focusable
+          as="h1"
+          className="text-landing-fg max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl"
+        >
           Terms of Service
-        </h1>
+        </Focusable>
         <p className="text-landing-fg-muted mt-3 text-sm">Last updated: April 3, 2026</p>
 
         <div className="mt-12 max-w-xl space-y-10">
           {SECTIONS.map((section) => (
             <div key={section.title}>
-              <h2 className="text-landing-fg mb-3 text-base font-semibold">{section.title}</h2>
+              <Focusable as="h2" className="text-landing-fg mb-3 text-base font-semibold">
+                {section.title}
+              </Focusable>
               <ul className="text-landing-fg-secondary space-y-3 text-sm leading-relaxed">
                 {section.content.map((item, i) => (
                   <li key={i}>{item}</li>

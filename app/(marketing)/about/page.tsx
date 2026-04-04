@@ -1,3 +1,4 @@
+import { Focusable } from '@/components/shared/focusable';
 import { MAX_WIDTH } from '@/lib/layout';
 import { createMetadata } from '@/lib/metadata';
 import { CONTACT_EMAIL } from '@/lib/services/config';
@@ -16,12 +17,13 @@ export default function AboutPage() {
         <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
           About
         </p>
-        <h1
+        <Focusable
+          as="h1"
           className="text-landing-fg max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl"
           style={{ textWrap: 'balance' }}
         >
           We&apos;re building the outbound sales platform we wish existed.
-        </h1>
+        </Focusable>
 
         <div className="text-landing-fg-secondary mt-12 max-w-xl space-y-6 text-sm leading-relaxed">
           <p>
