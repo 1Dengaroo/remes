@@ -6,7 +6,14 @@ export async function POST() {
   if (auth instanceof Response) return auth;
   const { supabase, user } = auth;
 
-  await deleteGmailConnection(supabase, user.id);
+  const { error } = await deleteGmailConnection(supabase, user.id);
+
+  if (error) {
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
+  }
 
   return Response.json({ success: true });
 }

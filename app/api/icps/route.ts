@@ -11,7 +11,10 @@ export async function GET() {
   const { data, error } = await listICPs(supabase, user.id);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ icps: data });
@@ -30,7 +33,10 @@ export async function POST(req: NextRequest) {
   const { data, error } = await createICP(supabase, user.id, name, icp);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json(data, { status: 201 });

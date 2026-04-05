@@ -25,7 +25,8 @@ export async function postJson(
     let message = `Request failed: ${response.status}`;
     try {
       const data = await response.json();
-      if (data.error) message = data.error;
+      if (data.error?.message) message = data.error.message;
+      else if (typeof data.error === 'string') message = data.error;
     } catch {}
     throw new ApiError(message, response.status);
   }

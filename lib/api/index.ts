@@ -10,19 +10,13 @@ export {
 } from './research';
 export { streamEmailSequence, sendEmail } from './emails';
 export { getGmailStatus, connectGmail, disconnectGmail } from './gmail';
+export { listICPs, createICP, updateICP, deleteICP } from './icps';
 export {
-  listICPs,
-  createICP,
-  updateICP,
-  deleteICP,
   listSessions,
   createSession,
   updateSession,
   deleteSession,
-  listResearchedCompanies,
-  listSignatures,
-  createSignature,
-  updateSignature,
-  deleteSignature,
-  listContactedCompanies
-} from './data';
+  listResearchedCompanies
+} from './sessions';
+export { listSignatures, createSignature, updateSignature, deleteSignature } from './signatures';
+export { listContactedCompanies } from './contacts';

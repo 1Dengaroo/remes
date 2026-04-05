@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { data, error } = await getSession(supabase, id, user.id);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 404 });
+    return Response.json({ error: { code: 'NOT_FOUND', message: error.message } }, { status: 404 });
   }
 
   return Response.json(data);
@@ -30,7 +30,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { error } = await updateSession(supabase, id, user.id, parsed.data);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ success: true });
@@ -45,7 +48,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   const { error } = await deleteSession(supabase, id, user.id);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ success: true });

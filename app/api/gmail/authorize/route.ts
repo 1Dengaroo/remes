@@ -1,5 +1,5 @@
 import { requireAuth } from '@/lib/supabase/server';
-import { getGoogleAuthUrl } from '@/lib/services/gmail';
+import { getGoogleAuthUrl } from '@/lib/services/gmail/client';
 import { requireEnvVars } from '@/lib/validation';
 
 export async function GET() {

@@ -30,7 +30,10 @@ export async function PUT(req: NextRequest) {
   const { error } = await upsertProfile(supabase, user.id, fullName, companyName);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ full_name: fullName, company_name: companyName });

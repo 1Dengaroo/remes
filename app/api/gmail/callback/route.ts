@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
-import { exchangeCodeForTokens } from '@/lib/services/gmail';
+import { exchangeCodeForTokens } from '@/lib/services/gmail/client';
 import { upsertGmailConnection } from '@/lib/supabase/queries';
 
 export async function GET(req: NextRequest) {

@@ -9,7 +9,10 @@ export async function GET() {
   const { data, error } = await listContacts(supabase, user.id);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ contacts: data });

@@ -51,3 +51,22 @@ export function clearDefaultSignatures(
 export function deleteSignature(supabase: SupabaseClient, id: string, userId: string) {
   return supabase.from('email_signatures').delete().eq('id', id).eq('user_id', userId);
 }
+
+/** Update a signature, clearing other defaults first if this one is being set as default. */
+export async function updateSignatureWithDefault(
+  supabase: SupabaseClient,
+  id: string,
+  userId: string,
+  updates: { name?: string; body?: string; is_default?: boolean }
+) {
+  if (updates.is_default) {
+    await clearDefaultSignatures(supabase, userId, id);
+  }
+
+  const dbUpdates: Record<string, unknown> = {};
+  if (updates.name !== undefined) dbUpdates.name = updates.name;
+  if (updates.body !== undefined) dbUpdates.body = updates.body;
+  if (updates.is_default !== undefined) dbUpdates.is_default = updates.is_default;
+
+  return updateSignature(supabase, id, userId, dbUpdates);
+}

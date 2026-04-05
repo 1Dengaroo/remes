@@ -19,7 +19,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { data, error } = await updateICP(supabase, id, user.id, updates);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json(data);
@@ -34,7 +37,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   const { error } = await deleteICP(supabase, id, user.id);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json(
+      { error: { code: 'INTERNAL_ERROR', message: error.message } },
+      { status: 500 }
+    );
   }
 
   return Response.json({ success: true });

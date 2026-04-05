@@ -49,7 +49,10 @@ export async function requireAuth(): Promise<{ supabase: SupabaseClient; user: U
     data: { user }
   } = await supabase.auth.getUser();
   if (!user) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    return Response.json(
+      { error: { code: 'UNAUTHORIZED', message: 'Authentication required' } },
+      { status: 401 }
+    );
   }
   return { supabase, user };
 }

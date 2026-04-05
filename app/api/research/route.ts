@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
-import { discoverCompanies, researchConfirmedCompanies } from '@/lib/services/pipeline';
+import { discoverCompanies, researchConfirmedCompanies } from '@/lib/services/research/pipeline';
 import { researchBodySchema, parseBody } from '@/lib/validation';
 import type { ResearchStreamEvent } from '@/lib/types';
 
@@ -20,8 +20,11 @@ export async function POST(req: NextRequest) {
   if (!process.env.APOLLO_API_KEY && !companies) missing.push('APOLLO_API_KEY');
 
   if (missing.length > 0) {
+    console.error('[Config] Missing environment variables:', missing.join(', '));
     return Response.json(
-      { error: `Missing environment variables: ${missing.join(', ')}. Add them to .env.local` },
+      {
+        error: { code: 'SERVICE_UNAVAILABLE', message: 'Required service configuration is missing' }
+      },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
-import { apolloPeopleSearch } from '@/lib/services/apollo-people';
+import { apolloPeopleSearch } from '@/lib/services/people/apollo';
 import { peopleBulkBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
@@ -28,6 +28,6 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Bulk people search failed';
     console.error('[People Bulk]', message);
-    return Response.json({ error: message }, { status: 500 });
+    return Response.json({ error: { code: 'INTERNAL_ERROR', message } }, { status: 500 });
   }
 }

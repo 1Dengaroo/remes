@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
-import { apolloPersonEnrich } from '@/lib/services/apollo-people';
+import { apolloPersonEnrich } from '@/lib/services/people/apollo';
 import { peopleEnrichBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
@@ -21,6 +21,6 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Person enrichment failed';
     console.error('[People Enrich]', message);
-    return Response.json({ error: message }, { status: 500 });
+    return Response.json({ error: { code: 'INTERNAL_ERROR', message } }, { status: 500 });
   }
 }

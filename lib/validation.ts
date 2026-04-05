@@ -243,7 +243,13 @@ export const parseIcpBodySchema = z.object({
 export function requireEnvVars(...vars: string[]): Response | null {
   const missing = vars.filter((v) => !process.env[v]);
   if (missing.length === 0) return null;
-  return Response.json({ error: `${missing.join(', ')} not set` }, { status: 500 });
+  console.error('[Config] Missing environment variables:', missing.join(', '));
+  return Response.json(
+    {
+      error: { code: 'SERVICE_UNAVAILABLE', message: 'Required service configuration is missing' }
+    },
+    { status: 500 }
+  );
 }
 
 // Helper — parse and return 400 on failure
@@ -259,6 +265,9 @@ export function parseBody<T>(
   console.error('[Validation]', issues);
   return {
     success: false,
-    response: Response.json({ error: `Validation failed: ${issues}` }, { status: 400 })
+    response: Response.json(
+      { error: { code: 'VALIDATION_ERROR', message: `Validation failed: ${issues}` } },
+      { status: 400 }
+    )
   };
 }

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/supabase/server';
-import { claudeICPParser } from '@/lib/services/ai';
+import { claudeICPParser } from '@/lib/services/icp/parser';
 import { parseIcpBodySchema, parseBody, requireEnvVars } from '@/lib/validation';
 
 export async function POST(req: NextRequest) {
@@ -20,6 +20,6 @@ export async function POST(req: NextRequest) {
     return Response.json({ icp });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to parse ICP';
-    return Response.json({ error: message }, { status: 500 });
+    return Response.json({ error: { code: 'INTERNAL_ERROR', message } }, { status: 500 });
   }
 }
