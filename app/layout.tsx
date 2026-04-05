@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Sora, Space_Grotesk } from 'next/font/google';
+import { Space_Grotesk, Source_Serif_4, Lexend } from 'next/font/google';
 import '@/styles/globals.css';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/lib/theme/theme-provider';
@@ -11,12 +11,12 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 import { Analytics } from '@vercel/analytics/next';
 
-const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-space-grotesk'
 });
+const sourceSerif = Source_Serif_4({ subsets: ['latin'], variable: '--font-source-serif' });
+const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend' });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://remes.so';
 
@@ -51,8 +51,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-font="space-grotesk"
-      className={cn(sora.variable, inter.variable, spaceGrotesk.variable)}
+      data-font="default"
+      className={cn(spaceGrotesk.variable, sourceSerif.variable, lexend.variable)}
       suppressHydrationWarning
     >
       <body className="antialiased">

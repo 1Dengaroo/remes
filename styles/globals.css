@@ -111,14 +111,19 @@
 }
 
 /* Font switching via data-font attribute */
-[data-font='sora'] {
-  --font-active: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
-}
-[data-font='inter'] {
-  --font-active: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-}
-[data-font='space-grotesk'] {
+[data-font='default'] {
   --font-active: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+[data-font='serif'] {
+  --font-active: var(--font-source-serif), ui-serif, Georgia, 'Times New Roman', serif;
+}
+[data-font='system'] {
+  --font-active:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+}
+[data-font='dyslexic'] {
+  --font-active: var(--font-lexend), ui-sans-serif, system-ui, sans-serif;
 }
 
 @keyframes hero-fade-in {

@@ -13,7 +13,6 @@ import { AuroraCanvas } from './aurora-canvas';
 import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
 import { GradientText } from './gradient-text';
 import { IntegrationsSection } from './integrations-section';
-import { StorySection } from './story-section.client';
 import { SignalsSection } from './signals-section.client';
 import { ShowcaseSection } from './showcase-section.client';
 
@@ -251,18 +250,7 @@ export function Landing() {
             <div className="h-px w-2/3 bg-linear-to-r from-transparent via-white/6 to-transparent" />
           </div>
 
-          {/* 1. The Problem — word-by-word scroll reveal */}
-          <StorySection />
-
-          {/* Integrations logo bar */}
-          <IntegrationsSection />
-
-          {/* Gradient divider */}
-          <div className="flex justify-center">
-            <div className="h-px w-2/3 bg-linear-to-r from-transparent via-white/6 to-transparent" />
-          </div>
-
-          {/* 2. How it works — side-by-side mock UIs */}
+          {/* How it works */}
           <ShowcaseSection />
 
           {/* Gradient divider */}
@@ -270,8 +258,11 @@ export function Landing() {
             <div className="h-px w-2/3 bg-linear-to-r from-transparent via-white/6 to-transparent" />
           </div>
 
-          {/* 3. Signals grid */}
+          {/* Signals grid */}
           <SignalsSection />
+
+          {/* Integrations logo bar */}
+          <IntegrationsSection />
 
           {/* ── FAQs ── */}
           <section id="faqs" className="relative scroll-mt-16 py-24 sm:py-36">

@@ -70,7 +70,7 @@ export function AppearanceTab() {
                   ? 'border-primary ring-primary ring-1'
                   : 'border-border'
               }`}
-              style={{ fontFamily: `var(${f.variable})` }}
+              style={f.variable ? { fontFamily: `var(${f.variable})` } : undefined}
             >
               <div className="flex flex-col items-start gap-0.5">
                 <span>{f.name}</span>

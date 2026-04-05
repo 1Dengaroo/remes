@@ -7,27 +7,33 @@ export interface FontDefinition {
 
 export const fonts: FontDefinition[] = [
   {
-    id: 'sora',
-    name: 'Sora',
-    variable: '--font-sora',
-    description: 'Modern geometric sans-serif'
-  },
-  {
-    id: 'inter',
-    name: 'Inter',
-    variable: '--font-inter',
-    description: 'Clean and neutral'
-  },
-  {
-    id: 'space-grotesk',
-    name: 'Space Grotesk',
+    id: 'default',
+    name: 'Default',
     variable: '--font-space-grotesk',
     description: 'Technical and sharp'
+  },
+  {
+    id: 'serif',
+    name: 'Serif',
+    variable: '--font-source-serif',
+    description: 'Classic and readable'
+  },
+  {
+    id: 'system',
+    name: 'System',
+    variable: '',
+    description: 'Your device\u2019s native font'
+  },
+  {
+    id: 'dyslexic',
+    name: 'Dyslexic Friendly',
+    variable: '--font-lexend',
+    description: 'Optimized for readability'
   }
 ];
 
 export const fontIds = fonts.map((f) => f.id);
-export const defaultFontId = 'space-grotesk';
+export const defaultFontId = 'default';
 
 export function getFontDefinition(id: string): FontDefinition | undefined {
   return fonts.find((f) => f.id === id);

@@ -28,6 +28,10 @@ function subscribe(cb: () => void) {
 function getSnapshot(): string {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved && getFontDefinition(saved)) return saved;
+  // Migrate legacy font IDs to new defaults
+  if (saved === 'space-grotesk' || saved === 'sora' || saved === 'inter') {
+    localStorage.setItem(STORAGE_KEY, defaultFontId);
+  }
   return defaultFontId;
 }
 function getServerSnapshot(): string {
