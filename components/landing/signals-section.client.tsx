@@ -1,8 +1,29 @@
 'use client';
 
-import { Sparkles } from 'lucide-react';
+import {
+  Briefcase,
+  FileText,
+  Globe,
+  Linkedin,
+  Newspaper,
+  Sparkles,
+  TrendingUp,
+  Users,
+  FileBarChart
+} from 'lucide-react';
 import { SIGNALS } from './landing-constants';
 import { RotatingWord } from './rotating-word.client';
+
+const SIGNAL_ICONS: Record<string, React.ReactNode> = {
+  'Job Openings': <Briefcase className="size-4" />,
+  'News & Press': <Newspaper className="size-4" />,
+  'Company Website': <Globe className="size-4" />,
+  'Job Descriptions': <FileText className="size-4" />,
+  'Employee Activity': <Users className="size-4" />,
+  '10-K Reports': <FileBarChart className="size-4" />,
+  'Funding Rounds': <TrendingUp className="size-4" />,
+  'LinkedIn Posts': <Linkedin className="size-4" />
+};
 
 export function SignalsSection() {
   return (
@@ -80,10 +101,15 @@ export function SignalsSection() {
               <div className="flex flex-col gap-3 px-5 py-5">
                 {/* Source header */}
                 <div className="flex items-center gap-2.5">
-                  <span
-                    className="size-1.5 shrink-0 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_6px_currentColor]"
-                    style={{ backgroundColor: signal.color, color: signal.color }}
-                  />
+                  <div
+                    className="flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-300"
+                    style={{
+                      backgroundColor: `${signal.color}15`,
+                      color: signal.color
+                    }}
+                  >
+                    {SIGNAL_ICONS[signal.source]}
+                  </div>
                   <span className="text-landing-fg text-sm font-medium">{signal.source}</span>
                 </div>
 

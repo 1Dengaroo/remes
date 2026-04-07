@@ -12,7 +12,6 @@ import { FAQS } from './landing-constants';
 import { AuroraCanvas } from './aurora-canvas';
 import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
 import { GradientText } from './gradient-text';
-import { IntegrationsSection } from './integrations-section';
 import { SignalsSection } from './signals-section.client';
 import { ShowcaseSection } from './showcase-section.client';
 
@@ -261,8 +260,7 @@ export function Landing() {
           {/* Signals grid */}
           <SignalsSection />
 
-          {/* Integrations logo bar */}
-          <IntegrationsSection />
+          {/* Integrations section hidden for now */}
 
           {/* ── FAQs ── */}
           <section id="faqs" className="relative scroll-mt-16 py-24 sm:py-36">
