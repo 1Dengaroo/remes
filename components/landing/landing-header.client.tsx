@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { useProfileStore } from '@/lib/store/profile-store';
@@ -10,7 +11,7 @@ import { MAX_WIDTH } from '@/lib/layout';
 import { NAV_LINKS } from './landing-constants';
 import { MobileNav } from './mobile-nav.client';
 
-function UserAvatar() {
+function UserAvatar({ light }: { light: boolean }) {
   const user = useAuthStore((s) => s.user);
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
   const openProfile = useProfileStore((s) => s.openProfile);
@@ -20,7 +21,10 @@ function UserAvatar() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-landing-fg-secondary hover:text-landing-fg hidden text-sm font-medium transition-colors duration-150 hover:bg-transparent md:inline-flex"
+        className="hidden text-sm font-medium transition-colors duration-500 hover:bg-transparent md:inline-flex"
+        style={{
+          color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--landing-fg)'
+        }}
         onClick={openAuthModal}
       >
         Log in
@@ -51,7 +55,7 @@ function UserAvatar() {
   );
 }
 
-function DesktopNav() {
+function DesktopNav({ light }: { light: boolean }) {
   return (
     <>
       {NAV_LINKS.map((link) => (
@@ -59,7 +63,10 @@ function DesktopNav() {
           key={link.label}
           variant="link"
           asChild
-          className="text-landing-fg-secondary hover:text-landing-fg hidden h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline md:inline-flex"
+          className="hidden h-auto p-0 text-sm font-normal no-underline transition-colors duration-500 hover:no-underline md:inline-flex"
+          style={{
+            color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--landing-fg)'
+          }}
         >
           <a href={link.href}>{link.label}</a>
         </Button>
@@ -69,6 +76,8 @@ function DesktopNav() {
 }
 
 export function LandingHeader() {
+  const pathname = usePathname();
+  const darkHero = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -78,10 +87,11 @@ export function LandingHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const light = darkHero && !scrolled;
+
   return (
     <div
-      className="fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out"
-      style={{ padding: scrolled ? '10px 0 0' : '0' }}
+      className={`fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out ${scrolled ? 'pt-2.5' : 'pt-0'}`}
     >
       <header
         className="w-full transition-all duration-500 ease-out"
@@ -89,27 +99,29 @@ export function LandingHeader() {
           maxWidth: scrolled ? '87.5rem' : '100%',
           backgroundColor: scrolled ? 'var(--landing-header-bg)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
-          border: scrolled ? '1px solid var(--landing-header-border)' : '1px solid transparent',
-          borderBottomColor: scrolled
-            ? 'var(--landing-header-border)'
-            : 'var(--landing-header-border-bottom)',
+          border: scrolled ? '1px solid var(--landing-border-card)' : '1px solid transparent',
           backdropFilter: scrolled ? 'blur(24px) saturate(1.3)' : 'none',
           boxShadow: scrolled ? 'var(--landing-shadow-header)' : 'none'
         }}
       >
         <div
-          className={`mx-auto flex w-full ${MAX_WIDTH} items-center justify-between px-6 transition-all duration-500 ease-out`}
-          style={{ padding: scrolled ? '8px 20px' : '14px 24px' }}
+          className={`mx-auto flex w-full ${MAX_WIDTH} items-center justify-between transition-all duration-500 ease-out`}
+          style={{ padding: scrolled ? '12px 20px' : '18px 24px' }}
         >
           <div className="flex items-center gap-6">
             <Link href="/" className="relative z-50 flex items-center gap-2.5">
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
-              <span className="text-landing-fg text-sm font-semibold tracking-wide">Remes</span>
+              <span
+                className="text-sm font-semibold tracking-wide transition-colors duration-500"
+                style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--landing-fg)' }}
+              >
+                Remes
+              </span>
             </Link>
-            <DesktopNav />
+            <DesktopNav light={light} />
           </div>
           <div className="flex items-center gap-3">
-            <UserAvatar />
+            <UserAvatar light={light} />
             <MobileNav />
           </div>
         </div>

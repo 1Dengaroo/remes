@@ -34,7 +34,7 @@ const STREAM_SPEED = 6;
 const DEMO_CONTACTS = CONTACTS.slice(0, 4);
 
 export function InteractiveDemo() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [activeStep, setActiveStep] = useState(0); // drives content rendering
   const [indicatorStep, setIndicatorStep] = useState(0); // drives button highlight (updates immediately)
   const [visibleCompanies, setVisibleCompanies] = useState(0);
@@ -152,17 +152,15 @@ export function InteractiveDemo() {
       className="overflow-hidden rounded-xl border"
       style={{
         borderColor: 'var(--border)',
-        boxShadow: '0 0 40px rgba(255, 255, 255, 0.06), 0 0 80px rgba(255, 255, 255, 0.03)',
+        boxShadow: 'var(--landing-shadow-card)',
         backgroundColor: 'var(--card)',
         color: 'var(--card-foreground)'
       }}
     >
-      {/* Header */}
       <div
         className="flex items-center justify-between px-5 py-3.5"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
-        {/* Step indicators */}
         <div className="flex items-center gap-1">
           {STEPS.map((step, i) => {
             const Icon = step.icon;
@@ -191,7 +189,6 @@ export function InteractiveDemo() {
           })}
         </div>
 
-        {/* Theme toggle */}
         <button
           type="button"
           className="flex size-8 cursor-pointer items-center justify-center rounded-lg"
@@ -209,7 +206,6 @@ export function InteractiveDemo() {
         </button>
       </div>
 
-      {/* Progress bar */}
       <div className="h-px w-full" style={{ backgroundColor: 'var(--border)' }}>
         <div
           className="h-full"
@@ -221,7 +217,6 @@ export function InteractiveDemo() {
         />
       </div>
 
-      {/* Content area */}
       <div
         className="relative h-135 overflow-hidden sm:h-115"
         style={{ backgroundColor: 'var(--background)' }}
@@ -242,7 +237,6 @@ export function InteractiveDemo() {
         </div>
       </div>
 
-      {/* Footer */}
       <div
         className="flex items-center justify-between px-5 py-3"
         style={{
@@ -273,12 +267,9 @@ export function InteractiveDemo() {
   );
 }
 
-/* ── Step 1: Signal Detection ── */
-
 function SignalStep({ visibleCount }: { visibleCount: number }) {
   return (
     <div className="p-4 sm:p-5">
-      {/* Mini header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div
@@ -303,7 +294,6 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
         </span>
       </div>
 
-      {/* Company rows */}
       <div className="flex flex-col gap-2">
         {COMPANIES.map((c, i) => {
           const visible = i < visibleCount;
@@ -320,7 +310,6 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
               }}
             >
               <div className="flex items-center gap-3">
-                {/* Avatar */}
                 <div
                   className="flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold"
                   style={{
@@ -331,7 +320,6 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
                   {c.name.slice(0, 2)}
                 </div>
 
-                {/* Info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
@@ -355,7 +343,6 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
                   </div>
                 </div>
 
-                {/* Score */}
                 <div
                   className="flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-semibold"
                   style={{
@@ -368,7 +355,6 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
                 </div>
               </div>
 
-              {/* Signal tags */}
               <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
                 {c.signals.map((s, j) => (
                   <div key={j} className="flex items-center gap-1.5">
@@ -395,12 +381,9 @@ function SignalStep({ visibleCount }: { visibleCount: number }) {
   );
 }
 
-/* ── Step 2: Contact Discovery ── */
-
 function ContactStep({ enrichedCount }: { enrichedCount: number }) {
   return (
     <div className="p-4 sm:p-5">
-      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>
           Decision-makers
@@ -410,7 +393,6 @@ function ContactStep({ enrichedCount }: { enrichedCount: number }) {
         </span>
       </div>
 
-      {/* Contact rows */}
       <div className="flex flex-col gap-1.5">
         {DEMO_CONTACTS.map((c, i) => {
           const isEnriched = i < enrichedCount;
@@ -427,7 +409,6 @@ function ContactStep({ enrichedCount }: { enrichedCount: number }) {
                 transition: 'opacity 300ms ease-out'
               }}
             >
-              {/* Avatar */}
               <div
                 className="flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-medium"
                 style={{
@@ -441,7 +422,6 @@ function ContactStep({ enrichedCount }: { enrichedCount: number }) {
                   .join('')}
               </div>
 
-              {/* Info */}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span
@@ -471,7 +451,6 @@ function ContactStep({ enrichedCount }: { enrichedCount: number }) {
                 </span>
               </div>
 
-              {/* Email or placeholder */}
               <span
                 className="hidden shrink-0 text-xs sm:block"
                 style={{
@@ -490,8 +469,6 @@ function ContactStep({ enrichedCount }: { enrichedCount: number }) {
   );
 }
 
-/* ── Step 3: AI Outreach ── */
-
 function OutreachStep({
   streamedText,
   isStreaming
@@ -503,7 +480,6 @@ function OutreachStep({
 
   return (
     <div className="p-4 sm:p-5">
-      {/* Email header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>
@@ -529,7 +505,6 @@ function OutreachStep({
         </div>
       </div>
 
-      {/* Email fields */}
       <div
         className="mb-4 rounded-lg"
         style={{
@@ -558,7 +533,6 @@ function OutreachStep({
         </div>
       </div>
 
-      {/* Email body */}
       <div
         className="rounded-lg px-4 py-3"
         style={{
@@ -579,7 +553,6 @@ function OutreachStep({
           )}
         </div>
 
-        {/* Best practices */}
         <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
           <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
             Plain text &middot; Under 80 words &middot; Signal-led opener

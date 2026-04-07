@@ -171,6 +171,15 @@
   }
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 @layer components {
   .section-label {
     font-size: var(--section-label-size, 0.75rem);
@@ -193,5 +202,5 @@
 }
 
 html:has(.marketing) {
-  background-color: #000;
+  background-color: #fff;
 }

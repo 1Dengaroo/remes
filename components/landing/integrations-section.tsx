@@ -71,7 +71,7 @@ export function IntegrationsSection() {
         <p className="text-landing-fg-muted mb-1 text-xs font-medium tracking-widest uppercase">
           Integrations
         </p>
-        <h2 className="text-landing-fg text-xl font-semibold tracking-tight sm:text-2xl">
+        <h2 className="text-landing-fg text-xl font-bold tracking-tight sm:text-2xl">
           Works with your stack
         </h2>
         <p className="text-landing-fg-secondary mt-2 max-w-md text-sm leading-relaxed">

@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP);
 
 function Skel({ className }: { className?: string }) {
-  return <div className={`rounded-full bg-white/6 ${className ?? ''}`} />;
+  return <div className={`rounded-full bg-(--landing-skel-base) ${className ?? ''}`} />;
 }
 
 function ScoreBadge({ tier, value }: { tier: 'high' | 'mid' | 'low'; value: string }) {
@@ -25,10 +25,10 @@ function ScoreBadge({ tier, value }: { tier: 'high' | 'mid' | 'low'; value: stri
 }
 
 const SIGNAL_COLORS: Record<string, string> = {
-  purple: 'bg-(--landing-accent)/25 text-(--landing-accent-light)',
-  emerald: 'bg-emerald-500/20 text-emerald-400/90',
-  red: 'bg-red-500/20 text-red-400/90',
-  amber: 'bg-amber-500/20 text-amber-400/90'
+  purple: 'bg-(--landing-signal-job)/20 text-(--landing-accent-light)',
+  emerald: 'bg-(--landing-signal-funding)/20 text-(--landing-signal-funding)',
+  red: 'bg-(--landing-signal-news)/20 text-(--landing-signal-news)',
+  amber: 'bg-(--landing-signal-jd)/20 text-(--landing-signal-jd)'
 };
 
 function SignalPill({
@@ -67,7 +67,7 @@ function CompanyRow({
   return (
     <div className={`company-row rounded-lg px-4 py-3.5 ${className ?? ''}`}>
       <div className="flex items-center gap-3">
-        <div className="company-icon text-2xs flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/6 font-semibold text-white/30">
+        <div className="company-icon text-2xs text-landing-fg-muted flex size-8 shrink-0 items-center justify-center rounded-lg bg-(--landing-skel-base) font-semibold">
           {initials}
         </div>
         <div className="min-w-0 flex-1 space-y-1.5">
@@ -98,7 +98,7 @@ function CompanyRow({
 function ContactRow({ name, initials, title }: { name: string; initials: string; title: string }) {
   return (
     <div className="contact-row flex items-center gap-3 px-4 py-3">
-      <div className="contact-avatar text-2xs flex size-8 shrink-0 items-center justify-center rounded-full bg-white/6 font-medium text-white/30">
+      <div className="contact-avatar text-2xs text-landing-fg-muted flex size-8 shrink-0 items-center justify-center rounded-full bg-(--landing-skel-base) font-medium">
         {initials}
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
@@ -111,7 +111,13 @@ function ContactRow({ name, initials, title }: { name: string; initials: string;
           >
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
           </svg>
-          <span className="contact-badge text-2xs rounded-full bg-emerald-500/15 px-1.5 py-0.5 font-medium text-emerald-400/80 opacity-0">
+          <span
+            className="contact-badge text-2xs rounded-full px-1.5 py-0.5 font-medium opacity-0"
+            style={{
+              backgroundColor: 'var(--landing-badge-verified-bg)',
+              color: 'var(--landing-badge-verified-text)'
+            }}
+          >
             Verified
           </span>
         </div>
@@ -125,7 +131,7 @@ function ContactRow({ name, initials, title }: { name: string; initials: string;
 function EmailLine({ className, width }: { className?: string; width: string }) {
   return (
     <div className={`email-line overflow-hidden ${className ?? ''}`} style={{ width }}>
-      <div className="email-line-fill relative h-full w-0 overflow-hidden rounded-full bg-white/6">
+      <div className="email-line-fill relative h-full w-0 overflow-hidden rounded-full bg-(--landing-skel-base)">
         <div className="email-shimmer absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/8 to-transparent opacity-0" />
       </div>
     </div>
@@ -135,12 +141,29 @@ function EmailLine({ className, width }: { className?: string; width: string }) 
 function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-white/8 bg-(--landing-bg-card) shadow-(--landing-shadow-glow) ${className ?? ''}`}
+      className={`overflow-hidden rounded-xl border border-(--landing-hero-badge-border) bg-(--landing-bg-card) shadow-(--landing-shadow-glow) ${className ?? ''}`}
       style={{ visibility: 'hidden' }}
     >
       {children}
     </div>
   );
+}
+
+function resolveTokens(el: HTMLElement) {
+  const s = getComputedStyle(el);
+  const get = (token: string) => s.getPropertyValue(token).trim();
+  return {
+    statusActive: get('--landing-status-active'),
+    statusActiveGlow: get('--landing-status-active-glow'),
+    iconActiveBg: get('--landing-icon-active-bg'),
+    iconActiveText: get('--landing-icon-active-text'),
+    skelBright: get('--landing-skel-bright'),
+    skelDim: get('--landing-skel-dim'),
+    avatarEnrichedBg: get('--landing-avatar-enriched-bg'),
+    avatarEnrichedText: get('--landing-avatar-enriched-text'),
+    rowActiveBg: get('--landing-row-active-bg'),
+    rowActiveBorder: get('--landing-row-active-border')
+  };
 }
 
 export function HeroPipeline() {
@@ -150,6 +173,7 @@ export function HeroPipeline() {
     () => {
       if (!containerRef.current) return;
 
+      const t = resolveTokens(containerRef.current);
       const tl = gsap.timeline({ delay: 0.8 });
 
       /* ── Layer 1: Signals ── */
@@ -159,8 +183,8 @@ export function HeroPipeline() {
       tl.to(
         '.header-dot',
         {
-          backgroundColor: 'rgba(74, 222, 128, 0.7)',
-          boxShadow: '0 0 6px rgba(74, 222, 128, 0.4)',
+          backgroundColor: t.statusActive,
+          boxShadow: t.statusActiveGlow,
           duration: 0.4,
           ease: 'power2.out'
         },
@@ -170,8 +194,8 @@ export function HeroPipeline() {
       tl.to('.signals-header', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '+=0.1');
 
       tl.to('.company-row .company-icon', {
-        backgroundColor: 'rgba(86, 67, 204, 0.2)',
-        color: 'rgba(138, 143, 255, 0.9)',
+        backgroundColor: t.iconActiveBg,
+        color: t.iconActiveText,
         duration: 0.35,
         stagger: 0.1,
         ease: 'power1.out'
@@ -185,12 +209,7 @@ export function HeroPipeline() {
 
       tl.to(
         '.company-row .company-desc',
-        {
-          backgroundColor: 'rgba(255,255,255,0.10)',
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'power1.out'
-        },
+        { backgroundColor: t.skelBright, duration: 0.3, stagger: 0.1, ease: 'power1.out' },
         '<0.05'
       );
 
@@ -209,7 +228,7 @@ export function HeroPipeline() {
         '.signal-desc',
         {
           opacity: 1,
-          backgroundColor: 'rgba(255,255,255,0.08)',
+          backgroundColor: t.skelDim,
           duration: 0.3,
           stagger: 0.04,
           ease: 'power1.out'
@@ -236,8 +255,8 @@ export function HeroPipeline() {
       tl.to(
         '.company-row-active',
         {
-          backgroundColor: 'rgba(255,255,255,0.04)',
-          borderColor: 'rgba(255,255,255,0.06)',
+          backgroundColor: t.rowActiveBg,
+          borderColor: t.rowActiveBorder,
           duration: 0.3,
           ease: 'power1.out'
         },
@@ -248,13 +267,13 @@ export function HeroPipeline() {
       /* ── Layer 2: Contacts ── */
 
       tl.to('.contact-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
-      tl.to('.signal-card', { scale: 0.96, opacity: 0.6, duration: 0.4, ease: 'power2.out' }, '<');
+      tl.to('.signal-card', { scale: 0.98, opacity: 0.85, duration: 0.4, ease: 'power2.out' }, '<');
 
       tl.to('.contacts-header', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
 
       tl.to('.contact-avatar', {
-        backgroundColor: 'rgba(255,255,255,0.12)',
-        color: 'rgba(255,255,255,0.5)',
+        backgroundColor: t.avatarEnrichedBg,
+        color: t.avatarEnrichedText,
         duration: 0.3,
         stagger: 0.1,
         ease: 'power1.out'
@@ -276,12 +295,7 @@ export function HeroPipeline() {
       );
       tl.to(
         '.contact-email',
-        {
-          backgroundColor: 'rgba(255,255,255,0.10)',
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'power1.out'
-        },
+        { backgroundColor: t.skelBright, duration: 0.3, stagger: 0.1, ease: 'power1.out' },
         '<'
       );
       tl.to(
@@ -293,20 +307,19 @@ export function HeroPipeline() {
       /* ── Layer 3: Email ── */
 
       tl.to('.email-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
-      tl.to('.contact-card', { scale: 0.97, opacity: 0.6, duration: 0.4, ease: 'power2.out' }, '<');
-      tl.to('.signal-card', { scale: 0.92, opacity: 0.35, duration: 0.4, ease: 'power2.out' }, '<');
+      tl.to(
+        '.contact-card',
+        { scale: 0.98, opacity: 0.85, duration: 0.4, ease: 'power2.out' },
+        '<'
+      );
+      tl.to('.signal-card', { scale: 0.96, opacity: 0.7, duration: 0.4, ease: 'power2.out' }, '<');
 
       tl.to('.email-status', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
       tl.to('.email-label', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '<0.05');
 
       tl.to(
         '.email-field',
-        {
-          backgroundColor: 'rgba(255,255,255,0.10)',
-          duration: 0.25,
-          stagger: 0.1,
-          ease: 'power1.out'
-        },
+        { backgroundColor: t.skelBright, duration: 0.25, stagger: 0.1, ease: 'power1.out' },
         '-=0.1'
       );
 
@@ -379,11 +392,14 @@ export function HeroPipeline() {
   );
 
   return (
-    <div ref={containerRef} className="relative hidden h-145 w-115 lg:block xl:h-155 xl:w-125">
-      <Card className="signal-card absolute top-0 left-0 w-105 origin-top-left xl:w-115">
-        <div className="flex items-center justify-between border-b border-white/6 px-5 py-3">
+    <div
+      ref={containerRef}
+      className="relative hidden h-80 w-200 lg:flex lg:justify-center xl:h-90 xl:w-240"
+    >
+      <Card className="signal-card absolute top-0 left-1/2 w-190 -translate-x-1/2 xl:w-230">
+        <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
           <div className="flex items-center gap-2.5">
-            <div className="header-dot size-2 rounded-full bg-white/15" />
+            <div className="header-dot size-2 rounded-full bg-(--landing-skel-base)" />
             <span className="status-text text-landing-fg-secondary text-xs2 font-medium">
               Scanning signals...
             </span>
@@ -396,7 +412,7 @@ export function HeroPipeline() {
             <span className="text-landing-fg-muted text-2xs font-medium tracking-wide uppercase">
               Matched Companies
             </span>
-            <span className="match-count text-landing-fg-muted text-2xs rounded-full bg-white/6 px-2 py-0.5 font-medium opacity-0">
+            <span className="match-count text-landing-fg-muted text-2xs rounded-full bg-(--landing-skel-base) px-2 py-0.5 font-medium opacity-0">
               3 found
             </span>
           </div>
@@ -437,10 +453,16 @@ export function HeroPipeline() {
         </div>
       </Card>
 
-      <Card className="contact-card absolute top-30 right-0 w-95 origin-top-right xl:top-32.5 xl:w-105">
-        <div className="contacts-header flex items-center justify-between border-b border-white/6 px-5 py-3">
+      <Card className="contact-card absolute top-12 left-1/2 w-190 -translate-x-1/2 xl:top-14 xl:w-230">
+        <div className="contacts-header flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
           <span className="text-landing-fg-secondary text-xs2 font-medium">Contacts at Remes</span>
-          <span className="enriched-count text-2xs rounded-full bg-emerald-500/15 px-2 py-0.5 font-medium text-emerald-400/80 opacity-0">
+          <span
+            className="enriched-count text-2xs rounded-full px-2 py-0.5 font-medium opacity-0"
+            style={{
+              backgroundColor: 'var(--landing-badge-verified-bg)',
+              color: 'var(--landing-badge-verified-text)'
+            }}
+          >
             3 enriched
           </span>
         </div>
@@ -452,15 +474,15 @@ export function HeroPipeline() {
         </div>
       </Card>
 
-      <Card className="email-card absolute right-2.5 bottom-0 w-100 xl:w-110">
-        <div className="flex items-center justify-between border-b border-white/6 px-5 py-3">
+      <Card className="email-card absolute top-24 left-1/2 w-190 -translate-x-1/2 xl:top-28 xl:w-230">
+        <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
           <span className="email-status text-landing-fg-secondary text-xs2 font-medium">
             Generating outreach
           </span>
           <span className="email-label text-landing-fg-muted text-2xs">Email 1 of 3</span>
         </div>
 
-        <div className="mx-5 divide-y divide-white/4">
+        <div className="mx-5 divide-y divide-(--landing-border-card)">
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-landing-fg-muted text-2xs">To</span>
             <span className="email-label text-landing-fg-secondary text-xs2">kenny@remes.so</span>
@@ -473,7 +495,7 @@ export function HeroPipeline() {
           </div>
         </div>
 
-        <div className="mx-5 border-t border-white/4" />
+        <div className="mx-5 border-t border-(--landing-border-card)" />
 
         <div className="space-y-1.75 px-5 pt-3.5 pb-4">
           <EmailLine className="eline-0 h-2" width="28%" />
@@ -493,12 +515,12 @@ export function HeroPipeline() {
           <EmailLine className="eline-9 h-2" width="14%" />
         </div>
 
-        <div className="border-t border-white/6 px-5 py-2">
+        <div className="border-t border-(--landing-border-card) px-5 py-2">
           <div className="flex flex-wrap gap-1.5">
             {['Plain text', 'Signal-led', 'Under 80 words', 'One CTA'].map((t) => (
               <span
                 key={t}
-                className="practice-pill text-2xs rounded-full bg-white/5 px-2 py-0.5 text-white/30"
+                className="practice-pill text-2xs text-landing-fg-muted rounded-full bg-(--landing-skel-base) px-2 py-0.5"
               >
                 {t}
               </span>
@@ -506,11 +528,11 @@ export function HeroPipeline() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-white/6 px-5 py-2.5">
+        <div className="flex items-center justify-between border-t border-(--landing-border-card) px-5 py-2.5">
           <span className="email-footer-text text-landing-fg-muted text-2xs">
             Personalized from signal data
           </span>
-          <div className="send-btn text-2xs flex h-6.5 items-center rounded-full bg-white/10 px-3.5 font-medium text-white/60 opacity-0">
+          <div className="send-btn text-2xs text-landing-fg-secondary flex h-6.5 items-center rounded-full bg-(--landing-skel-base) px-3.5 font-medium opacity-0">
             Send
           </div>
         </div>

@@ -56,7 +56,7 @@ export function ShowcaseSection() {
           How it works
         </p>
         <h2
-          className="text-landing-fg text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl"
+          className="text-landing-fg text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl"
           style={{ textWrap: 'balance' }}
         >
           From signal to sent in minutes
@@ -81,7 +81,7 @@ export function ShowcaseSection() {
                 </span>
               </div>
               <h3
-                className="text-landing-fg text-xl font-semibold tracking-tight sm:text-2xl"
+                className="text-landing-fg text-xl font-bold tracking-tight sm:text-2xl"
                 style={{ textWrap: 'balance' }}
               >
                 {step.title}
