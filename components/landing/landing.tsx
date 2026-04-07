@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import {
   Accordion,
@@ -17,6 +18,8 @@ import { SignalsSection } from './signals-section.client';
 import { InteractiveDemo } from './interactive-demo.client';
 
 export function Landing() {
+  const [demoTheme, setDemoTheme] = useState<'dark' | 'light'>('dark');
+
   return (
     <div className="relative flex flex-col overflow-x-hidden">
       {/* Noise texture overlay — hidden on mobile for perf */}
@@ -275,7 +278,7 @@ export function Landing() {
               </p>
             </div>
 
-            <InteractiveDemo />
+            <InteractiveDemo theme={demoTheme} onThemeChange={setDemoTheme} />
           </section>
 
           {/* Gradient divider */}
@@ -284,7 +287,7 @@ export function Landing() {
           </div>
 
           {/* Signals grid */}
-          <SignalsSection />
+          <SignalsSection theme={demoTheme} />
 
           {/* Integrations section hidden for now */}
 
