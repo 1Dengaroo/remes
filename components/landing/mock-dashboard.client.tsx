@@ -30,7 +30,7 @@ function scoreStyles(score: number) {
   };
 }
 
-const COMPANIES = [
+export const COMPANIES = [
   {
     name: 'Ashby',
     industry: 'Recruiting',
@@ -139,7 +139,7 @@ export function MockSignalDashboard() {
   );
 }
 
-const CONTACTS = [
+export const CONTACTS = [
   {
     name: 'David Kim',
     title: 'VP of Sales',
@@ -290,7 +290,7 @@ export function MockContactList() {
  * - Sign off with first name only
  * - No forbidden phrases
  */
-const EMAILS = [
+export const EMAILS = [
   {
     subject: "ramp's bdr hiring spree",
     body: 'Hi James,\n\nSaw Ramp posted 6 BDR roles in the last two weeks. Tripling outbound headcount after a $300M raise usually means pipeline targets just got aggressive.\n\nWe built Remes to detect signals like yours and write the first email automatically. One customer went from 0 to 47 qualified meetings in their first month.\n\nWorth a quick look?\n\nKenny'

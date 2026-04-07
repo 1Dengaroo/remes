@@ -12,8 +12,9 @@ import { FAQS } from './landing-constants';
 import { AuroraCanvas } from './aurora-canvas';
 import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
 import { GradientText } from './gradient-text';
+import { HeroPipeline } from './hero-pipeline.client';
 import { SignalsSection } from './signals-section.client';
-import { ShowcaseSection } from './showcase-section.client';
+import { InteractiveDemo } from './interactive-demo.client';
 
 export function Landing() {
   return (
@@ -75,32 +76,40 @@ export function Landing() {
         />
 
         <div
-          className={`relative z-10 mx-auto flex w-full ${MAX_WIDTH} flex-col items-start px-6 pt-32 pb-20 sm:pt-40 sm:pb-28`}
+          className={`relative z-10 mx-auto flex w-full ${MAX_WIDTH} items-center justify-between px-6 pt-32 pb-20 sm:pt-40 sm:pb-28`}
         >
-          <div className="animate-[hero-fade-in_0.8s_ease-out_0.15s_both]">
-            <span className="text-landing-fg-muted inline-block rounded-full border border-white/8 bg-white/3 px-4 py-1.5 text-xs font-medium tracking-widest uppercase backdrop-blur-sm">
-              Outbound on Auto-Pilot
-            </span>
+          {/* Left — headline + CTA */}
+          <div className="flex max-w-2xl flex-col items-start lg:max-w-xl xl:max-w-2xl">
+            <div className="animate-[hero-fade-in_0.8s_ease-out_0.15s_both]">
+              <span className="text-landing-fg-muted inline-block rounded-full border border-white/8 bg-white/3 px-4 py-1.5 text-xs font-medium tracking-widest uppercase backdrop-blur-sm">
+                Outbound on Auto-Pilot
+              </span>
+            </div>
+
+            <h1
+              className="leading-hero text-landing-fg mt-8 animate-[hero-fade-in_0.8s_ease-out_0.27s_both] text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl"
+              style={{ textWrap: 'balance' }}
+            >
+              Deep Research. Right Contacts. <GradientText>Outreach that Converts.</GradientText>
+            </h1>
+
+            <p
+              className="text-landing-fg-secondary mt-6 max-w-xl animate-[hero-fade-in_0.8s_ease-out_0.39s_both] text-sm leading-relaxed sm:text-base sm:leading-relaxed"
+              style={{ textWrap: 'balance' }}
+            >
+              Remes scans for buying signals from companies using your ideal customer criteria, maps
+              contacts at every account, and crafts hyper-personalized outreach.
+            </p>
+
+            <div className="mt-10 flex animate-[hero-fade-in_0.8s_ease-out_0.51s_both] flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <PrimaryCta>Get started</PrimaryCta>
+              <SecondaryCta />
+            </div>
           </div>
 
-          <h1
-            className="leading-hero text-landing-fg mt-8 max-w-3xl animate-[hero-fade-in_0.8s_ease-out_0.27s_both] text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl"
-            style={{ textWrap: 'balance' }}
-          >
-            Deep Research. Right Contacts. <GradientText>Outreach that Converts.</GradientText>
-          </h1>
-
-          <p
-            className="text-landing-fg-secondary mt-6 max-w-xl animate-[hero-fade-in_0.8s_ease-out_0.39s_both] text-sm leading-relaxed sm:text-base sm:leading-relaxed"
-            style={{ textWrap: 'balance' }}
-          >
-            Remes scans for buying signals from companies using your ideal customer criteria, maps
-            contacts at every account, and crafts hyper-personalized outreach.
-          </p>
-
-          <div className="mt-10 flex animate-[hero-fade-in_0.8s_ease-out_0.51s_both] flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
-            <PrimaryCta>Get started</PrimaryCta>
-            <SecondaryCta />
+          {/* Right — pipeline animation (desktop only) */}
+          <div className="animate-[hero-fade-in_0.8s_ease-out_0.6s_both]">
+            <HeroPipeline />
           </div>
         </div>
 
@@ -250,7 +259,24 @@ export function Landing() {
           </div>
 
           {/* How it works */}
-          <ShowcaseSection />
+          <section id="use-cases" className="relative scroll-mt-16 py-24 sm:py-36">
+            <div className="mb-14 sm:mb-20">
+              <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
+                How it works
+              </p>
+              <h2
+                className="text-landing-fg text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl"
+                style={{ textWrap: 'balance' }}
+              >
+                From signal to sent in minutes
+              </h2>
+              <p className="text-landing-fg-secondary mt-3 max-w-md text-sm leading-relaxed">
+                Three steps. Fully automated. No manual research required.
+              </p>
+            </div>
+
+            <InteractiveDemo />
+          </section>
 
           {/* Gradient divider */}
           <div className="flex justify-center">
