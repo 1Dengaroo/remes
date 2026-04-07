@@ -28,7 +28,7 @@ const SIGNAL_TOKEN: Record<string, string> = {
 const STEP_DURATIONS = [5500, 4500, 11500];
 const COMPANY_STAGGER = 800;
 const CONTACT_STAGGER = 400;
-const STREAM_SPEED = 10;
+const STREAM_SPEED = 6;
 
 // Only show first 4 contacts for the demo
 const DEMO_CONTACTS = CONTACTS.slice(0, 4);
@@ -111,7 +111,7 @@ export function InteractiveDemo() {
           }
           lastTime = time;
 
-          const chunkSize = email.body[charIndex] === '\n' ? 1 : Math.random() > 0.4 ? 3 : 2;
+          const chunkSize = email.body[charIndex] === '\n' ? 1 : Math.random() > 0.3 ? 4 : 3;
           charIndex += chunkSize;
 
           if (charIndex >= email.body.length) {
@@ -220,7 +220,7 @@ export function InteractiveDemo() {
 
       {/* Content area */}
       <div
-        className="relative min-h-80 sm:min-h-90"
+        className="relative h-135 overflow-hidden sm:h-115"
         style={{ backgroundColor: 'var(--background)' }}
       >
         <div

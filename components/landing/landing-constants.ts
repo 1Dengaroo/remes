@@ -64,6 +64,87 @@ export const SIGNALS: { source: string; example: string; color: string }[] = [
   }
 ];
 
+export const SIGNAL_PREVIEWS: Record<
+  string,
+  { companies: { name: string; reason: string }[]; emailOpener: string }
+> = {
+  'Job Openings': {
+    companies: [
+      { name: 'Vercel', reason: 'Posted 4 Next.js engineer roles this week' },
+      { name: 'Supabase', reason: 'Hiring 3 senior frontend engineers' },
+      { name: 'Linear', reason: 'New React Native lead role posted' }
+    ],
+    emailOpener:
+      "Hi Sarah,\n\nSaw Vercel just posted 4 Next.js roles in one week. When engineering teams scale that fast, tooling decisions usually haven't caught up yet."
+  },
+  'News & Press': {
+    companies: [
+      { name: 'Okta', reason: 'Data breach disclosed in SEC filing last month' },
+      { name: 'LastPass', reason: 'Security incident covered in TechCrunch' }
+    ],
+    emailOpener:
+      'Hi Michael,\n\nAfter the breach Okta disclosed last month, I imagine security tooling is getting a hard look from your team right now.'
+  },
+  'Company Website': {
+    companies: [
+      { name: 'Stripe', reason: 'SOC 2 Type 2 badge added to security page' },
+      { name: 'Plaid', reason: 'ISO 27001 certification listed on trust center' },
+      { name: 'Brex', reason: 'HIPAA compliance page recently published' }
+    ],
+    emailOpener:
+      'Hi Rachel,\n\nNoticed Stripe recently added SOC 2 Type 2 to your security page. Companies at that compliance stage usually need tooling that matches.'
+  },
+  'Job Descriptions': {
+    companies: [
+      { name: 'Notion', reason: 'Finance roles mention Excel-based expense reporting' },
+      { name: 'Figma', reason: 'FP&A role requires spreadsheet modeling experience' }
+    ],
+    emailOpener:
+      "Hi David,\n\nNoticed Notion's finance job postings still mention Excel for expense reporting. That usually signals the team is ready to modernize."
+  },
+  'Employee Activity': {
+    companies: [
+      { name: 'Databricks', reason: 'New Data Engineer onboarded, Snowflake on LinkedIn' },
+      { name: 'dbt Labs', reason: 'Hired 2 analytics engineers mentioning BigQuery' }
+    ],
+    emailOpener:
+      'Hi Alex,\n\nSaw Databricks just brought on a Data Engineer with deep Snowflake experience. Teams building out that stack usually hit a tooling gap fast.'
+  },
+  '10-K Reports': {
+    companies: [
+      { name: 'Salesforce', reason: '10-K mentions employee communication initiatives' },
+      { name: 'HubSpot', reason: 'Annual report highlights internal tooling investment' }
+    ],
+    emailOpener:
+      "Hi Jennifer,\n\nSalesforce's latest 10-K mentions investing in employee communication tools. That usually means budget is allocated and decisions are being made."
+  },
+  'Funding Rounds': {
+    companies: [
+      { name: 'Wiz', reason: 'Raised $300M Series D two weeks ago' },
+      { name: 'Mistral AI', reason: 'Closed $415M Series B last month' },
+      { name: 'Cursor', reason: 'Raised $60M Series A this quarter' }
+    ],
+    emailOpener:
+      "Hi Tom,\n\nCongrats on Wiz's $300M raise. Post-funding is usually when teams invest in scaling their go-to-market stack."
+  },
+  'LinkedIn Posts': {
+    companies: [
+      { name: 'Snowflake', reason: 'VP of Eng posted about attending AWS re:Invent' },
+      { name: 'MongoDB', reason: 'CTO sharing posts about cloud migration trends' }
+    ],
+    emailOpener:
+      'Hi Chris,\n\nSaw your post about AWS re:Invent. Teams evaluating cloud infrastructure usually need tooling that keeps up with the migration.'
+  },
+  'Custom Signals': {
+    companies: [
+      { name: 'Any company', reason: 'Define your own signal criteria' },
+      { name: 'Any industry', reason: 'Remes adapts to your exact ICP' }
+    ],
+    emailOpener:
+      'If you can describe a buying signal, Remes can detect it. Custom signals let you monitor exactly what matters for your business.'
+  }
+};
+
 export const SHOWCASE = [
   {
     label: 'Signal Detection',

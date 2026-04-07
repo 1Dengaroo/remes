@@ -6,12 +6,10 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP);
 
-/* ── Skeleton line ── */
 function Skel({ className }: { className?: string }) {
   return <div className={`rounded-full bg-white/6 ${className ?? ''}`} />;
 }
 
-/* ── Score badge ── */
 function ScoreBadge({ tier, value }: { tier: 'high' | 'mid' | 'low'; value: string }) {
   return (
     <div
@@ -26,7 +24,6 @@ function ScoreBadge({ tier, value }: { tier: 'high' | 'mid' | 'low'; value: stri
   );
 }
 
-/* ── Signal pill ── */
 const SIGNAL_COLORS: Record<string, string> = {
   purple: 'bg-(--landing-accent)/25 text-(--landing-accent-light)',
   emerald: 'bg-emerald-500/20 text-emerald-400/90',
@@ -50,7 +47,6 @@ function SignalPill({
   );
 }
 
-/* ── Company row ── */
 function CompanyRow({
   name,
   initials,
@@ -75,9 +71,15 @@ function CompanyRow({
           {initials}
         </div>
         <div className="min-w-0 flex-1 space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="company-name text-landing-fg text-sm2 font-medium">{name}</span>
-            <span className="text-landing-fg-muted text-2xs">{meta}</span>
+          <div className="relative flex items-center gap-2">
+            <span className="company-name text-landing-fg text-sm2 font-medium opacity-0">
+              {name}
+            </span>
+            <span className="company-meta text-landing-fg-muted text-2xs opacity-0">{meta}</span>
+            <div className="company-name-skel pointer-events-none absolute inset-0 flex items-center gap-2">
+              <Skel className="h-3.5 w-14" />
+              <Skel className="h-2.5 w-28" />
+            </div>
           </div>
           <Skel className="company-desc h-2.5 w-5/6" />
         </div>
@@ -93,7 +95,6 @@ function CompanyRow({
   );
 }
 
-/* ── Contact row ── */
 function ContactRow({ name, initials, title }: { name: string; initials: string; title: string }) {
   return (
     <div className="contact-row flex items-center gap-3 px-4 py-3">
@@ -121,7 +122,6 @@ function ContactRow({ name, initials, title }: { name: string; initials: string;
   );
 }
 
-/* ── Email line with shimmer ── */
 function EmailLine({ className, width }: { className?: string; width: string }) {
   return (
     <div className={`email-line overflow-hidden ${className ?? ''}`} style={{ width }}>
@@ -132,7 +132,6 @@ function EmailLine({ className, width }: { className?: string; width: string }) 
   );
 }
 
-/* ── Card shell ── */
 function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
@@ -144,11 +143,6 @@ function Card({ className, children }: { className?: string; children: React.Rea
   );
 }
 
-/* ═══════════════════════════════════════
-   Main hero pipeline — 3 layered cards
-   Research → Contacts → Email
-   ═══════════════════════════════════════ */
-
 export function HeroPipeline() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -158,9 +152,7 @@ export function HeroPipeline() {
 
       const tl = gsap.timeline({ delay: 0.8 });
 
-      /* ─────────────────────────────────
-         LAYER 1 — Signal detection
-         ───────────────────────────────── */
+      /* ── Layer 1: Signals ── */
 
       tl.to('.signal-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' });
 
@@ -184,16 +176,13 @@ export function HeroPipeline() {
         stagger: 0.1,
         ease: 'power1.out'
       });
+
       tl.to(
-        '.company-row .company-name',
-        {
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'power1.out'
-        },
+        '.company-name-skel',
+        { opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power1.out' },
         '<0.05'
       );
+
       tl.to(
         '.company-row .company-desc',
         {
@@ -207,24 +196,13 @@ export function HeroPipeline() {
 
       tl.to(
         '.score-badge',
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          stagger: 0.08,
-          ease: 'back.out(2)'
-        },
+        { opacity: 1, scale: 1, duration: 0.35, stagger: 0.08, ease: 'back.out(2)' },
         '-=0.15'
       );
+
       tl.to(
         '.signal-pill',
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.3,
-          stagger: 0.04,
-          ease: 'power2.out'
-        },
+        { opacity: 1, x: 0, duration: 0.3, stagger: 0.04, ease: 'power2.out' },
         '-=0.2'
       );
       tl.to(
@@ -240,6 +218,22 @@ export function HeroPipeline() {
       );
 
       tl.to(
+        '.company-name-skel',
+        { opacity: 0, duration: 0.25, stagger: 0.08, ease: 'power1.in' },
+        '+=0.2'
+      );
+      tl.to(
+        '.company-row .company-name',
+        { opacity: 1, duration: 0.3, stagger: 0.08, ease: 'power1.out' },
+        '<0.1'
+      );
+      tl.to(
+        '.company-row .company-meta',
+        { opacity: 1, duration: 0.3, stagger: 0.08, ease: 'power1.out' },
+        '<0.05'
+      );
+
+      tl.to(
         '.company-row-active',
         {
           backgroundColor: 'rgba(255,255,255,0.04)',
@@ -249,41 +243,12 @@ export function HeroPipeline() {
         },
         '-=0.2'
       );
-      tl.to(
-        '.match-count',
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: 'back.out(2)'
-        },
-        '-=0.1'
-      );
+      tl.to('.match-count', { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, '-=0.1');
 
-      /* ─────────────────────────────────
-         LAYER 2 — Contacts
-         ───────────────────────────────── */
+      /* ── Layer 2: Contacts ── */
 
-      tl.to(
-        '.contact-card',
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        },
-        '+=1.3'
-      );
-      tl.to(
-        '.signal-card',
-        {
-          scale: 0.96,
-          filter: 'brightness(0.7)',
-          duration: 0.4,
-          ease: 'power2.out'
-        },
-        '<'
-      );
+      tl.to('.contact-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
+      tl.to('.signal-card', { scale: 0.96, opacity: 0.6, duration: 0.4, ease: 'power2.out' }, '<');
 
       tl.to('.contacts-header', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
 
@@ -296,33 +261,17 @@ export function HeroPipeline() {
       });
       tl.to(
         '.contact-name',
-        {
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'power1.out'
-        },
+        { opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power1.out' },
         '<0.05'
       );
       tl.to(
         '.contact-linkedin',
-        {
-          opacity: 1,
-          duration: 0.2,
-          stagger: 0.1,
-          ease: 'power2.out'
-        },
+        { opacity: 1, duration: 0.2, stagger: 0.1, ease: 'power2.out' },
         '<0.1'
       );
       tl.to(
         '.contact-badge',
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          stagger: 0.1,
-          ease: 'back.out(2)'
-        },
+        { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1, ease: 'back.out(2)' },
         '-=0.1'
       );
       tl.to(
@@ -337,49 +286,15 @@ export function HeroPipeline() {
       );
       tl.to(
         '.enriched-count',
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: 'back.out(2)'
-        },
+        { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' },
         '-=0.1'
       );
 
-      /* ─────────────────────────────────
-         LAYER 3 — Email generation
-         ───────────────────────────────── */
+      /* ── Layer 3: Email ── */
 
-      tl.to(
-        '.email-card',
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        },
-        '+=1.3'
-      );
-      tl.to(
-        '.contact-card',
-        {
-          scale: 0.97,
-          filter: 'brightness(0.7)',
-          duration: 0.4,
-          ease: 'power2.out'
-        },
-        '<'
-      );
-      tl.to(
-        '.signal-card',
-        {
-          scale: 0.92,
-          filter: 'brightness(0.5)',
-          duration: 0.4,
-          ease: 'power2.out'
-        },
-        '<'
-      );
+      tl.to('.email-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
+      tl.to('.contact-card', { scale: 0.97, opacity: 0.6, duration: 0.4, ease: 'power2.out' }, '<');
+      tl.to('.signal-card', { scale: 0.92, opacity: 0.35, duration: 0.4, ease: 'power2.out' }, '<');
 
       tl.to('.email-status', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
       tl.to('.email-label', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '<0.05');
@@ -395,32 +310,24 @@ export function HeroPipeline() {
         '-=0.1'
       );
 
-      // Cursor
-      tl.to('.email-cursor', { opacity: 1, duration: 0.15 }, '+=0.1');
-
-      // Stream each line
       const lines = [
-        { sel: '.eline-0', dur: 0.3 },
-        { sel: '.eline-1', dur: 0.5 },
-        { sel: '.eline-2', dur: 0.5 },
-        { sel: '.eline-3', dur: 0.4 },
-        { sel: '.eline-4', dur: 0.5 },
-        { sel: '.eline-5', dur: 0.4 },
-        { sel: '.eline-6', dur: 0.5 },
-        { sel: '.eline-7', dur: 0.35 },
-        { sel: '.eline-8', dur: 0.3 },
-        { sel: '.eline-9', dur: 0.2 }
+        { sel: '.eline-0', dur: 0.15 },
+        { sel: '.eline-1', dur: 0.25 },
+        { sel: '.eline-2', dur: 0.25 },
+        { sel: '.eline-3', dur: 0.2 },
+        { sel: '.eline-4', dur: 0.25 },
+        { sel: '.eline-5', dur: 0.2 },
+        { sel: '.eline-6', dur: 0.25 },
+        { sel: '.eline-7', dur: 0.18 },
+        { sel: '.eline-8', dur: 0.15 },
+        { sel: '.eline-9', dur: 0.1 }
       ];
 
       lines.forEach((l, i) => {
         const offset = i === 0 ? '+=0.05' : '-=0.02';
         tl.to(
           `${l.sel} .email-line-fill`,
-          {
-            width: '100%',
-            duration: l.dur,
-            ease: 'none'
-          },
+          { width: '100%', duration: l.dur, ease: 'none' },
           offset
         );
         tl.to(
@@ -438,38 +345,21 @@ export function HeroPipeline() {
         );
       });
 
-      tl.to('.email-cursor', { opacity: 0, duration: 0.2 }, '+=0.1');
-
       tl.to('.email-footer-text', { opacity: 1, duration: 0.25, ease: 'power2.out' }, '-=0.1');
       tl.to(
         '.practice-pill',
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.25,
-          stagger: 0.06,
-          ease: 'power2.out'
-        },
+        { opacity: 1, y: 0, duration: 0.25, stagger: 0.06, ease: 'power2.out' },
         '<'
       );
-      tl.to(
-        '.send-btn',
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: 'back.out(2)'
-        },
-        '-=0.1'
-      );
+      tl.to('.send-btn', { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, '-=0.1');
 
-      // Initial states
       gsap.set('.signal-card', { autoAlpha: 0, y: 20 });
       gsap.set('.contact-card', { autoAlpha: 0, y: 24 });
       gsap.set('.email-card', { autoAlpha: 0, y: 30 });
       gsap.set('.status-text', { opacity: 0 });
       gsap.set('.signals-header', { opacity: 0 });
-      gsap.set('.company-row .company-name', { opacity: 0.4 });
+      gsap.set('.company-row .company-name', { opacity: 0 });
+      gsap.set('.company-row .company-meta', { opacity: 0 });
       gsap.set('.score-badge', { opacity: 0, scale: 0.8 });
       gsap.set('.signal-pill', { opacity: 0, x: -8 });
       gsap.set('.signal-desc', { opacity: 0 });
@@ -481,7 +371,6 @@ export function HeroPipeline() {
       gsap.set('.enriched-count', { opacity: 0, scale: 0.8 });
       gsap.set('.email-status', { opacity: 0 });
       gsap.set('.email-label', { opacity: 0 });
-      gsap.set('.email-cursor', { opacity: 0 });
       gsap.set('.email-footer-text', { opacity: 0 });
       gsap.set('.practice-pill', { opacity: 0, y: 4 });
       gsap.set('.send-btn', { opacity: 0, scale: 0.8 });
@@ -491,7 +380,6 @@ export function HeroPipeline() {
 
   return (
     <div ref={containerRef} className="relative hidden h-145 w-115 lg:block xl:h-155 xl:w-125">
-      {/* ── Layer 1: Signals (back) ── */}
       <Card className="signal-card absolute top-0 left-0 w-105 origin-top-left xl:w-115">
         <div className="flex items-center justify-between border-b border-white/6 px-5 py-3">
           <div className="flex items-center gap-2.5">
@@ -515,9 +403,9 @@ export function HeroPipeline() {
 
           <div className="space-y-0.5 px-2 pb-2.5">
             <CompanyRow
-              name="Ramp"
-              initials="Ra"
-              meta="Fintech · Series D"
+              name="Remes"
+              initials="Re"
+              meta="Sales Tech · Seed"
               className="company-row-active rounded-lg border border-transparent"
               tier="high"
               score="9"
@@ -549,23 +437,21 @@ export function HeroPipeline() {
         </div>
       </Card>
 
-      {/* ── Layer 2: Contacts (middle) ── */}
       <Card className="contact-card absolute top-30 right-0 w-95 origin-top-right xl:top-32.5 xl:w-105">
         <div className="contacts-header flex items-center justify-between border-b border-white/6 px-5 py-3">
-          <span className="text-landing-fg-secondary text-xs2 font-medium">Contacts at Ramp</span>
+          <span className="text-landing-fg-secondary text-xs2 font-medium">Contacts at Remes</span>
           <span className="enriched-count text-2xs rounded-full bg-emerald-500/15 px-2 py-0.5 font-medium text-emerald-400/80 opacity-0">
             3 enriched
           </span>
         </div>
 
         <div className="space-y-0.5 px-2 py-2">
-          <ContactRow name="James Park" initials="JP" title="VP of Sales" />
-          <ContactRow name="Sarah Chen" initials="SC" title="Head of Growth" />
-          <ContactRow name="David Kim" initials="DK" title="Director of Revenue Ops" />
+          <ContactRow name="Kenny" initials="KL" title="kenny@remes.so" />
+          <ContactRow name="Andy" initials="AD" title="andy@remes.so" />
+          <ContactRow name="Josh Besse" initials="JB" title="josh.besse@remes.so" />
         </div>
       </Card>
 
-      {/* ── Layer 3: Email (front) ── */}
       <Card className="email-card absolute right-2.5 bottom-0 w-100 xl:w-110">
         <div className="flex items-center justify-between border-b border-white/6 px-5 py-3">
           <span className="email-status text-landing-fg-secondary text-xs2 font-medium">
@@ -577,19 +463,19 @@ export function HeroPipeline() {
         <div className="mx-5 divide-y divide-white/4">
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-landing-fg-muted text-2xs">To</span>
-            <Skel className="email-field h-2.5 w-30" />
+            <span className="email-label text-landing-fg-secondary text-xs2">kenny@remes.so</span>
           </div>
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-landing-fg-muted text-2xs">Subject</span>
-            <Skel className="email-field h-2.5 w-40" />
+            <span className="email-label text-landing-fg-secondary text-xs2">
+              remes&apos; outbound automation
+            </span>
           </div>
         </div>
 
         <div className="mx-5 border-t border-white/4" />
 
-        <div className="relative space-y-1.75 px-5 pt-3.5 pb-4">
-          <div className="email-cursor pointer-events-none absolute top-3.5 left-5 h-2.5 w-0.5 animate-pulse rounded-full bg-white/40" />
-
+        <div className="space-y-1.75 px-5 pt-3.5 pb-4">
           <EmailLine className="eline-0 h-2" width="28%" />
           <div className="h-0.75" />
           <EmailLine className="eline-1 h-2" width="100%" />
