@@ -128,16 +128,6 @@ export function ContactRow({
   );
 }
 
-export function EmailLine({ className, width }: { className?: string; width: string }) {
-  return (
-    <div className={`email-line overflow-hidden ${className ?? ''}`} style={{ width }}>
-      <div className="email-line-fill relative h-full w-0 overflow-hidden rounded-full bg-(--landing-skel-base)">
-        <div className="email-shimmer absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/8 to-transparent opacity-0" />
-      </div>
-    </div>
-  );
-}
-
 export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
