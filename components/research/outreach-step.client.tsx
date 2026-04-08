@@ -8,10 +8,10 @@ import {
   CheckSquare,
   Send,
   Users,
-  Loader2,
   Building2,
   ChevronDown
 } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -270,7 +270,7 @@ export function OutreachStep() {
 
         {isOutreachLoading && (
           <div className="flex items-center gap-2 px-4 py-3">
-            <Loader2 className="text-muted-foreground size-3 animate-spin" />
+            <Spinner size="xs" className="text-muted-foreground" />
             <span className="text-muted-foreground text-xs">Loading contacts...</span>
           </div>
         )}
@@ -322,11 +322,7 @@ export function OutreachStep() {
                               enrichPersonAction(c.person.apollo_person_id, c.companyName)
                             }
                           >
-                            {isEnriching ? (
-                              <Loader2 className="size-3 animate-spin" />
-                            ) : (
-                              <Users className="size-3" />
-                            )}
+                            {isEnriching ? <Spinner size="xs" /> : <Users className="size-3" />}
                           </Button>
                         </div>
                       );

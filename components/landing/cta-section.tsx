@@ -15,7 +15,7 @@ export function CtaSection() {
     >
       {/* Noise overlay */}
       <div
-        className="pointer-events-none absolute inset-0 hidden opacity-[0.03] md:block"
+        className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: 'var(--landing-noise)',
           backgroundRepeat: 'repeat',
@@ -25,9 +25,7 @@ export function CtaSection() {
 
       {/* SVG left */}
       <svg
-        className="pointer-events-none absolute top-0 left-0 hidden h-full opacity-50 md:block"
-        width="896"
-        height="668"
+        className="pointer-events-none absolute top-0 left-0 h-auto w-[85vw] max-w-4xl opacity-50"
         viewBox="0 0 896 668"
         fill="none"
         style={{ transform: 'translate(-25%, -10%)' }}
@@ -44,9 +42,7 @@ export function CtaSection() {
 
       {/* SVG right (mirrored) */}
       <svg
-        className="pointer-events-none absolute top-0 right-0 hidden h-full opacity-25 md:block"
-        width="896"
-        height="668"
+        className="pointer-events-none absolute top-0 right-0 h-auto w-[85vw] max-w-4xl opacity-25"
         viewBox="0 0 896 668"
         fill="none"
         style={{ transform: 'translate(35%, 5%) scaleX(-1)' }}
@@ -62,7 +58,7 @@ export function CtaSection() {
 
       {/* Gear bottom-right */}
       <svg
-        className="pointer-events-none absolute right-[10%] bottom-[15%] hidden opacity-20 md:block"
+        className="pointer-events-none absolute right-[10%] bottom-[15%] opacity-20"
         width="48"
         height="48"
         viewBox="394 12 44 44"
@@ -72,7 +68,7 @@ export function CtaSection() {
       </svg>
 
       {/* Ambient glows */}
-      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="absolute top-[10%] left-1/2 -translate-x-1/2"
           style={{

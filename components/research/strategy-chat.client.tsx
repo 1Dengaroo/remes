@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Loader2, Send, Search } from 'lucide-react';
+import { Send, Search } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -61,7 +62,7 @@ export function StrategyChat() {
 
         {isStrategizing && strategyMessages.length === 0 && (
           <div className="text-muted-foreground flex items-center gap-2 text-xs">
-            <Loader2 className="size-3 animate-spin" />
+            <Spinner size="xs" />
             Analyzing your ICP...
           </div>
         )}
@@ -96,11 +97,7 @@ export function StrategyChat() {
             onClick={handleSend}
             disabled={isStrategizing || !input.trim()}
           >
-            {isStrategizing ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Send className="size-4" />
-            )}
+            {isStrategizing ? <Spinner size="md" /> : <Send className="size-4" />}
           </Button>
         </div>
       </div>

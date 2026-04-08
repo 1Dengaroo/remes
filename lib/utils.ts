@@ -17,6 +17,16 @@ export function extractJson<T = Record<string, unknown>>(text: string): T | null
   return parsed as T;
 }
 
+/** Extract a human-readable message from an unknown catch value. */
+export function getErrorMessage(err: unknown, fallback = 'Something went wrong'): string {
+  return err instanceof Error ? err.message : fallback;
+}
+
+/** ISO-8601 timestamp for the current instant. */
+export function now(): string {
+  return new Date().toISOString();
+}
+
 export function formatRelativeDate(dateStr: string): string {
   const date = new Date(dateStr);
   const now = new Date();

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { now } from '@/lib/utils';
 
 export function listSignatures(supabase: SupabaseClient, userId: string) {
   return supabase
@@ -29,7 +30,7 @@ export function updateSignature(
 ) {
   return supabase
     .from('email_signatures')
-    .update({ updated_at: new Date().toISOString(), ...data })
+    .update({ updated_at: now(), ...data })
     .eq('id', id)
     .eq('user_id', userId)
     .select()
@@ -43,7 +44,7 @@ export function clearDefaultSignatures(
 ) {
   return supabase
     .from('email_signatures')
-    .update({ is_default: false, updated_at: new Date().toISOString() })
+    .update({ is_default: false, updated_at: now() })
     .eq('user_id', userId)
     .neq('id', excludeId);
 }

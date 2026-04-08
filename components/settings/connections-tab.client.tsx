@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, CheckCircle, Loader2 } from 'lucide-react';
+import { Mail, CheckCircle } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { CONTACT_EMAIL } from '@/lib/services/config';
 import {
@@ -70,7 +71,7 @@ export function ConnectionsTab() {
               }}
               disabled={disconnecting}
             >
-              {disconnecting && <Loader2 className="size-3.5 animate-spin" />}
+              {disconnecting && <Spinner />}
               Disconnect
             </Button>
           ) : (

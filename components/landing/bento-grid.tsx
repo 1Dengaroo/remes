@@ -6,31 +6,52 @@ function SignalMock() {
         <span className="text-landing-fg-muted text-2xs">3 signals detected</span>
       </div>
       <div className="divide-y divide-(--landing-border-card)">
-        {['Ramp — 6 BDR roles posted', 'Lattice — EMEA expansion', 'Ashby — Series C closed'].map(
-          (s, i) => (
-            <div key={i} className="flex items-center gap-3 px-4 py-2.5">
-              <div
-                className="text-2xs flex size-6 shrink-0 items-center justify-center rounded-md font-semibold"
-                style={{
-                  backgroundColor: 'var(--landing-icon-active-bg)',
-                  color: 'var(--landing-icon-active-text)'
-                }}
-              >
-                {s[0]}
-              </div>
-              <span className="text-landing-fg-secondary text-xs2 truncate">{s}</span>
-              <div
-                className="text-2xs ml-auto shrink-0 rounded-md px-1.5 py-0.5 font-semibold"
-                style={{
-                  backgroundColor: `var(--landing-score-${i < 2 ? 'high' : 'mid'}-bg)`,
-                  color: `var(--landing-score-${i < 2 ? 'high' : 'mid'}-text)`
-                }}
-              >
-                {i < 2 ? '9' : '8'}
-              </div>
+        {[
+          {
+            label: 'Ramp — 6 BDR roles posted',
+            score: 9,
+            tier: 'high',
+            color: 'var(--landing-signal-job)'
+          },
+          {
+            label: 'Lattice — EMEA expansion',
+            score: 9,
+            tier: 'high',
+            color: 'var(--landing-signal-news)'
+          },
+          {
+            label: 'Ashby — Series C closed',
+            score: 8,
+            tier: 'mid',
+            color: 'var(--landing-signal-funding)'
+          }
+        ].map((s, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 px-4 py-2.5"
+            style={{ borderLeft: `2px solid ${s.color}` }}
+          >
+            <div
+              className="text-2xs flex size-6 shrink-0 items-center justify-center rounded-md font-semibold"
+              style={{
+                backgroundColor: `color-mix(in srgb, ${s.color} 15%, transparent)`,
+                color: s.color
+              }}
+            >
+              {s.label[0]}
             </div>
-          )
-        )}
+            <span className="text-landing-fg-secondary text-xs2 truncate">{s.label}</span>
+            <div
+              className="text-2xs ml-auto shrink-0 rounded-md px-1.5 py-0.5 font-semibold"
+              style={{
+                backgroundColor: `var(--landing-score-${s.tier}-bg)`,
+                color: `var(--landing-score-${s.tier}-text)`
+              }}
+            >
+              {s.score}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -53,17 +74,47 @@ function ContactMock() {
       </div>
       <div className="divide-y divide-(--landing-border-card)">
         {[
-          { name: 'James Park', title: 'VP of Sales', initials: 'JP' },
-          { name: 'Sarah Chen', title: 'Head of Growth', initials: 'SC' },
-          { name: 'David Kim', title: 'RevOps Director', initials: 'DK' }
+          {
+            name: 'James Park',
+            title: 'VP of Sales',
+            initials: 'JP',
+            color: 'var(--landing-signal-job)'
+          },
+          {
+            name: 'Sarah Chen',
+            title: 'Head of Growth',
+            initials: 'SC',
+            color: 'var(--landing-signal-news)'
+          },
+          {
+            name: 'David Kim',
+            title: 'RevOps Director',
+            initials: 'DK',
+            color: 'var(--landing-signal-linkedin)'
+          }
         ].map((c) => (
           <div key={c.initials} className="flex items-center gap-3 px-4 py-2.5">
-            <div className="text-landing-fg-muted text-2xs flex size-7 shrink-0 items-center justify-center rounded-full bg-(--landing-skel-base) font-medium">
+            <div
+              className="text-xs2 flex size-7 shrink-0 items-center justify-center rounded-full font-semibold"
+              style={{
+                backgroundColor: `color-mix(in srgb, ${c.color} 15%, transparent)`,
+                color: c.color
+              }}
+            >
               {c.initials}
             </div>
             <div className="min-w-0 flex-1">
               <span className="text-landing-fg text-xs2 font-medium">{c.name}</span>
               <span className="text-landing-fg-muted text-2xs ml-2">{c.title}</span>
+            </div>
+            <div
+              className="text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium"
+              style={{
+                backgroundColor: 'var(--landing-badge-verified-bg)',
+                color: 'var(--landing-badge-verified-text)'
+              }}
+            >
+              verified
             </div>
           </div>
         ))}
@@ -80,20 +131,26 @@ function EmailMock() {
       </div>
       <div className="text-xs2 divide-y divide-(--landing-border-card)">
         <div className="text-landing-fg-muted flex gap-3 px-4 py-2">
-          <span className="text-2xs">To</span>
+          <span className="text-2xs shrink-0">To</span>
           <span className="text-landing-fg-secondary">james.p@ramp.com</span>
         </div>
         <div className="text-landing-fg-muted flex gap-3 px-4 py-2">
-          <span className="text-2xs">Subject</span>
-          <span className="text-landing-fg-secondary">ramp&apos;s bdr hiring spree</span>
+          <span className="text-2xs shrink-0">Subject</span>
+          <span className="font-medium" style={{ color: 'var(--landing-accent)' }}>
+            ramp&apos;s bdr hiring spree
+          </span>
         </div>
       </div>
       <div className="space-y-1.5 px-4 py-3">
         {[65, 100, 90, 55, 80, 40, 20].map((w, i) => (
           <div
             key={i}
-            className="h-1.5 rounded-full bg-(--landing-skel-base)"
-            style={{ width: `${w}%` }}
+            className="h-1.5 rounded-full"
+            style={{
+              width: `${w}%`,
+              backgroundColor:
+                i === 0 ? 'var(--landing-icon-active-bg)' : 'var(--landing-skel-base)'
+            }}
           />
         ))}
       </div>
@@ -101,7 +158,13 @@ function EmailMock() {
         <span className="text-landing-fg-muted text-2xs">
           Plain text · Signal-led · Under 80 words
         </span>
-        <div className="text-2xs text-landing-fg-secondary rounded-full bg-(--landing-skel-base) px-2.5 py-1 font-medium">
+        <div
+          className="text-2xs cursor-pointer rounded-full px-2.5 py-1 font-semibold transition-opacity duration-150 hover:opacity-85"
+          style={{
+            backgroundColor: 'var(--landing-btn-primary-bg)',
+            color: 'var(--landing-btn-primary-text)'
+          }}
+        >
           Send
         </div>
       </div>
@@ -117,14 +180,30 @@ function SequenceMock() {
       </div>
       <div className="flex flex-col gap-2 p-3">
         {[
-          { label: 'Email 1', desc: 'Signal-led opener', status: 'sent', color: 'high' },
+          {
+            label: 'Email 1',
+            desc: 'Signal-led opener',
+            status: 'sent',
+            color: 'high',
+            statusBg: 'var(--landing-score-high-bg)',
+            statusText: 'var(--landing-score-high-text)'
+          },
           {
             label: 'Email 2',
             desc: 'Follow-up, different angle',
             status: 'scheduled',
-            color: 'mid'
+            color: 'mid',
+            statusBg: 'var(--landing-score-mid-bg)',
+            statusText: 'var(--landing-score-mid-text)'
           },
-          { label: 'Email 3', desc: 'Final touch, value prop', status: 'draft', color: 'low' }
+          {
+            label: 'Email 3',
+            desc: 'Final touch, value prop',
+            status: 'draft',
+            color: 'low',
+            statusBg: 'var(--landing-score-low-bg)',
+            statusText: 'var(--landing-score-low-text)'
+          }
         ].map((step) => (
           <div
             key={step.label}
@@ -138,7 +217,10 @@ function SequenceMock() {
               <span className="text-landing-fg text-xs2 font-medium">{step.label}</span>
               <span className="text-landing-fg-muted text-2xs ml-2">{step.desc}</span>
             </div>
-            <span className="text-landing-fg-muted text-2xs shrink-0 capitalize">
+            <span
+              className="text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium capitalize"
+              style={{ backgroundColor: step.statusBg, color: step.statusText }}
+            >
               {step.status}
             </span>
           </div>

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { withAuth, jsonError, parseBody, requireEnvVars } from '@/lib/route-utils';
 import { peopleEnrichBodySchema, apolloPersonEnrich } from '@/lib/services/people';
+import { getErrorMessage } from '@/lib/utils';
 
 export const POST = (req: NextRequest) =>
   withAuth(async () => {
@@ -16,7 +17,7 @@ export const POST = (req: NextRequest) =>
       const person = await apolloPersonEnrich(personId);
       return Response.json({ person });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Person enrichment failed';
+      const message = getErrorMessage(err, 'Person enrichment failed');
       console.error('[People Enrich]', message);
       return jsonError('INTERNAL_ERROR', message, 500);
     }

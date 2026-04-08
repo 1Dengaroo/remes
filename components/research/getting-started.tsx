@@ -1,6 +1,7 @@
 'use client';
 
-import { Search, Target, Mail, Plus, Loader2 } from 'lucide-react';
+import { Search, Target, Mail, Plus } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -56,7 +57,7 @@ export function GettingStarted({
 
       <div className="mt-10 flex justify-center">
         <Button onClick={onStart} disabled={isCreating}>
-          {isCreating ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+          {isCreating ? <Spinner size="md" /> : <Plus className="size-4" />}
           Start Your First Research
         </Button>
       </div>

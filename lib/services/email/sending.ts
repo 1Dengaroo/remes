@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getGmailClient, sendEmail } from '../gmail/client';
 import { insertSentEmail, insertFailedEmail, upsertContact } from '@/lib/supabase/queries';
+import { getErrorMessage } from '@/lib/utils';
 
 interface SendEmailParams {
   to: string;
@@ -53,7 +54,7 @@ export async function sendAndRecordEmail(
 
     return { messageId };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Failed to send email';
+    const errorMessage = getErrorMessage(err, 'Failed to send email');
 
     await insertFailedEmail(supabase, {
       user_id: userId,

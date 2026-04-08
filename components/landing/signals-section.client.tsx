@@ -109,14 +109,14 @@ export function SignalsSection() {
       </div>
 
       <div className="grid items-start gap-8 lg:grid-cols-[2fr_3fr]">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           {CYCLABLE_SIGNALS.map((signal, i) => {
             const isSelected = selectedIndex === i;
             return (
               <Button
                 key={signal.source}
                 variant="ghost"
-                className="h-auto w-full items-start justify-start gap-3 rounded-xl border bg-(--landing-bg-card) p-4 text-left transition-all duration-200 hover:bg-(--landing-bg-card)"
+                className="h-auto w-full items-start justify-start gap-3 rounded-xl border bg-(--landing-bg-card) p-4 text-left transition-all duration-200 hover:bg-(--landing-surface-hover) hover:text-inherit"
                 style={{
                   borderColor: isSelected
                     ? 'var(--landing-accent-light)'
@@ -181,7 +181,7 @@ export function SignalsSection() {
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-24">
+        <div className="min-w-0 lg:sticky lg:top-24">
           <div
             data-theme={theme}
             className="overflow-hidden rounded-xl border"
@@ -210,9 +210,9 @@ export function SignalsSection() {
                 transition: 'background-color 300ms'
               }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 items-center gap-2">
                 <div
-                  className="size-2 rounded-full"
+                  className="size-2 shrink-0 rounded-full"
                   style={{
                     backgroundColor:
                       visibleCompanies > 0 ? 'var(--signal-funding-text)' : 'var(--border)',

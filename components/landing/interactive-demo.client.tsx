@@ -33,7 +33,9 @@ export function InteractiveDemo() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [hasEnteredView, setHasEnteredView] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const cycleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -44,6 +46,22 @@ export function InteractiveDemo() {
   useEffect(() => {
     pausedRef.current = paused;
   }, [paused]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasEnteredView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const clearTimeouts = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
@@ -143,16 +161,18 @@ export function InteractiveDemo() {
   );
 
   useEffect(() => {
+    if (!hasEnteredView) return;
     const t = setTimeout(() => runStep(activeStep), 0);
     return () => {
       clearTimeout(t);
       clearTimeouts();
       if (transitionRef.current) clearTimeout(transitionRef.current);
     };
-  }, [activeStep, runStep, clearTimeouts]);
+  }, [activeStep, hasEnteredView, runStep, clearTimeouts]);
 
   return (
     <div
+      ref={containerRef}
       data-theme={theme}
       className="overflow-hidden rounded-xl border"
       style={{

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePagination } from '@/lib/hooks/use-pagination';
 import { Pagination } from '@/components/ui/pagination';
-import { Plus, Loader2, Search, Mail, Settings, UserPlus, Clock } from 'lucide-react';
+import { Plus, Search, Mail, Settings, UserPlus, Clock } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
@@ -206,7 +207,7 @@ export function Dashboard({
             <p className="text-muted-foreground mt-1 text-sm">Your research dashboard</p>
           </div>
           <Button onClick={handleCreate} disabled={isCreating}>
-            {isCreating ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+            {isCreating ? <Spinner size="md" /> : <Plus className="size-4" />}
             New Research
           </Button>
         </div>

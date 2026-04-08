@@ -92,12 +92,12 @@ export function LandingHeader() {
 
   return (
     <div
-      className={`fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out ${scrolled ? 'pt-2.5' : 'pt-0'}`}
+      className={`fixed top-0 right-0 left-0 z-50 flex justify-center transition-all duration-500 ease-out ${scrolled ? 'px-4 pt-2.5' : 'pt-0'}`}
     >
       <header
         className="w-full transition-all duration-500 ease-out"
         style={{
-          maxWidth: scrolled ? '87.5rem' : '100%',
+          maxWidth: scrolled ? '56rem' : '100%',
           backgroundColor: scrolled ? 'var(--landing-header-bg)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
           border: scrolled ? '1px solid var(--landing-border-card)' : '1px solid transparent',
@@ -107,7 +107,7 @@ export function LandingHeader() {
       >
         <div
           className={`mx-auto flex w-full ${MAX_WIDTH} items-center justify-between transition-all duration-500 ease-out`}
-          style={{ padding: scrolled ? '12px 20px' : '18px 24px' }}
+          style={{ padding: scrolled ? '10px 24px' : '18px 24px' }}
         >
           <div className="flex items-center gap-6">
             <Link href="/" className="relative z-50 flex items-center gap-2.5">
@@ -123,7 +123,7 @@ export function LandingHeader() {
           </div>
           <div className="flex items-center gap-3">
             <UserAvatar light={light} />
-            <MobileNav />
+            <MobileNav light={light} />
           </div>
         </div>
       </header>

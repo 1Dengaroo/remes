@@ -12,6 +12,7 @@ import {
   listContactedCompanies,
   listResearchedCompanies
 } from '@/lib/api';
+import { getErrorMessage, now } from '@/lib/utils';
 import type {
   ICPCriteria,
   CompanyResult,
@@ -181,7 +182,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       get().generateStrategy();
     } catch (err) {
       set({
-        error: err instanceof Error ? err.message : 'Failed to extract ICP',
+        error: getErrorMessage(err, 'Failed to extract ICP'),
         isExtracting: false
       });
     }
@@ -203,7 +204,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       set({ strategyMessages: [{ role: 'assistant', content: cleanText }] });
     } catch (err) {
       set({
-        error: err instanceof Error ? err.message : 'Strategy generation failed'
+        error: getErrorMessage(err, 'Strategy generation failed')
       });
     } finally {
       set({ isStrategizing: false, statusMessage: '' });
@@ -242,7 +243,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       }
     } catch (err) {
       set({
-        error: err instanceof Error ? err.message : 'Strategy update failed'
+        error: getErrorMessage(err, 'Strategy update failed')
       });
     } finally {
       set({ isStrategizing: false, statusMessage: '' });
@@ -289,7 +290,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       get().saveSession();
     } catch (err) {
       set({
-        error: err instanceof Error ? err.message : 'Discovery failed',
+        error: getErrorMessage(err, 'Discovery failed'),
         isDiscovering: false
       });
     }
@@ -427,7 +428,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       );
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      set({ error: err instanceof Error ? err.message : 'Re-research failed' });
+      set({ error: getErrorMessage(err, 'Re-research failed') });
     } finally {
       set({ isResearching: false, researchingCompany: null });
       get().saveSession();
@@ -641,7 +642,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         people_results: peopleResults,
         email_sequences: emailSequences
       });
-      set({ lastSavedAt: new Date().toISOString() });
+      set({ lastSavedAt: now() });
     } catch (err) {
       console.error('Failed to save session:', err);
     } finally {

@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Plus, Loader2 } from 'lucide-react';
+import { Mail, Plus } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { createSession } from '@/lib/api';
@@ -63,11 +64,7 @@ export function ResearchHub({
               <TabsTrigger value="icps">Saved Profiles</TabsTrigger>
             </TabsList>
             <Button onClick={handleCreate} disabled={isCreating}>
-              {isCreating ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Plus className="size-4" />
-              )}
+              {isCreating ? <Spinner size="md" /> : <Plus className="size-4" />}
               New Research
             </Button>
           </div>

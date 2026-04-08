@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Send, RefreshCw, Loader2, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Send, RefreshCw, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
+import { getErrorMessage } from '@/lib/utils';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -246,7 +248,7 @@ export function EmailEditorInline({
         toast.error(result.error ?? 'Send failed');
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Send failed');
+      toast.error(getErrorMessage(err, 'Send failed'));
     } finally {
       setSending(false);
     }
@@ -352,11 +354,7 @@ export function EmailEditorInline({
               disabled={generating}
               label={generating ? 'Generating...' : steps ? 'Regenerate' : 'Generate'}
             >
-              {generating ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <RefreshCw className="size-3.5" />
-              )}
+              {generating ? <Spinner /> : <RefreshCw className="size-3.5" />}
             </Button>
             <div className="ml-auto flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -402,11 +400,7 @@ export function EmailEditorInline({
                 disabled={!gmailConnected || !toEmail || generating || sending}
                 label={!gmailConnected ? 'Connect Gmail to send' : 'Send email'}
               >
-                {sending ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Send className="size-3.5" />
-                )}
+                {sending ? <Spinner /> : <Send className="size-3.5" />}
               </Button>
 
               <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>

@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { withAuth, jsonError, parseBody } from '@/lib/route-utils';
+import { getErrorMessage } from '@/lib/utils';
 import {
   researchBodySchema,
   discoverCompanies,
@@ -39,7 +40,7 @@ export const POST = (req: NextRequest) =>
             await discoverCompanies(icp, send);
           }
         } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error';
+          const message = getErrorMessage(err);
           send({ type: 'error', message });
         } finally {
           controller.close();

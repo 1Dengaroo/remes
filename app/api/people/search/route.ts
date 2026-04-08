@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { withAuth, jsonError, parseBody, requireEnvVars } from '@/lib/route-utils';
 import { peopleSearchBodySchema, searchAndRankPeople } from '@/lib/services/people';
+import { getErrorMessage } from '@/lib/utils';
 
 export const POST = (req: NextRequest) =>
   withAuth(async () => {
@@ -16,7 +17,7 @@ export const POST = (req: NextRequest) =>
       const results = await searchAndRankPeople(orgIds, icp, companies);
       return Response.json({ results });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'People search failed';
+      const message = getErrorMessage(err, 'People search failed');
       console.error('[People Search]', message);
       return jsonError('INTERNAL_ERROR', message, 500);
     }

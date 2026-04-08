@@ -5,14 +5,19 @@ import { cn } from '@/lib/utils';
 function Card({
   className,
   size = 'default',
+  variant = 'default',
   ...props
-}: React.ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
+}: React.ComponentProps<'div'> & {
+  size?: 'default' | 'sm';
+  variant?: 'default' | 'empty-state';
+}) {
   return (
     <div
       data-slot="card"
       data-size={size}
       className={cn(
         'group/card bg-card text-card-foreground border-border flex flex-col gap-0 overflow-hidden rounded-(--card-radius) border-(length:--card-border-width) py-0 text-sm shadow-xs has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-(--card-radius) *:[img:last-child]:rounded-b-(--card-radius)',
+        variant === 'empty-state' && 'py-16 text-center',
         className
       )}
       {...props}

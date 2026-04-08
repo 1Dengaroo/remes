@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { now } from '@/lib/utils';
 
 export function listICPs(supabase: SupabaseClient, userId: string) {
   return supabase
@@ -20,7 +21,7 @@ export function updateICP(
 ) {
   return supabase
     .from('saved_icps')
-    .update({ updated_at: new Date().toISOString(), ...data })
+    .update({ updated_at: now(), ...data })
     .eq('id', id)
     .eq('user_id', userId)
     .select()

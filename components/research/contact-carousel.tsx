@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Mail, AtSign, Loader2, Users, Linkedin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, AtSign, Users, Linkedin } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { CopyButton } from './copy-button.client';
 import { Button } from '@/components/ui/button';
 import type { ApolloPersonPreview } from '@/lib/types';
@@ -91,11 +92,7 @@ export function ContactCarousel({
               label={isEnriching ? 'Loading...' : 'Get Contact'}
               onClick={() => onEnrichPerson?.(person.apollo_person_id, companyName)}
             >
-              {isEnriching ? (
-                <Loader2 className="size-3 animate-spin" />
-              ) : (
-                <Users className="size-3" />
-              )}
+              {isEnriching ? <Spinner size="xs" /> : <Users className="size-3" />}
             </Button>
           )}
         </div>

@@ -20,7 +20,7 @@ export function Landing() {
   return (
     <div className="relative flex flex-col overflow-x-clip">
       <div
-        className="pointer-events-none fixed inset-0 z-1 hidden opacity-[0.025] md:block"
+        className="pointer-events-none fixed inset-0 z-1 opacity-[0.025]"
         style={{
           backgroundImage: 'var(--landing-noise)',
           backgroundRepeat: 'repeat',
@@ -126,7 +126,7 @@ export function Landing() {
 
       {/* BentoGrid section */}
       <div className="relative">
-        <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div
             className="absolute top-[10%] left-1/2 -translate-x-1/2"
             style={{

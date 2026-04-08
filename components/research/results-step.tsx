@@ -138,11 +138,11 @@ export function ResultsStep() {
   const totalCount = allCompanies.length;
 
   return (
-    <>
+    <div className="space-y-6">
       {icp && <ICPSummary icp={icp} onEditCriteria={() => setStep('review')} />}
 
       {error && (
-        <Card className="border-destructive/30 bg-destructive/5 mb-6">
+        <Card className="border-destructive/30 bg-destructive/5">
           <CardContent className="pt-6">
             <p className="text-destructive text-sm">{error}</p>
           </CardContent>
@@ -224,6 +224,6 @@ export function ResultsStep() {
           </p>
         </div>
       )}
-    </>
+    </div>
   );
 }

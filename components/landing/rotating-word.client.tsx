@@ -47,8 +47,8 @@ export function RotatingWord() {
       <span
         ref={measureRef}
         aria-hidden
-        className="pointer-events-none invisible absolute whitespace-nowrap"
-        style={{ font: 'inherit' }}
+        className="pointer-events-none invisible whitespace-nowrap"
+        style={{ font: 'inherit', position: 'fixed', left: '-9999px', top: 0 }}
       />
       <span ref={wrapperRef} className="inline-block transition-[width] duration-400 ease-in-out">
         <span

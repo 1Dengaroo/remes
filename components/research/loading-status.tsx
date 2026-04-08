@@ -11,10 +11,12 @@ const LOADING_STAGES = [
 
 export function LoadingStatus({
   statusMessage,
-  subtitle
+  subtitle,
+  className
 }: {
   statusMessage: string;
   subtitle?: string;
+  className?: string;
 }) {
   const stage = LOADING_STAGES.find((s) =>
     statusMessage.toLowerCase().includes(s.label.split(' ')[0].toLowerCase())
@@ -22,7 +24,7 @@ export function LoadingStatus({
   const CurrentIcon = stage?.icon ?? Search;
 
   return (
-    <Card className="mb-6">
+    <Card className={className}>
       <div className="relative px-4 py-4">
         <div className="bg-muted absolute inset-x-0 bottom-0 h-0.5">
           <div className="bg-primary h-full w-1/3 animate-[shimmer_2s_ease-in-out_infinite] rounded-full" />

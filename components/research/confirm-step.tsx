@@ -120,6 +120,7 @@ export function ConfirmStep() {
 
       {isDiscovering && (
         <LoadingStatus
+          className="mb-6"
           statusMessage={statusMessage}
           subtitle="Finding companies that match your ICP"
         />

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { now } from '@/lib/utils';
 
 export function getGmailConnection(supabase: SupabaseClient, userId: string) {
   return supabase.from('gmail_connections').select('*').eq('user_id', userId).single();
@@ -22,7 +23,7 @@ export function upsertGmailConnection(
     {
       user_id: userId,
       ...data,
-      updated_at: new Date().toISOString()
+      updated_at: now()
     },
     { onConflict: 'user_id' }
   );
@@ -43,7 +44,7 @@ export function refreshGmailToken(
     .update({
       access_token: accessToken,
       token_expiry: tokenExpiry,
-      updated_at: new Date().toISOString()
+      updated_at: now()
     })
     .eq('user_id', userId);
 }

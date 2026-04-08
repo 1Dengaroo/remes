@@ -12,7 +12,7 @@ import { NAV_LINKS } from './landing-constants';
  * Radix handles: focus trap, body scroll lock, Escape to close,
  * aria-modal, focus restoration on close.
  */
-export function MobileNav() {
+export function MobileNav({ light }: { light: boolean }) {
   const [open, setOpen] = useState(false);
   const user = useAuthStore((s) => s.user);
   const openAuthModal = useAuthStore((s) => s.openAuthModal);
@@ -27,7 +27,8 @@ export function MobileNav() {
         <Button
           variant="ghost"
           size="icon-sm"
-          className="text-landing-fg-secondary relative z-50 hover:bg-transparent md:hidden"
+          className="relative z-50 transition-colors duration-500 hover:bg-transparent md:hidden"
+          style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--landing-fg-secondary)' }}
           aria-label="Open menu"
         >
           <div className="flex w-4 flex-col gap-1.25">

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Loader2,
   ChevronRight,
   Mail,
   RotateCcw,
@@ -14,6 +13,7 @@ import {
   Users,
   Send
 } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -48,7 +48,7 @@ function NavButton({
 }) {
   const mobileContent =
     status === 'in-progress' ? (
-      <Loader2 className="size-3.5 animate-spin" />
+      <Spinner />
     ) : status === 'completed' ? (
       <Check className="size-3.5" />
     ) : (
@@ -92,7 +92,7 @@ function NavButton({
         }`}
       >
         {status === 'in-progress' ? (
-          <Loader2 className="size-3 animate-spin" />
+          <Spinner size="xs" />
         ) : status === 'completed' ? (
           <Check className="size-3" />
         ) : (
@@ -199,7 +199,7 @@ export function BottomNav() {
         <div className="flex items-center gap-2">
           {(isDiscovering || isResearching) && step !== 'confirm' && step !== 'results' && (
             <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
-              <Loader2 className="size-3 animate-spin" />
+              <Spinner size="xs" />
               {isDiscovering ? 'Discovering...' : 'Researching...'}
             </span>
           )}
@@ -218,7 +218,7 @@ export function BottomNav() {
               <Button size="sm" onClick={extractICP} disabled={isExtracting || !transcript.trim()}>
                 {isExtracting ? (
                   <>
-                    <Loader2 className="size-3.5 animate-spin" />
+                    <Spinner />
                     <span className="hidden md:inline">Analyzing...</span>
                   </>
                 ) : (
@@ -235,7 +235,7 @@ export function BottomNav() {
             <>
               {isStrategizing && (
                 <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
-                  <Loader2 className="size-3 animate-spin" />
+                  <Spinner size="xs" />
                   Thinking...
                 </span>
               )}
@@ -277,7 +277,7 @@ export function BottomNav() {
             <>
               {isDiscovering && (
                 <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
-                  <Loader2 className="size-3 animate-spin" />
+                  <Spinner size="xs" />
                   Discovering...
                 </span>
               )}
@@ -288,7 +288,7 @@ export function BottomNav() {
               >
                 {isResearching ? (
                   <>
-                    <Loader2 className="size-3.5 animate-spin" />
+                    <Spinner />
                     <span className="hidden md:inline">Researching...</span>
                   </>
                 ) : (
@@ -307,7 +307,7 @@ export function BottomNav() {
             <>
               {isResearching && (
                 <span className="text-muted-foreground hidden items-center gap-1.5 text-xs md:flex">
-                  <Loader2 className="size-3.5 animate-spin" />
+                  <Spinner />
                   Researching...
                 </span>
               )}

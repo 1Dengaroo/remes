@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { now } from '@/lib/utils';
 
 export function getProfile(supabase: SupabaseClient, userId: string) {
   return supabase
@@ -19,7 +20,7 @@ export function upsertProfile(
       user_id: userId,
       full_name: fullName,
       company_name: companyName,
-      updated_at: new Date().toISOString()
+      updated_at: now()
     },
     { onConflict: 'user_id' }
   );

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ResearchSessionSummary } from '@/lib/types';
+import { now } from '@/lib/utils';
 
 export function listSessions(supabase: SupabaseClient, userId: string) {
   return supabase
@@ -48,7 +49,7 @@ export function updateSession(
 ) {
   return supabase
     .from('research_sessions')
-    .update({ updated_at: new Date().toISOString(), ...data })
+    .update({ updated_at: now(), ...data })
     .eq('id', id)
     .eq('user_id', userId);
 }

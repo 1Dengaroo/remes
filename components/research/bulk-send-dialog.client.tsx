@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Send, Loader2, CheckCircle, XCircle, Mail } from 'lucide-react';
+import { Send, CheckCircle, XCircle, Mail } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
+import { getErrorMessage } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -153,7 +155,7 @@ export function BulkSendDialog({
           next[i] = {
             ...next[i],
             status: 'failed',
-            error: err instanceof Error ? err.message : 'Send failed'
+            error: getErrorMessage(err, 'Send failed')
           };
           return next;
         });
@@ -210,9 +212,7 @@ export function BulkSendDialog({
                 <Card key={draft.contact.key} className="bg-muted/30 p-3">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 shrink-0">
-                      {draft.status === 'sending' && (
-                        <Loader2 className="text-primary size-4 animate-spin" />
-                      )}
+                      {draft.status === 'sending' && <Spinner size="md" className="text-primary" />}
                       {draft.status === 'sent' && <CheckCircle className="text-primary size-4" />}
                       {draft.status === 'failed' && <XCircle className="text-destructive size-4" />}
                       {draft.status === 'pending' && (
@@ -284,10 +284,10 @@ export function BulkSendDialog({
                 disabled={!gmailConnected || readyDrafts.length === 0 || isSending}
               >
                 {!gmailChecked ? (
-                  <Loader2 className="size-3.5 animate-spin" />
+                  <Spinner />
                 ) : isSending ? (
                   <>
-                    <Loader2 className="size-3.5 animate-spin" />
+                    <Spinner />
                     Sending {sentCount + failedCount + 1}/{drafts.length}
                   </>
                 ) : (

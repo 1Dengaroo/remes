@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2, Pencil, Check, X, Plus, Loader2, ArrowRight } from 'lucide-react';
+import { Trash2, Pencil, Check, X, Plus, ArrowRight } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -170,11 +171,7 @@ function ICPRow({
           disabled={isUsing}
           title="Create a new session with this profile"
         >
-          {isUsing ? (
-            <Loader2 className="size-3 animate-spin" />
-          ) : (
-            <ArrowRight className="size-3" />
-          )}
+          {isUsing ? <Spinner size="xs" /> : <ArrowRight className="size-3" />}
           <span className="hidden md:inline">Start Research</span>
         </Button>
       </div>
@@ -250,7 +247,7 @@ export function ICPList({ icps: initialICPs }: { icps: SavedICP[] }) {
       />
 
       {icps.length === 0 ? (
-        <Card className="py-16 text-center">
+        <Card variant="empty-state">
           <p className="text-muted-foreground text-sm">
             No saved profiles yet. Create one above or save from the strategy step during research.
           </p>

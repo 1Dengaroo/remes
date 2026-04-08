@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { Loader2, Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { useResearchStore } from '@/lib/store/research-store';
 import { TranscriptStep } from './transcript-step';
 import { StrategyStep } from './strategy-step';
@@ -24,7 +25,7 @@ function SaveIndicator() {
     <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
       {isSaving ? (
         <>
-          <Loader2 className="size-3 animate-spin" />
+          <Spinner size="xs" />
           Saving...
         </>
       ) : lastSavedAt ? (

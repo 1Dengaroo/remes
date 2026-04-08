@@ -8,15 +8,17 @@ import type { ICPCriteria } from '@/lib/types';
 
 export function ICPSummary({
   icp,
-  onEditCriteria
+  onEditCriteria,
+  className
 }: {
   icp: ICPCriteria;
   onEditCriteria?: () => void;
+  className?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Card className="mb-6">
+    <Card className={className}>
       <Button
         variant="ghost"
         onClick={() => setExpanded(!expanded)}

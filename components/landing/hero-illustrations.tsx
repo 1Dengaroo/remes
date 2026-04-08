@@ -8,9 +8,7 @@ export function HeroIllustrations() {
   return (
     <>
       <svg
-        className="pointer-events-none absolute top-0 left-0 hidden h-full opacity-60 md:block"
-        width="896"
-        height="668"
+        className="pointer-events-none absolute top-0 left-0 h-full w-auto opacity-60 lg:h-auto lg:w-[85vw] lg:max-w-4xl"
         viewBox="0 0 896 668"
         fill="none"
         style={{ transform: 'translate(-30%, -5%)' }}
@@ -26,9 +24,7 @@ export function HeroIllustrations() {
       </svg>
 
       <svg
-        className="pointer-events-none absolute top-0 right-0 hidden h-full opacity-40 md:block"
-        width="896"
-        height="668"
+        className="pointer-events-none absolute top-0 right-0 h-full w-auto opacity-40 lg:h-auto lg:w-[85vw] lg:max-w-4xl"
         viewBox="0 0 896 668"
         fill="none"
         style={{ transform: 'translate(40%, 15%) scaleX(-1)' }}
@@ -43,7 +39,7 @@ export function HeroIllustrations() {
       </svg>
 
       <svg
-        className="pointer-events-none absolute right-[15%] bottom-[20%] hidden opacity-30 md:block"
+        className="pointer-events-none absolute right-[15%] bottom-[20%] opacity-30"
         width="48"
         height="48"
         viewBox="394 12 44 44"

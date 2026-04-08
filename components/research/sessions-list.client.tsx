@@ -64,7 +64,7 @@ export function SessionsList({
   return (
     <>
       {sessions.length === 0 ? (
-        <Card className="py-16 text-center">
+        <Card variant="empty-state">
           <p className="text-muted-foreground text-sm">
             No sessions yet. Start your first research.
           </p>

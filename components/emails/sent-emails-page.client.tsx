@@ -49,7 +49,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
         </div>
 
         {emails.length === 0 ? (
-          <Card className="py-16 text-center">
+          <Card variant="empty-state">
             <div className="bg-muted/50 mx-auto mb-4 flex size-12 items-center justify-center rounded-full">
               <Mail className="text-muted-foreground size-5" />
             </div>

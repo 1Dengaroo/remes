@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useProfileStore } from '@/lib/store/profile-store';
@@ -53,7 +53,7 @@ export function ProfileTab() {
         />
       </div>
       <Button size="sm" onClick={handleSave} disabled={!profileLoaded || saving}>
-        {saving && <Loader2 className="size-3.5 animate-spin" />}
+        {saving && <Spinner />}
         {saving ? 'Saving...' : 'Save'}
       </Button>
     </div>

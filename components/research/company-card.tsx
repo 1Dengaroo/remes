@@ -1,6 +1,7 @@
 'use client';
 
-import { Building2, DollarSign, ExternalLink, Linkedin, Loader2, RotateCw } from 'lucide-react';
+import { Building2, DollarSign, ExternalLink, Linkedin, RotateCw } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import { SignalBadge } from './signal-badge';
 import { ContactCarousel } from './contact-carousel';
 import { MobileCompanyCard } from './mobile-company-card';
@@ -41,7 +42,7 @@ function PendingColumn({ isResearching }: { isResearching: boolean }) {
       {isResearching ? (
         <>
           <div className="flex items-center gap-2">
-            <Loader2 className="text-muted-foreground size-3 animate-spin" />
+            <Spinner size="xs" className="text-muted-foreground" />
             <span className="text-muted-foreground text-xs">Researching...</span>
           </div>
           <ShimmerBlock className="h-3 w-full" />

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { withAuth, jsonError, parseBody, requireEnvVars } from '@/lib/route-utils';
 import { parseIcpBodySchema, claudeICPParser } from '@/lib/services/icp';
+import { getErrorMessage } from '@/lib/utils';
 
 export const POST = (req: NextRequest) =>
   withAuth(async () => {
@@ -14,7 +15,7 @@ export const POST = (req: NextRequest) =>
       const icp = await claudeICPParser.parse(parsed.data.input.trim());
       return Response.json({ icp });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to parse ICP';
+      const message = getErrorMessage(err, 'Failed to parse ICP');
       return jsonError('INTERNAL_ERROR', message, 500);
     }
   });

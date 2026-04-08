@@ -2,6 +2,7 @@ import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { serviceConfig } from '../config';
 import { getAnthropicClient } from '../anthropic';
 import { getProfile } from '@/lib/supabase/queries';
+import { getErrorMessage } from '@/lib/utils';
 import type { CompanyResult, TargetContact, ICPCriteria } from '@/lib/types';
 
 function buildEmailGenerationPrompt(
@@ -149,7 +150,7 @@ export function streamEmailGeneration(
 
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to generate email';
+        const message = getErrorMessage(err, 'Failed to generate email');
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify({ type: 'error', message })}\n\n`)
         );

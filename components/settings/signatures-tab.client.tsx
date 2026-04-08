@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, CheckCircle, Loader2, Plus } from 'lucide-react';
+import { Mail, CheckCircle, Plus } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -107,7 +108,7 @@ export function SignaturesTab() {
 
         {isLoading ? (
           <div className="text-muted-foreground flex items-center gap-2 py-4 text-sm">
-            <Loader2 className="size-3.5 animate-spin" />
+            <Spinner />
             Loading...
           </div>
         ) : signatures.length === 0 && !adding ? (

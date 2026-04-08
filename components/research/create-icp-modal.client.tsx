@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, ChevronRight, FileText } from 'lucide-react';
+import { ChevronRight, FileText } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
+import { getErrorMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,7 +52,7 @@ export function CreateICPModal({
       setName(description.trim().slice(0, 40));
       setFormStep('review');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to analyze';
+      const msg = getErrorMessage(err, 'Failed to analyze');
       setError(msg);
       toast.error(msg);
     } finally {
@@ -66,7 +68,7 @@ export function CreateICPModal({
       toast.success('Profile saved');
       onCreated(saved);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save';
+      const msg = getErrorMessage(err, 'Failed to save');
       setError(msg);
       toast.error(msg);
       setIsSaving(false);
@@ -150,7 +152,7 @@ export function CreateICPModal({
               >
                 {isExtracting ? (
                   <>
-                    <Loader2 className="size-3.5 animate-spin" />
+                    <Spinner />
                     Analyzing...
                   </>
                 ) : (
@@ -208,7 +210,7 @@ export function CreateICPModal({
               <Button size="sm" onClick={handleSave} disabled={isSaving || !name.trim()}>
                 {isSaving ? (
                   <>
-                    <Loader2 className="size-3.5 animate-spin" />
+                    <Spinner />
                     Saving...
                   </>
                 ) : (

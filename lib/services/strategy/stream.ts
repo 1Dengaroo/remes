@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { serviceConfig } from '../config';
 import { getAnthropicClient } from '../anthropic';
+import { getErrorMessage } from '@/lib/utils';
 import type { ICPCriteria, StrategyMessage } from '@/lib/types';
 
 function formatIcp(icp: ICPCriteria): string {
@@ -130,7 +131,7 @@ export function streamStrategy(icp: ICPCriteria, messages?: StrategyMessage[]): 
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
         controller.close();
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Strategy generation failed';
+        const message = getErrorMessage(err, 'Strategy generation failed');
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify({ type: 'error', message })}\n\n`)
         );
