@@ -140,23 +140,8 @@
   --landing-hero-btn-primary-text: rgb(2, 9, 58);
   --landing-hero-btn-primary-shadow: 0 2px 16px rgba(37, 55, 177, 0.3);
   --landing-hero-btn-primary-hover-shadow: 0 4px 24px rgba(37, 55, 177, 0.45);
-  --landing-hero-btn-secondary-text: rgba(255, 255, 255, 0.7);
-  --landing-hero-btn-secondary-border: rgba(255, 255, 255, 0.15);
-  --landing-hero-btn-secondary-hover: rgba(255, 255, 255, 0.06);
   --landing-hero-stroke: #2537b1;
   --landing-hero-stroke-light: rgba(37, 55, 177, 0.4);
-
-  /* ── Dark section (How it works) ── */
-  --landing-section-dark-bg: rgb(8, 5, 42);
-  --landing-section-dark-stroke: rgba(86, 67, 204, 0.55);
-  --landing-section-dark-stroke-light: rgba(86, 67, 204, 0.2);
-  --landing-section-dark-border: rgba(86, 67, 204, 0.3);
-
-  /* ── CTA section (light blue) ── */
-  --landing-cta-bg: rgb(4, 20, 50);
-  --landing-cta-stroke: rgba(56, 165, 220, 0.55);
-  --landing-cta-stroke-light: rgba(56, 165, 220, 0.2);
-  --landing-cta-border: rgba(56, 165, 220, 0.25);
 }
 
 /*

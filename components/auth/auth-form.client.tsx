@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Mail } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { EmailForm, Mode } from './email-form.client';
@@ -35,6 +36,7 @@ interface AuthFormProps {
 export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
   const [mode, setMode] = useState<Mode>(defaultMode);
   const [oauthLoading, setOauthLoading] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const [serverMessage, setServerMessage] = useState<{
     type: 'error' | 'success';
     text: string;
@@ -45,6 +47,7 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
   function switchMode() {
     setMode(isSignUp ? Mode.SignIn : Mode.SignUp);
     setServerMessage(null);
+    setConfirmationEmail(null);
   }
 
   async function handleGoogleLogin() {
@@ -63,8 +66,37 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
     }
   }
 
+  if (confirmationEmail) {
+    return (
+      <div className="w-full max-w-md space-y-6 text-center">
+        <div className="bg-muted/50 mx-auto flex size-12 items-center justify-center rounded-full">
+          <Mail className="text-muted-foreground size-5" />
+        </div>
+        <div>
+          <h1 className="text-foreground text-2xl font-bold tracking-tight">Check your email</h1>
+          <p className="text-muted-foreground mt-2 text-sm">
+            We sent a confirmation link to{' '}
+            <span className="text-foreground font-medium">{confirmationEmail}</span>. Click the link
+            to activate your account, then sign in.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full"
+          onClick={() => {
+            setConfirmationEmail(null);
+            setMode(Mode.SignIn);
+          }}
+        >
+          Back to sign in
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-sm space-y-6">
+    <div className="w-full max-w-md space-y-6">
       <div className="text-center">
         <h1 className="text-foreground text-2xl font-bold tracking-tight">
           {isSignUp ? 'Create your account' : 'Sign in to Remes'}
@@ -106,6 +138,7 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
         mode={mode}
         onModeSwitch={switchMode}
         onServerMessage={setServerMessage}
+        onSignUpSuccess={setConfirmationEmail}
       />
 
       <p className="text-muted-foreground text-center text-sm">

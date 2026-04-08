@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useAuthStore } from '@/lib/store/auth-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,21 +35,69 @@ type AuthFormFields = z.infer<typeof baseSchema>;
 export const Mode = { SignIn: 'sign-in', SignUp: 'sign-up' } as const;
 export type Mode = (typeof Mode)[keyof typeof Mode];
 
+function PasswordInput({
+  id,
+  placeholder,
+  value,
+  onChange,
+  onBlur,
+  name,
+  invalid
+}: {
+  id: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  name: string;
+  invalid: boolean;
+}) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div className="relative">
+      <Input
+        id={id}
+        name={name}
+        type={visible ? 'text' : 'password'}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        aria-invalid={invalid}
+        className="pr-9"
+      />
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => setVisible((v) => !v)}
+        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+        aria-label={visible ? 'Hide password' : 'Show password'}
+      >
+        {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+      </button>
+    </div>
+  );
+}
+
 interface EmailFormProps {
   mode: Mode;
   onModeSwitch: () => void;
   onServerMessage: (msg: { type: 'error' | 'success'; text: string } | null) => void;
+  onSignUpSuccess?: (email: string) => void;
 }
 
-export function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProps) {
+export function EmailForm({
+  mode,
+  onModeSwitch,
+  onServerMessage,
+  onSignUpSuccess
+}: EmailFormProps) {
   const router = useRouter();
+  const closeAuthModal = useAuthStore((s) => s.closeAuthModal);
   const isSignUp = mode === Mode.SignUp;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting }
-  } = useForm<AuthFormFields>({
+  const { control, handleSubmit, formState } = useForm<AuthFormFields>({
     resolver: zodResolver(isSignUp ? signUpSchema : signInSchema),
     defaultValues: { email: '', password: '', confirmPassword: '' }
   });
@@ -65,11 +116,7 @@ export function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProp
         onServerMessage({ type: 'error', text: error.message });
         return;
       }
-      onServerMessage({
-        type: 'success',
-        text: 'Check your email to confirm your account, then sign in.'
-      });
-      onModeSwitch();
+      onSignUpSuccess?.(data.email);
       return;
     }
 
@@ -82,43 +129,81 @@ export function EmailForm({ mode, onModeSwitch, onServerMessage }: EmailFormProp
       return;
     }
 
+    closeAuthModal();
     router.push('/research');
     router.refresh();
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="you@example.com" {...register('email')} />
-        {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder={isSignUp ? 'Create a password' : 'Your password'}
-          {...register('password')}
-        />
-        {errors.password && <p className="text-destructive text-xs">{errors.password.message}</p>}
-      </div>
+      <Controller
+        name="email"
+        control={control}
+        render={({ field, fieldState }) => (
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              {...field}
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              aria-invalid={fieldState.invalid}
+            />
+            {fieldState.error && (
+              <p className="text-destructive text-xs">{fieldState.error.message}</p>
+            )}
+          </div>
+        )}
+      />
+
+      <Controller
+        name="password"
+        control={control}
+        render={({ field, fieldState }) => (
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <PasswordInput
+              id="password"
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              placeholder={isSignUp ? 'Create a password' : 'Your password'}
+              invalid={fieldState.invalid}
+            />
+            {fieldState.error && (
+              <p className="text-destructive text-xs">{fieldState.error.message}</p>
+            )}
+          </div>
+        )}
+      />
+
       {isSignUp && (
-        <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm password</Label>
-          <Input
-            id="confirm-password"
-            type="password"
-            placeholder="Confirm your password"
-            {...register('confirmPassword')}
-          />
-          {errors.confirmPassword && (
-            <p className="text-destructive text-xs">{errors.confirmPassword.message}</p>
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirm password</Label>
+              <PasswordInput
+                id="confirm-password"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                placeholder="Confirm your password"
+                invalid={fieldState.invalid}
+              />
+              {fieldState.error && (
+                <p className="text-destructive text-xs">{fieldState.error.message}</p>
+              )}
+            </div>
           )}
-        </div>
+        />
       )}
-      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Loading...' : isSignUp ? 'Create account' : 'Sign in'}
+
+      <Button type="submit" size="lg" className="w-full" disabled={formState.isSubmitting}>
+        {formState.isSubmitting ? 'Loading...' : isSignUp ? 'Create account' : 'Sign in'}
       </Button>
     </form>
   );

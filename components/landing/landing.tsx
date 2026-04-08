@@ -6,10 +6,10 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { MAX_WIDTH } from '@/lib/layout';
+import { MAX_WIDTH, HERO_THEME } from '@/lib/layout';
+import { HeroBackdrop } from '@/components/shared/hero-backdrop';
 import { FAQS } from './landing-constants';
 import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
-import { HeroIllustrations } from './hero-illustrations';
 import { HeroPipeline } from './hero-pipeline.client';
 import { BentoGrid } from './bento-grid';
 import { SignalsSection } from './signals-section.client';
@@ -19,60 +19,10 @@ import { CtaSection } from './cta-section';
 export function Landing() {
   return (
     <div className="relative flex flex-col overflow-x-clip">
-      <div
-        className="pointer-events-none fixed inset-0 z-1 opacity-[0.025]"
-        style={{
-          backgroundImage: 'var(--landing-noise)',
-          backgroundRepeat: 'repeat',
-          backgroundSize: '128px 128px'
-        }}
-      />
-
-      <section
-        className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden"
-        style={{
-          backgroundColor: 'var(--landing-hero-bg)',
-          borderBottom: '1px solid var(--landing-hero-stroke-light)'
-        }}
+      <HeroBackdrop
+        theme={HERO_THEME.hero}
+        className="flex min-h-dvh flex-col items-center justify-center"
       >
-        <HeroIllustrations />
-
-        {/* Light cone from top center */}
-        <div
-          className="pointer-events-none absolute -top-16 left-0 z-1 w-full"
-          aria-hidden="true"
-          style={
-            {
-              '--cone-spread': '10%',
-              '--cone-gap': '3%',
-              '--cone-offset-y': '-5%',
-              '--cone-color': 'rgba(200, 190, 255, 0.18)',
-              '--glow-spread': '4%',
-              '--glow-color': 'rgba(140, 120, 255, 0.04)',
-              '--cone-start': 'calc(50% - var(--cone-spread))',
-              '--cone-end': 'calc(50% + var(--cone-spread))',
-              '--glow-start': 'calc(var(--cone-start) - var(--glow-spread))',
-              '--glow-end': 'calc(var(--cone-end) + var(--glow-spread))',
-              '--mask-width': '100%',
-              '--mask-height': '720px',
-              '--mask-fade-start': '0px',
-              '--mask-fade-end': '100px',
-              height: 'var(--mask-height)',
-              background: [
-                'conic-gradient(from 0deg at 50% var(--cone-offset-y), #0000 0, #0000 var(--glow-start), var(--glow-color) var(--cone-start), var(--cone-color) calc(var(--cone-start) + var(--cone-gap)), var(--cone-color) 50%, var(--cone-color) calc(var(--cone-end) - var(--cone-gap)), var(--glow-color) var(--cone-end), #0000 var(--glow-end), #0000 100%)',
-                'radial-gradient(ellipse 30% 60% at 50% 10%, rgba(120, 100, 255, 0.06) 0%, transparent 100%)'
-              ].join(', '),
-              maskImage: [
-                "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='grain'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch' result='noise'/><feComponentTransfer in='noise'><feFuncA type='linear' slope='0.4' intercept='0.6'/></feComponentTransfer></filter><rect width='100%25' height='100%25' filter='url(%23grain)'/></svg>\")",
-                'linear-gradient(to bottom, #0000 var(--mask-fade-start), #000 var(--mask-fade-end))',
-                'radial-gradient(ellipse var(--mask-width) var(--mask-height) at 50% 0, #000 0, #000 30%, #0000 100%)'
-              ].join(', '),
-              maskComposite: 'intersect, intersect',
-              WebkitMaskComposite: 'source-in, source-in'
-            } as React.CSSProperties
-          }
-        />
-
         <div
           className={`relative z-10 mx-auto flex w-full ${MAX_WIDTH} flex-col items-center px-6 pt-28 pb-44 sm:pt-32 sm:pb-56`}
         >
@@ -122,7 +72,7 @@ export function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </HeroBackdrop>
 
       {/* BentoGrid section */}
       <div className="relative">
@@ -157,7 +107,7 @@ export function Landing() {
       </div>
 
       {/* How it works — dark section */}
-      <UseCasesSection />
+      <UseCasesSection theme={HERO_THEME.useCases} />
 
       {/* Signals, FAQs, CTA */}
       <div className="relative">
@@ -215,7 +165,7 @@ export function Landing() {
         </div>
       </div>
 
-      <CtaSection />
+      <CtaSection theme={HERO_THEME.cta} />
     </div>
   );
 }

@@ -60,7 +60,7 @@ export function SecondaryCta({
       size="lg"
       className={`rounded-full border px-8 py-6 text-sm font-semibold transition-all duration-200 ${
         isHero
-          ? 'border-(--landing-hero-btn-secondary-border) text-(--landing-hero-btn-secondary-text) hover:bg-(--landing-hero-btn-secondary-hover)'
+          ? 'border-(--landing-hero-fg-secondary)/30 text-(--landing-hero-fg) hover:bg-(--landing-hero-fg)/10'
           : 'border-(--landing-btn-secondary-border) bg-(--landing-btn-secondary-bg) text-(--landing-btn-secondary-text) shadow-(--landing-btn-secondary-shadow) hover:bg-(--landing-btn-secondary-hover)'
       }`}
       onClick={openDemo}
