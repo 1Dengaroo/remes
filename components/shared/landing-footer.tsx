@@ -60,7 +60,7 @@ export function LandingFooter() {
       <div className={`mx-auto w-full ${MAX_WIDTH} px-6`}>
         <div className="flex flex-col gap-12 sm:flex-row sm:justify-between">
           {/* Brand column */}
-          <div className="flex max-w-[220px] flex-col gap-4">
+          <div className="flex max-w-55 flex-col gap-4">
             <div className="flex items-center gap-2">
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
               <span className="text-landing-fg text-sm font-semibold tracking-tight">Remes</span>

@@ -52,7 +52,7 @@ export function StrategyStep() {
             <Button
               variant="ghost"
               onClick={() => setIcpOpen(!icpOpen)}
-              className="bg-card flex w-full items-center justify-between rounded-[var(--card-radius)] px-4 py-3 shadow-xs"
+              className="bg-card flex w-full items-center justify-between rounded-(--card-radius) px-4 py-3 shadow-xs"
             >
               <span className="text-muted-foreground section-label">Customer Profile</span>
               <ChevronDown
@@ -60,7 +60,7 @@ export function StrategyStep() {
               />
             </Button>
             <div
-              className={`overflow-hidden transition-all duration-200 ${icpOpen ? 'mt-2 max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              className={`overflow-hidden transition-all duration-200 ${icpOpen ? 'mt-2 max-h-500 opacity-100' : 'max-h-0 opacity-0'}`}
             >
               <IcpPanel />
             </div>
