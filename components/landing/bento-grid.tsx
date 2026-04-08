@@ -158,13 +158,7 @@ function EmailMock() {
         <span className="text-landing-fg-muted text-2xs">
           Plain text · Signal-led · Under 80 words
         </span>
-        <div
-          className="text-2xs cursor-pointer rounded-full px-2.5 py-1 font-semibold transition-opacity duration-150 hover:opacity-85"
-          style={{
-            backgroundColor: 'var(--landing-btn-primary-bg)',
-            color: 'var(--landing-btn-primary-text)'
-          }}
-        >
+        <div className="bg-primary text-primary-foreground text-2xs cursor-pointer rounded-full px-2.5 py-1 font-semibold transition-opacity duration-150 hover:opacity-85">
           Send
         </div>
       </div>
