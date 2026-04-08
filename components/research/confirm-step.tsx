@@ -125,7 +125,7 @@ export function ConfirmStep() {
         />
       )}
 
-      <div className="flex flex-col gap-4 lg:h-[640px] lg:flex-row">
+      <div className="flex flex-col gap-4 lg:h-160 lg:flex-row">
         {/* Chat */}
         <div className="w-full shrink-0 lg:h-full lg:w-80">
           <StrategyChat />

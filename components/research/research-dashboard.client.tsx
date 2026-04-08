@@ -150,7 +150,7 @@ export function ResearchDashboard({ session }: { session: ResearchSession }) {
 
   return (
     <div className="flex min-h-[calc(100dvh-3rem)] flex-col">
-      <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 pt-10 pb-24 md:px-6">
+      <main className="mx-auto w-full max-w-375 flex-1 px-4 pt-10 pb-24 md:px-6">
         {sessionId && (
           <div className="mb-6 flex items-end justify-between gap-4">
             <div className="min-w-0">

@@ -39,7 +39,7 @@ export function Landing() {
 
         {/* Light cone from top center */}
         <div
-          className="pointer-events-none absolute top-[-64px] left-0 z-[1] w-full"
+          className="pointer-events-none absolute -top-16 left-0 z-1 w-full"
           aria-hidden="true"
           style={
             {

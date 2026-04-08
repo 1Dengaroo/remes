@@ -12,7 +12,7 @@ function Card({
       data-slot="card"
       data-size={size}
       className={cn(
-        'group/card bg-card text-card-foreground border-border flex flex-col gap-0 overflow-hidden rounded-[var(--card-radius)] border-[length:var(--card-border-width)] py-0 text-sm shadow-xs has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-[var(--card-radius)] *:[img:last-child]:rounded-b-[var(--card-radius)]',
+        'group/card bg-card text-card-foreground border-border flex flex-col gap-0 overflow-hidden rounded-(--card-radius) border-(length:--card-border-width) py-0 text-sm shadow-xs has-[>img:first-child]:pt-0 *:[img:first-child]:rounded-t-(--card-radius) *:[img:last-child]:rounded-b-(--card-radius)',
         className
       )}
       {...props}
@@ -25,7 +25,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-header"
       className={cn(
-        'group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-[var(--card-radius)] px-[var(--density-card-px)] group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)] has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-[var(--density-card-py)] group-data-[size=sm]/card:[.border-b]:pb-[calc(var(--density-card-py)*0.67)]',
+        'group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-(--card-radius) px-(--density-card-px) group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)] has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--density-card-py) group-data-[size=sm]/card:[.border-b]:pb-[calc(var(--density-card-py)*0.67)]',
         className
       )}
       {...props}
@@ -71,7 +71,7 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-content"
       className={cn(
-        'px-[var(--density-card-px)] group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)]',
+        'px-(--density-card-px) group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)]',
         className
       )}
       {...props}
@@ -84,7 +84,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-footer"
       className={cn(
-        'flex items-center rounded-b-[var(--card-radius)] px-[var(--density-card-px)] group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)] [.border-t]:pt-[var(--density-card-py)] group-data-[size=sm]/card:[.border-t]:pt-[calc(var(--density-card-py)*0.67)]',
+        'flex items-center rounded-b-(--card-radius) px-(--density-card-px) group-data-[size=sm]/card:px-[calc(var(--density-card-px)*0.67)] [.border-t]:pt-(--density-card-py) group-data-[size=sm]/card:[.border-t]:pt-[calc(var(--density-card-py)*0.67)]',
         className
       )}
       {...props}
