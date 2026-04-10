@@ -97,7 +97,7 @@ export function LandingHeader() {
       <header
         className="w-full transition-all duration-500 ease-out"
         style={{
-          maxWidth: scrolled ? '56rem' : '100%',
+          maxWidth: scrolled ? '90rem' : '100%',
           backgroundColor: scrolled ? 'var(--landing-header-bg)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
           border: scrolled ? '1px solid var(--landing-border-card)' : '1px solid transparent',

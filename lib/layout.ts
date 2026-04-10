@@ -7,6 +7,7 @@ export const MAX_WIDTH = 'max-w-7xl';
 export interface ThemeConfig {
   hero: HeroTheme;
   useCases: HeroTheme;
+  signals: HeroTheme;
   cta: HeroTheme;
   login: HeroTheme;
 }
@@ -14,6 +15,7 @@ export interface ThemeConfig {
 export const HERO_THEME: ThemeConfig = {
   hero: 'indigo-dusk',
   useCases: 'slate-indigo',
+  signals: 'light-indigo',
   cta: 'light-indigo',
   login: 'indigo-abyss'
 };

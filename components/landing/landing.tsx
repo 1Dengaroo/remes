@@ -14,11 +14,13 @@ import { HeroPipeline } from './hero-pipeline.client';
 import { BentoGrid } from './bento-grid';
 import { SignalsSection } from './signals-section.client';
 import { UseCasesSection } from './use-cases-section';
+import { WorkflowComparison } from './workflow-comparison';
 import { CtaSection } from './cta-section';
 
 export function Landing() {
   return (
     <div className="relative flex flex-col overflow-x-clip">
+      {/* Hero */}
       <HeroBackdrop
         theme={HERO_THEME.hero}
         className="flex min-h-dvh flex-col items-center justify-center"
@@ -39,7 +41,7 @@ export function Landing() {
               style={{ color: 'var(--landing-hero-fg-secondary)' }}
             >
               Remes monitors the web for buying signals, deep-researches every account, maps the
-              right contacts, and crafts hyper-personalized outreach — all on auto-pilot.
+              right contacts, and crafts hyper-personalized outreach, all on auto-pilot.
             </p>
 
             <div className="mt-6 flex animate-[hero-fade-in_0.8s_ease-out_0.39s_both] flex-col items-center gap-4 sm:flex-row sm:gap-5">
@@ -74,7 +76,21 @@ export function Landing() {
         </div>
       </HeroBackdrop>
 
-      {/* BentoGrid section */}
+      {/* Workflow comparison */}
+      <div className="relative">
+        <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
+          <WorkflowComparison />
+        </div>
+      </div>
+
+      {/* Signals */}
+      <HeroBackdrop theme="light-indigo" cone={false} className="relative">
+        <div className={`relative mx-auto w-full ${MAX_WIDTH} px-6`}>
+          <SignalsSection />
+        </div>
+      </HeroBackdrop>
+
+      {/* Bento grid */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div
@@ -106,22 +122,12 @@ export function Landing() {
         </div>
       </div>
 
-      {/* How it works — dark section */}
+      {/* Interactive demo */}
       <UseCasesSection theme={HERO_THEME.useCases} />
 
-      {/* Signals, FAQs, CTA */}
+      {/* FAQs */}
       <div className="relative">
         <div className={`relative mx-auto flex w-full ${MAX_WIDTH} flex-col px-6`}>
-          <div className="flex justify-center">
-            <div className="h-px w-2/3 bg-linear-to-r from-transparent via-(--landing-border-card) to-transparent" />
-          </div>
-
-          <SignalsSection />
-
-          <div className="flex justify-center">
-            <div className="h-px w-2/3 bg-linear-to-r from-transparent via-(--landing-border-card) to-transparent" />
-          </div>
-
           <section id="faqs" className="scroll-mt-16 py-24 sm:py-36">
             <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
               <div className="lg:sticky lg:top-32 lg:self-start">

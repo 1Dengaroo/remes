@@ -145,25 +145,15 @@ export const SIGNAL_PREVIEWS: Record<
   }
 };
 
-export const SHOWCASE = [
-  {
-    label: 'Signal Detection',
-    title: 'Catch buying signals before your competitors',
-    desc: 'Remes monitors job postings, funding rounds, and product launches across the web, surfacing the companies most likely to buy right now.',
-    image: '/research-step-one.png'
-  },
-  {
-    label: 'Contact Discovery',
-    title: 'Find the right person instantly',
-    desc: 'Automatically match signals to decision-makers with verified emails and LinkedIn profiles. No more guessing who to reach out to.',
-    image: '/research-step-three.png'
-  },
-  {
-    label: 'AI Outreach',
-    title: 'Emails that actually get replies',
-    desc: 'Every email is grounded in the signal that triggered it. Relevant, timely, and personal. Not another generic template.',
-    image: '/research-step-five.png'
-  }
+export const SIGNAL_TYPES = [
+  { type: 'Funding', color: '#46e3b7' },
+  { type: 'Hiring', color: '#5643cc' },
+  { type: 'News', color: '#e5484d' },
+  { type: 'Website', color: '#46e3b7' },
+  { type: 'Job Desc', color: '#f7c12b' },
+  { type: 'Employee', color: '#2f7ad0' },
+  { type: '10-K', color: '#673fd7' },
+  { type: 'LinkedIn', color: '#455eb5' }
 ];
 
 export const FAQS = [

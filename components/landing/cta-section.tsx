@@ -24,7 +24,7 @@ export function CtaSection({ theme }: { theme?: HeroTheme }) {
           className="mt-4 max-w-md text-sm leading-relaxed sm:text-base"
           style={{ color: 'var(--landing-hero-fg-secondary)' }}
         >
-          Detect signals, find contacts, and send personalized outreach — all in one place.
+          Detect signals, find contacts, and send personalized outreach. All in one place.
         </p>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
           <PrimaryCta variant="hero">Get started free</PrimaryCta>

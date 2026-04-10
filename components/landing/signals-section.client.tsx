@@ -1,349 +1,213 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import {
-  Briefcase,
-  FileText,
-  Globe,
-  Linkedin,
-  Newspaper,
-  Sparkles,
-  TrendingUp,
-  Users,
-  FileBarChart
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ThemeToggleButton } from './theme-toggle-button';
+import { useState, useEffect, useCallback } from 'react';
+import { Sparkles } from 'lucide-react';
 import { SIGNALS, SIGNAL_PREVIEWS } from './landing-constants';
 import { RotatingWord } from './rotating-word.client';
 
-const SIGNAL_ICONS: Record<string, React.ReactNode> = {
-  'Job Openings': <Briefcase className="size-4" />,
-  'News & Press': <Newspaper className="size-4" />,
-  'Company Website': <Globe className="size-4" />,
-  'Job Descriptions': <FileText className="size-4" />,
-  'Employee Activity': <Users className="size-4" />,
-  '10-K Reports': <FileBarChart className="size-4" />,
-  'Funding Rounds': <TrendingUp className="size-4" />,
-  'LinkedIn Posts': <Linkedin className="size-4" />
-};
+const CYCLE_MS = 4500;
 
-// Non-custom signals for cycling
-const CYCLABLE_SIGNALS = SIGNALS.filter((s) => s.color !== 'custom');
+function SignalSourcePill({
+  label,
+  isCustom,
+  active,
+  onClick
+}: {
+  label: string;
+  isCustom: boolean;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-300 ${
+        active
+          ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+          : 'bg-card text-muted-foreground border-border hover:border-primary/30 shadow-xs'
+      }`}
+    >
+      {isCustom && <Sparkles className="size-3" />}
+      {label}
+    </button>
+  );
+}
+
+function CompanyMatch({
+  company,
+  index
+}: {
+  company: { name: string; reason: string };
+  index: number;
+}) {
+  return (
+    <div
+      className="border-border bg-card flex items-start gap-3 rounded-lg border px-4 py-3 shadow-xs"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="bg-primary/10 text-primary mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold">
+        {company.name[0]}
+      </div>
+      <div className="min-w-0 flex-1">
+        <span className="text-foreground text-sm font-medium">{company.name}</span>
+        <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">{company.reason}</p>
+      </div>
+    </div>
+  );
+}
 
 export function SignalsSection() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [displayIndex, setDisplayIndex] = useState(0);
-  const [hasEnteredView, setHasEnteredView] = useState(false);
-  const [visibleCompanies, setVisibleCompanies] = useState(0);
-  const [streamedText, setStreamedText] = useState('');
-  const [showEmail, setShowEmail] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  const skipAnimationRef = useRef(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const activeSignal = SIGNALS[activeIndex];
+  const isCustom = activeSignal.color === 'custom';
+  const preview = SIGNAL_PREVIEWS[activeSignal.source];
 
-  const goToSignal = useCallback((index: number) => {
-    skipAnimationRef.current = true;
-    setSelectedIndex(index);
-    setDisplayIndex(index);
-  }, []);
-
-  const runPreview = useCallback((index: number) => {
-    setVisibleCompanies(0);
-    setStreamedText('');
-    setShowEmail(false);
-
-    const signal = CYCLABLE_SIGNALS[index] ?? SIGNALS[index];
-    const preview = SIGNAL_PREVIEWS[signal?.source];
-    if (!preview) return;
-
-    skipAnimationRef.current = false;
-    setVisibleCompanies(preview.companies.length);
-    setShowEmail(true);
-    setStreamedText(preview.emailOpener);
+  const next = useCallback(() => {
+    setActiveIndex((i) => (i + 1) % SIGNALS.length);
   }, []);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEnteredView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!hasEnteredView) return;
-    runPreview(displayIndex);
-  }, [displayIndex, hasEnteredView, runPreview]);
-
-  const selectedSignal = CYCLABLE_SIGNALS[displayIndex] ?? SIGNALS[displayIndex];
-  const preview = SIGNAL_PREVIEWS[selectedSignal?.source];
+    if (paused) return;
+    const id = setInterval(next, CYCLE_MS);
+    return () => clearInterval(id);
+  }, [paused, next]);
 
   return (
-    <section ref={sectionRef} className="relative scroll-mt-16 py-24 sm:py-36">
-      <div className="section-heading relative mb-14 sm:mb-20">
-        <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
+    <section
+      className="relative scroll-mt-16 py-24 sm:py-36"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Heading */}
+      <div className="mb-14 max-w-2xl sm:mb-20">
+        <p className="text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase">
           Signals
         </p>
         <h2
-          className="text-landing-fg text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl xl:text-[2.75rem]"
+          className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl"
           style={{ textWrap: 'balance' }}
         >
           Reach out the moment you spot <RotatingWord />
         </h2>
-        <p className="text-landing-fg-secondary mt-4 max-w-lg text-sm leading-relaxed sm:text-base">
-          Remes monitors dozens of data sources in real time. Here are some of the signals you can
-          track.
+        <p className="text-foreground/70 mt-4 max-w-lg text-sm leading-relaxed">
+          Remes monitors dozens of data sources in real time, from job boards and SEC filings to
+          company websites and LinkedIn. Pick a signal to see what Remes finds.
         </p>
       </div>
 
-      <div className="grid items-start gap-8 lg:grid-cols-[2fr_3fr]">
-        <div className="flex min-w-0 flex-col gap-1.5">
-          {CYCLABLE_SIGNALS.map((signal, i) => {
-            const isSelected = selectedIndex === i;
-            return (
-              <Button
-                key={signal.source}
-                variant="ghost"
-                className="h-auto w-full items-start justify-start gap-3 rounded-xl border bg-(--landing-bg-card) p-4 text-left transition-all duration-200 hover:bg-(--landing-surface-hover) hover:text-inherit"
-                style={{
-                  borderColor: isSelected
-                    ? 'var(--landing-accent-light)'
-                    : 'var(--landing-border-card)',
-                  boxShadow: isSelected ? 'var(--landing-shadow-card)' : 'none'
-                }}
-                onClick={() => goToSignal(i)}
-              >
-                <div
-                  className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg"
-                  style={{ backgroundColor: `${signal.color}14`, color: signal.color }}
-                >
-                  {SIGNAL_ICONS[signal.source]}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <span
-                    className="text-sm font-medium transition-colors duration-200"
-                    style={{ color: isSelected ? 'var(--landing-accent)' : 'var(--landing-fg)' }}
-                  >
-                    {signal.source}
-                  </span>
-                  <p className="text-landing-fg-secondary mt-0.5 line-clamp-2 text-xs leading-relaxed">
-                    {signal.example}
-                  </p>
-                </div>
-              </Button>
-            );
-          })}
+      {/* Signal source selector */}
+      <div className="mb-8 flex flex-wrap gap-2">
+        {SIGNALS.map((signal, i) => (
+          <SignalSourcePill
+            key={signal.source}
+            label={signal.source}
+            isCustom={signal.color === 'custom'}
+            active={i === activeIndex}
+            onClick={() => setActiveIndex(i)}
+          />
+        ))}
+      </div>
 
-          {/* Custom signal — rainbow border applied via pseudo-element mask */}
-          <div
-            className="relative overflow-hidden rounded-xl border bg-(--landing-bg-card) p-4"
-            style={{ borderColor: 'var(--landing-accent-light)' }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0 rounded-(--card-radius) opacity-40"
-              style={{
-                background: 'var(--landing-rainbow-border)',
-                mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                maskComposite: 'exclude',
-                WebkitMaskComposite: 'xor',
-                padding: 1
-              }}
-            />
-            <div className="flex items-start gap-3">
-              <div
-                className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg"
-                style={{
-                  backgroundColor: 'rgba(86, 67, 204, 0.1)',
-                  color: 'var(--landing-accent)'
-                }}
-              >
-                <Sparkles className="size-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-sm font-medium text-(--landing-accent)">Custom Signals</span>
-                <p className="text-landing-fg-secondary mt-0.5 text-xs leading-relaxed">
-                  If you can describe it, Remes can detect it
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="min-w-0 lg:sticky lg:top-24">
-          <div
-            data-theme={theme}
-            className="overflow-hidden rounded-xl border"
-            style={{
-              borderColor:
-                selectedSignal?.color && selectedSignal.color !== 'custom'
-                  ? `${selectedSignal.color}50`
-                  : 'var(--border)',
-              boxShadow:
-                selectedSignal?.color && selectedSignal.color !== 'custom'
-                  ? `var(--landing-shadow-card), 0 0 0 1px ${selectedSignal.color}18`
-                  : 'var(--landing-shadow-card)',
-              backgroundColor: 'var(--card)',
-              color: 'var(--card-foreground)',
-              transition: 'border-color 300ms, box-shadow 300ms'
-            }}
-          >
-            <div
-              className="flex items-center justify-between px-5 py-3.5"
-              style={{
-                borderBottom: '1px solid var(--border)',
-                backgroundColor:
-                  selectedSignal?.color && selectedSignal.color !== 'custom'
-                    ? `${selectedSignal.color}08`
-                    : undefined,
-                transition: 'background-color 300ms'
-              }}
-            >
-              <div className="flex min-w-0 items-center gap-2">
-                <div
-                  className="size-2 shrink-0 rounded-full"
-                  style={{
-                    backgroundColor:
-                      visibleCompanies > 0 ? 'var(--signal-funding-text)' : 'var(--border)',
-                    boxShadow: visibleCompanies > 0 ? '0 0 6px var(--signal-funding-bg)' : 'none'
-                  }}
-                />
-                <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>
-                  {visibleCompanies > 0 ? `${visibleCompanies} companies matched` : 'Scanning...'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className="rounded-md px-2.5 py-1 text-xs font-medium"
-                  style={{
-                    backgroundColor:
-                      selectedSignal?.color !== 'custom' ? `${selectedSignal?.color}15` : undefined,
-                    color: selectedSignal?.color !== 'custom' ? selectedSignal?.color : undefined
-                  }}
-                >
-                  {selectedSignal?.source}
-                </span>
-                <ThemeToggleButton
-                  theme={theme}
-                  onToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                />
-              </div>
-            </div>
-
-            <div
-              className="h-105 overflow-hidden sm:h-115"
-              style={{ backgroundColor: 'var(--card)' }}
-            >
-              <div className="p-4 sm:p-5">
-                <div className="flex flex-col gap-2">
-                  {preview?.companies.map((c, i) => {
-                    const visible = i < visibleCompanies;
-                    return (
-                      <div
-                        key={c.name}
-                        className="flex items-center gap-3 rounded-lg px-4 py-3"
-                        style={{
-                          opacity: visible ? 1 : 0,
-                          transform: visible ? 'translateY(0)' : 'translateY(8px)',
-                          transition: 'none',
-                          border: '1px solid var(--border)',
-                          backgroundColor: 'var(--card)',
-                          boxShadow:
-                            selectedSignal?.color && selectedSignal.color !== 'custom'
-                              ? `inset 3px 0 0 ${selectedSignal.color}`
-                              : 'none'
-                        }}
-                      >
-                        <div
-                          className="flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold"
-                          style={{
-                            backgroundColor: 'var(--primary)',
-                            color: 'var(--primary-foreground)'
-                          }}
-                        >
-                          {c.name.slice(0, 2)}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <span
-                            className="text-sm font-medium"
-                            style={{ color: 'var(--foreground)' }}
-                          >
-                            {c.name}
-                          </span>
-                          <div
-                            className="mt-0.5 text-xs leading-relaxed"
-                            style={{ color: 'var(--muted-foreground)' }}
-                          >
-                            {c.reason}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {showEmail && (
-                  <div
-                    className="mt-4 rounded-lg px-4 py-3"
-                    style={{
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)'
-                    }}
-                  >
-                    <div
-                      className="mb-2 text-xs font-medium"
-                      style={{ color: 'var(--muted-foreground)' }}
-                    >
-                      Generated outreach
-                    </div>
-                    <div
-                      className="min-h-15 text-xs leading-relaxed whitespace-pre-line"
-                      style={{ color: 'var(--foreground)' }}
-                    >
-                      {streamedText}
-                    </div>
-                  </div>
+      {/* Active signal detail */}
+      <div
+        key={activeIndex}
+        className="grid min-h-100 gap-4 lg:grid-cols-[1fr_1fr]"
+        style={{ animation: 'signal-fade-in 0.4s ease-out' }}
+      >
+        {/* Left: Signal description + matched companies */}
+        <div className="flex flex-col">
+          <p className="text-muted-foreground mb-2 px-1 text-xs font-medium tracking-wide uppercase">
+            Signal detected
+          </p>
+          {/* Signal description card */}
+          <div className="border-primary/20 bg-card mb-3 rounded-xl border p-5 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="bg-primary/10 text-primary flex size-8 items-center justify-center rounded-lg">
+                {isCustom ? (
+                  <Sparkles className="size-4" />
+                ) : (
+                  <span className="text-xs font-bold">{activeSignal.source[0]}</span>
                 )}
               </div>
+              <div>
+                <span className="text-foreground text-sm font-semibold">{activeSignal.source}</span>
+                <span className="bg-primary/10 text-primary ml-2 rounded-full px-2 py-0.5 text-xs font-medium">
+                  Monitoring
+                </span>
+              </div>
             </div>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              {activeSignal.example}
+            </p>
+          </div>
 
-            <div
-              className="flex items-center justify-between px-5 py-3"
-              style={{
-                borderTop: '1px solid var(--border)',
-                backgroundColor: 'var(--card)'
-              }}
-            >
-              <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                {showEmail ? 'Ready to send' : 'Detecting signals...'}
-              </span>
-              <div className="flex gap-1">
-                {CYCLABLE_SIGNALS.map((_, i) => (
-                  <div
-                    key={i}
-                    className="size-1.5 rounded-full"
-                    style={{
-                      backgroundColor: i === selectedIndex ? 'var(--primary)' : 'var(--border)',
-                      transition: 'background-color 150ms'
-                    }}
-                  />
-                ))}
+          {/* Matched companies */}
+          {preview && (
+            <div className="space-y-2">
+              <p className="text-muted-foreground px-1 text-xs font-medium tracking-wide uppercase">
+                Companies matched
+              </p>
+              {preview.companies.map((company, i) => (
+                <CompanyMatch key={company.name} company={company} index={i} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right: Email preview */}
+        {preview && (
+          <div className="flex flex-col">
+            <p className="text-muted-foreground mb-2 px-1 text-xs font-medium tracking-wide uppercase">
+              Generated email
+            </p>
+            <div className="border-border bg-card flex flex-col rounded-xl border shadow-xs">
+              {/* Email header */}
+              <div className="border-border border-b px-5 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="bg-primary size-2 rounded-full shadow-sm" />
+                  <span className="text-muted-foreground text-xs">
+                    Draft from{' '}
+                    <span className="text-primary font-medium">{activeSignal.source}</span> signal
+                  </span>
+                </div>
+              </div>
+
+              {/* Email body */}
+              <div className="flex-1 px-5 py-4">
+                <p className="text-foreground text-sm leading-relaxed whitespace-pre-line">
+                  {preview.emailOpener}
+                </p>
+              </div>
+
+              {/* Email footer */}
+              <div className="border-border flex items-center justify-between border-t px-5 py-3">
+                <div className="flex gap-2">
+                  {['Signal-led', 'Personalized', 'Under 80 words'].map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-muted-foreground bg-muted rounded-md px-2 py-0.5 text-xs"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="bg-primary text-primary-foreground rounded-md px-3 py-1.5 text-xs font-medium">
+                  Send
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
+
+      <style>{`
+        @keyframes signal-fade-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </section>
   );
 }
