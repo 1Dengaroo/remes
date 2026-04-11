@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -30,8 +31,16 @@ type DemoFormFields = z.infer<typeof demoSchema>;
 
 export function DemoModal() {
   const open = useDemoStore((s) => s.open);
+  const openDemo = useDemoStore((s) => s.openDemo);
   const closeDemo = useDemoStore((s) => s.closeDemo);
+  const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('demo') !== null) {
+      openDemo();
+    }
+  }, [searchParams, openDemo]);
   const [submitError, setSubmitError] = useState('');
 
   const { control, handleSubmit, formState, reset } = useForm<DemoFormFields>({

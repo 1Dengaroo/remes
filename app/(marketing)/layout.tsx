@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { LandingHeader } from '@/components/landing/landing-header.client';
 import { LandingFooter } from '@/components/shared/landing-footer';
 import { DemoModal } from '@/components/landing/demo-modal.client';
@@ -9,7 +10,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <LandingHeader />
       {children}
       <LandingFooter />
-      <DemoModal />
+      <Suspense>
+        <DemoModal />
+      </Suspense>
       <CookieConsentBanner />
     </div>
   );
