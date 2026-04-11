@@ -96,7 +96,7 @@ const companyResultLoose = z
     signals: z.array(companySignalLoose).max(50),
     match_reason: mediumStr,
     company_overview: mediumStr,
-    contacts: z.array(targetContactLoose).max(50),
+    contacts: z.array(targetContactLoose).max(50).optional().default([]),
     sources: z.object({
       jobs: z.array(sourceLinkLoose).max(50),
       funding: z.array(sourceLinkLoose).max(50),
