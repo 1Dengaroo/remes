@@ -35,6 +35,30 @@ export const themes: ThemeDefinition[] = [
       secondary: '#7e7e7e',
       tertiary: '#a78bfa'
     }
+  },
+  {
+    id: 'daybreak',
+    name: 'Daybreak',
+    description: 'Clean slate-blue with electric blue accents — crisp, professional',
+    isDark: false,
+    previewColors: {
+      bg: '#f5f7fa',
+      primary: '#4c6ef5',
+      secondary: '#718096',
+      tertiary: '#d4a017'
+    }
+  },
+  {
+    id: 'midnight',
+    name: 'Midnight',
+    description: 'Bold midnight navy with electric blue — sharp, data-driven',
+    isDark: true,
+    previewColors: {
+      bg: '#0d1117',
+      primary: '#4c6ef5',
+      secondary: '#7d8590',
+      tertiary: '#fbbf24'
+    }
   }
 ];
 

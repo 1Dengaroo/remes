@@ -5,6 +5,8 @@
 /* Theme files */
 @import './themes/light.css';
 @import './themes/dark.css';
+@import './themes/daybreak.css';
+@import './themes/midnight.css';
 @import './landing.css';
 
 @custom-variant dark (&:is(.dark *));
