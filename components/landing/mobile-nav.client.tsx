@@ -28,7 +28,7 @@ export function MobileNav({ light }: { light: boolean }) {
           variant="ghost"
           size="icon-sm"
           className="relative z-50 transition-colors duration-500 hover:bg-transparent md:hidden"
-          style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--landing-fg-secondary)' }}
+          style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--muted-foreground)' }}
           aria-label="Open menu"
         >
           <div className="flex w-4 flex-col gap-1.25">
@@ -48,7 +48,7 @@ export function MobileNav({ light }: { light: boolean }) {
         {/* Full-screen overlay content */}
         <DialogPrimitive.Content
           className="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 fixed inset-0 z-40 flex flex-col md:hidden"
-          style={{ backgroundColor: 'var(--landing-bg-card)' }}
+          style={{ backgroundColor: 'var(--card)' }}
           aria-describedby={undefined}
         >
           <DialogPrimitive.Title className="sr-only">Navigation menu</DialogPrimitive.Title>
@@ -58,7 +58,7 @@ export function MobileNav({ light }: { light: boolean }) {
             <Button
               variant="ghost"
               size="icon-sm"
-              className="text-landing-fg-secondary absolute top-3.5 right-6 z-50 rounded-sm hover:bg-transparent"
+              className="text-muted-foreground absolute top-3.5 right-6 z-50 rounded-sm hover:bg-transparent"
               aria-label="Close menu"
             >
               <div className="flex w-4 flex-col gap-1.25">
@@ -75,7 +75,7 @@ export function MobileNav({ light }: { light: boolean }) {
                 key={link.label}
                 href={link.href}
                 onClick={close}
-                className="text-landing-fg border-b border-white/6 py-5 text-2xl font-medium tracking-tight transition-all duration-500 ease-out last:border-0"
+                className="text-foreground border-b border-white/6 py-5 text-2xl font-medium tracking-tight transition-all duration-500 ease-out last:border-0"
                 style={{
                   opacity: open ? 1 : 0,
                   transform: open ? 'translateY(0)' : 'translateY(20px)',
@@ -91,7 +91,7 @@ export function MobileNav({ light }: { light: boolean }) {
                 openDemo();
                 close();
               }}
-              className="text-landing-fg h-auto justify-start py-5 text-left text-2xl font-medium tracking-tight transition-all duration-500 ease-out hover:bg-transparent"
+              className="text-foreground h-auto justify-start py-5 text-left text-2xl font-medium tracking-tight transition-all duration-500 ease-out hover:bg-transparent"
               style={{
                 opacity: open ? 1 : 0,
                 transform: open ? 'translateY(0)' : 'translateY(20px)',
@@ -113,7 +113,7 @@ export function MobileNav({ light }: { light: boolean }) {
           >
             {!user && (
               <Button
-                className="mb-6 w-full rounded-full bg-white py-6 text-sm font-semibold text-(--landing-bg)"
+                className="mb-6 w-full rounded-full bg-white py-6 text-sm font-semibold text-(--background)"
                 onClick={() => {
                   openAuthModal();
                   close();
@@ -122,7 +122,7 @@ export function MobileNav({ light }: { light: boolean }) {
                 Log in
               </Button>
             )}
-            <p className="text-landing-fg-muted text-xs">&copy; {new Date().getFullYear()} Remes</p>
+            <p className="text-muted-foreground text-xs">&copy; {new Date().getFullYear()} Remes</p>
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

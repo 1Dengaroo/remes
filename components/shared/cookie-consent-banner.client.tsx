@@ -23,12 +23,12 @@ export function CookieConsentBanner() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 p-4 sm:p-6">
-      <div className="mx-auto flex max-w-lg flex-col items-center gap-3 rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) px-5 py-4 shadow-lg sm:flex-row sm:gap-4">
-        <p className="text-landing-fg-secondary text-xs leading-relaxed sm:text-sm">
+      <div className="border-border bg-card mx-auto flex max-w-lg flex-col items-center gap-3 rounded-xl border px-5 py-4 shadow-lg sm:flex-row sm:gap-4">
+        <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">
           We use cookies to improve your experience.{' '}
           <a
             href="/privacy"
-            className="text-landing-fg underline underline-offset-2 transition-colors hover:text-(--landing-accent)"
+            className="text-foreground hover:text-primary underline underline-offset-2 transition-colors"
           >
             Privacy policy
           </a>
@@ -38,14 +38,14 @@ export function CookieConsentBanner() {
             size="sm"
             variant="ghost"
             onClick={() => dismiss('declined')}
-            className="text-landing-fg-muted hover:text-landing-fg text-xs"
+            className="text-muted-foreground hover:text-foreground text-xs"
           >
             Decline
           </Button>
           <Button
             size="sm"
             onClick={() => dismiss('accepted')}
-            className="bg-(--landing-accent) text-xs text-white hover:bg-(--landing-accent)/80"
+            className="bg-primary hover:bg-primary/80 text-xs text-white"
           >
             Accept
           </Button>

@@ -206,10 +206,10 @@ export function HeroPipeline() {
       className="relative hidden h-80 w-220 lg:flex lg:justify-center xl:h-90 xl:w-260"
     >
       <Card className="signal-card absolute top-0 left-1/2 w-210 -translate-x-1/2 xl:w-250">
-        <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
+        <div className="border-border flex items-center justify-between border-b px-5 py-3">
           <div className="flex items-center gap-2.5">
             <div className="header-dot size-2 rounded-full bg-(--landing-skel-base)" />
-            <span className="status-text text-landing-fg-secondary text-xs2 font-medium">
+            <span className="status-text text-muted-foreground text-xs2 font-medium">
               Scanning signals...
             </span>
           </div>
@@ -218,10 +218,10 @@ export function HeroPipeline() {
 
         <div>
           <div className="signals-header flex items-center justify-between px-5 py-2.5">
-            <span className="text-landing-fg-muted text-2xs font-medium tracking-wide uppercase">
+            <span className="text-muted-foreground text-2xs font-medium tracking-wide uppercase">
               Matched Companies
             </span>
-            <span className="match-count text-landing-fg-muted text-2xs rounded-full bg-(--landing-skel-base) px-2 py-0.5 font-medium opacity-0">
+            <span className="match-count text-muted-foreground text-2xs rounded-full bg-(--landing-skel-base) px-2 py-0.5 font-medium opacity-0">
               3 found
             </span>
           </div>
@@ -263,8 +263,8 @@ export function HeroPipeline() {
       </Card>
 
       <Card className="contact-card absolute top-12 left-1/2 w-210 -translate-x-1/2 xl:top-14 xl:w-250">
-        <div className="contacts-header flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
-          <span className="text-landing-fg-secondary text-xs2 font-medium">Contacts at Remes</span>
+        <div className="contacts-header border-border flex items-center justify-between border-b px-5 py-3">
+          <span className="text-muted-foreground text-xs2 font-medium">Contacts at Remes</span>
           <span
             className="enriched-count text-2xs rounded-full px-2 py-0.5 font-medium opacity-0"
             style={{
@@ -277,54 +277,54 @@ export function HeroPipeline() {
         </div>
 
         <div className="flex items-center justify-between px-5 py-2">
-          <span className="text-landing-fg-muted text-2xs font-medium tracking-wide uppercase">
+          <span className="text-muted-foreground text-2xs font-medium tracking-wide uppercase">
             Decision Makers
           </span>
-          <span className="text-landing-fg-muted text-2xs">3 of 5 contacts</span>
+          <span className="text-muted-foreground text-2xs">3 of 5 contacts</span>
         </div>
         <div className="space-y-0.5 px-2 pb-2">
           <ContactRow name="Kenny" initials="KL" title="Co-founder & CEO" />
           <ContactRow name="Andy" initials="AD" title="Co-founder & CTO" />
           <ContactRow name="Josh Besse" initials="JB" title="Head of Growth" />
         </div>
-        <div className="border-t border-(--landing-border-card) px-5 py-2.5">
+        <div className="border-border border-t px-5 py-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-landing-fg-muted text-2xs">kenny@remes.so</span>
-              <span className="text-landing-fg-muted text-2xs">·</span>
-              <span className="text-landing-fg-muted text-2xs">andy@remes.so</span>
-              <span className="text-landing-fg-muted text-2xs">·</span>
-              <span className="text-landing-fg-muted text-2xs">josh@remes.so</span>
+              <span className="text-muted-foreground text-2xs">kenny@remes.so</span>
+              <span className="text-muted-foreground text-2xs">·</span>
+              <span className="text-muted-foreground text-2xs">andy@remes.so</span>
+              <span className="text-muted-foreground text-2xs">·</span>
+              <span className="text-muted-foreground text-2xs">josh@remes.so</span>
             </div>
-            <span className="text-2xs text-landing-fg-secondary font-medium">View all →</span>
+            <span className="text-2xs text-muted-foreground font-medium">View all →</span>
           </div>
         </div>
       </Card>
 
       <Card className="email-card absolute top-24 left-1/2 w-210 -translate-x-1/2 xl:top-28 xl:w-250">
-        <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
-          <span className="email-status text-landing-fg-secondary text-xs2 font-medium">
+        <div className="border-border flex items-center justify-between border-b px-5 py-3">
+          <span className="email-status text-muted-foreground text-xs2 font-medium">
             Generating outreach
           </span>
-          <span className="email-label text-landing-fg-muted text-2xs">Email 1 of 3</span>
+          <span className="email-label text-muted-foreground text-2xs">Email 1 of 3</span>
         </div>
 
-        <div className="mx-5 divide-y divide-(--landing-border-card)">
+        <div className="divide-border mx-5 divide-y">
           <div className="flex items-center gap-3 py-2.5">
-            <span className="email-label text-landing-fg-muted text-2xs">To</span>
-            <span className="email-label text-landing-fg-secondary text-xs2">kenny@remes.so</span>
+            <span className="email-label text-muted-foreground text-2xs">To</span>
+            <span className="email-label text-muted-foreground text-xs2">kenny@remes.so</span>
           </div>
           <div className="flex items-center gap-3 py-2.5">
-            <span className="email-label text-landing-fg-muted text-2xs">Subject</span>
-            <span className="email-label text-landing-fg-secondary text-xs2">
+            <span className="email-label text-muted-foreground text-2xs">Subject</span>
+            <span className="email-label text-muted-foreground text-xs2">
               Congrats on the raise — idea for scaling outbound
             </span>
           </div>
         </div>
 
-        <div className="mx-5 border-t border-(--landing-border-card)" />
+        <div className="border-border mx-5 border-t" />
 
-        <div className="text-landing-fg-secondary text-xs2 space-y-2.5 px-5 pt-3.5 pb-4 leading-relaxed">
+        <div className="text-muted-foreground text-xs2 space-y-2.5 px-5 pt-3.5 pb-4 leading-relaxed">
           <p className="eline-0">Hi Kenny,</p>
           <p className="eline-1">
             Saw Remes just closed a $2.5M seed round — congrats. Also noticed you&apos;re hiring
@@ -341,12 +341,12 @@ export function HeroPipeline() {
           <p className="eline-4">— Andy</p>
         </div>
 
-        <div className="border-t border-(--landing-border-card) px-5 py-2">
+        <div className="border-border border-t px-5 py-2">
           <div className="flex flex-wrap gap-1.5">
             {['Plain text', 'Signal-led', 'Under 80 words', 'One CTA'].map((t) => (
               <span
                 key={t}
-                className="practice-pill text-2xs text-landing-fg-muted rounded-full bg-(--landing-skel-base) px-2 py-0.5"
+                className="practice-pill text-2xs text-muted-foreground rounded-full bg-(--landing-skel-base) px-2 py-0.5"
               >
                 {t}
               </span>
@@ -354,8 +354,8 @@ export function HeroPipeline() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-(--landing-border-card) px-5 py-2.5">
-          <span className="email-footer-text text-landing-fg-muted text-2xs">
+        <div className="border-border flex items-center justify-between border-t px-5 py-2.5">
+          <span className="email-footer-text text-muted-foreground text-2xs">
             Personalized from signal data
           </span>
           <div className="send-btn text-2xs bg-primary text-primary-foreground flex h-6.5 items-center rounded-full px-3.5 font-medium opacity-0">

@@ -5,7 +5,7 @@ import { CookieConsentBanner } from '@/components/shared/cookie-consent-banner.c
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="marketing bg-(--landing-bg)">
+    <div data-theme="light" className="marketing bg-background">
       <LandingHeader />
       {children}
       <LandingFooter />

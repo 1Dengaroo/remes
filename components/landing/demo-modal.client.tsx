@@ -71,22 +71,19 @@ export function DemoModal() {
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent
-        className="bg-(--landing-bg-modal) text-(--landing-text) sm:max-w-lg"
+        data-theme="light"
+        className="bg-modal text-foreground sm:max-w-lg"
         showCloseButton
       >
         {submitted ? (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <CheckCircle2 className="size-10 text-(--landing-accent)" />
-            <p className="text-lg font-semibold text-(--landing-text)">
-              Thanks! We&apos;ll be in touch.
-            </p>
-            <p className="text-sm text-(--landing-text-muted)">
-              Most demos are booked within 24 hours.
-            </p>
+            <CheckCircle2 className="text-primary size-10" />
+            <p className="text-foreground text-lg font-semibold">Thanks! We&apos;ll be in touch.</p>
+            <p className="text-muted-foreground text-sm">Most demos are booked within 24 hours.</p>
             <Button
               type="button"
               onClick={handleClose}
-              className="mt-2 bg-(--landing-accent) text-white hover:bg-(--landing-accent)/80"
+              className="bg-primary hover:bg-primary/80 mt-2 text-white"
             >
               Close
             </Button>
@@ -95,7 +92,7 @@ export function DemoModal() {
           <>
             <DialogHeader>
               <DialogTitle>Book a demo</DialogTitle>
-              <DialogDescription className="text-sm leading-relaxed text-(--landing-text-muted)">
+              <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
                 Get a personalized walkthrough of how Remes can build pipeline for your team.
               </DialogDescription>
             </DialogHeader>
@@ -165,7 +162,7 @@ export function DemoModal() {
               <Button
                 type="submit"
                 disabled={formState.isSubmitting}
-                className="bg-(--landing-accent) text-white hover:bg-(--landing-accent)/80"
+                className="bg-primary hover:bg-primary/80 text-white"
               >
                 {formState.isSubmitting ? (
                   <>
@@ -185,32 +182,28 @@ export function DemoModal() {
               <div className="flex gap-3">
                 <a
                   href="mailto:kenny@remes.so?subject=Demo%20request"
-                  className="flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150 hover:border-(--landing-accent)/30 hover:bg-(--landing-accent)/4"
+                  className="hover:border-primary/30 hover:bg-primary/4 flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150"
                 >
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-(--landing-accent)/10">
-                    <Mail className="size-3.5 text-(--landing-accent)" />
+                  <div className="bg-primary/10 flex size-8 shrink-0 items-center justify-center rounded-full">
+                    <Mail className="text-primary size-3.5" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-(--landing-text)">
-                      kenny@remes.so
-                    </span>
-                    <span className="text-xs text-(--landing-text-muted)/60">
+                    <span className="text-foreground text-sm font-medium">kenny@remes.so</span>
+                    <span className="text-muted-foreground/60 text-xs">
                       Co-Founder &amp; Product
                     </span>
                   </div>
                 </a>
                 <a
                   href="mailto:andy@remes.so?subject=Demo%20request"
-                  className="flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150 hover:border-(--landing-accent)/30 hover:bg-(--landing-accent)/4"
+                  className="hover:border-primary/30 hover:bg-primary/4 flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150"
                 >
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-(--landing-accent)/10">
-                    <Mail className="size-3.5 text-(--landing-accent)" />
+                  <div className="bg-primary/10 flex size-8 shrink-0 items-center justify-center rounded-full">
+                    <Mail className="text-primary size-3.5" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-(--landing-text)">andy@remes.so</span>
-                    <span className="text-xs text-(--landing-text-muted)/60">
-                      Co-Founder &amp; SWE
-                    </span>
+                    <span className="text-foreground text-sm font-medium">andy@remes.so</span>
+                    <span className="text-muted-foreground/60 text-xs">Co-Founder &amp; SWE</span>
                   </div>
                 </a>
               </div>

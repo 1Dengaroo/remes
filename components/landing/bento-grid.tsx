@@ -1,6 +1,6 @@
 function SignalMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
+    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-(--landing-shadow-card)">
       <div className="border-border flex items-center gap-2 border-b px-4 py-2.5">
         <div className="bg-primary size-1.5 rounded-full" />
         <span className="text-muted-foreground text-2xs">3 signals detected</span>
@@ -28,7 +28,7 @@ function SignalMock() {
 
 function ContactMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
+    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-(--landing-shadow-card)">
       <div className="border-border flex items-center justify-between border-b px-4 py-2.5">
         <span className="text-muted-foreground text-2xs">Contacts at Ramp</span>
         <span className="bg-primary/10 text-primary text-2xs rounded-full px-1.5 py-0.5 font-medium">
@@ -61,7 +61,7 @@ function ContactMock() {
 
 function EmailMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
+    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-(--landing-shadow-card)">
       <div className="border-border border-b px-4 py-2.5">
         <span className="text-muted-foreground text-2xs">Draft, Email 1 of 3</span>
       </div>
@@ -98,7 +98,7 @@ function EmailMock() {
 
 function SequenceMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
+    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-(--landing-shadow-card)">
       <div className="border-border border-b px-4 py-2.5">
         <span className="text-muted-foreground text-2xs">3-touch sequence</span>
       </div>
@@ -196,7 +196,7 @@ export function BentoGrid() {
           return (
             <div
               key={f.title}
-              className={`border-border bg-card overflow-hidden rounded-xl border p-6 shadow-xs transition-shadow duration-200 hover:shadow-sm sm:p-8 ${f.span}`}
+              className={`border-border bg-card overflow-hidden rounded-xl border p-6 shadow-(--landing-shadow-card) transition-shadow duration-200 hover:shadow-(--landing-shadow-card-hover) sm:p-8 ${f.span}`}
             >
               <p className="text-muted-foreground text-2xs font-medium tracking-widest uppercase">
                 {f.eyebrow}

@@ -23,8 +23,8 @@ function SignalSourcePill({
       onClick={onClick}
       className={`group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-300 ${
         active
-          ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-          : 'bg-card text-muted-foreground border-border hover:border-primary/30 shadow-xs'
+          ? 'bg-primary text-primary-foreground border-primary shadow-(--landing-shadow-card-hover)'
+          : 'bg-card text-muted-foreground border-border hover:border-primary/30 shadow-(--landing-shadow-card)'
       }`}
     >
       {isCustom && <Sparkles className="size-3" />}
@@ -42,7 +42,7 @@ function CompanyMatch({
 }) {
   return (
     <div
-      className="border-border bg-card flex items-start gap-3 rounded-lg border px-4 py-3 shadow-xs"
+      className="border-border bg-card flex items-start gap-3 rounded-lg border px-4 py-3 shadow-(--landing-shadow-card)"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="bg-primary/10 text-primary mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold">
@@ -122,7 +122,7 @@ export function SignalsSection() {
             Signal detected
           </p>
           {/* Signal description card */}
-          <div className="border-primary/20 bg-card mb-3 rounded-xl border p-5 shadow-xs">
+          <div className="border-primary/20 bg-card mb-3 rounded-xl border p-5 shadow-(--landing-shadow-card)">
             <div className="flex items-center gap-2.5">
               <div className="bg-primary/10 text-primary flex size-8 items-center justify-center rounded-lg">
                 {isCustom ? (
@@ -162,11 +162,11 @@ export function SignalsSection() {
             <p className="text-muted-foreground mb-2 px-1 text-xs font-medium tracking-wide uppercase">
               Generated email
             </p>
-            <div className="border-border bg-card flex flex-col rounded-xl border shadow-xs">
+            <div className="border-border bg-card flex flex-col rounded-xl border shadow-(--landing-shadow-card)">
               {/* Email header */}
               <div className="border-border border-b px-5 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="bg-primary size-2 rounded-full shadow-sm" />
+                  <span className="bg-primary size-2 rounded-full shadow-(--landing-shadow-card-hover)" />
                   <span className="text-muted-foreground text-xs">
                     Draft from{' '}
                     <span className="text-primary font-medium">{activeSignal.source}</span> signal

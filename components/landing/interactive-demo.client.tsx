@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, Users, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { COMPANIES, CONTACTS, EMAILS } from './mock-dashboard-data';
-import { ThemeToggleButton } from './theme-toggle-button';
 import { SignalStep } from './interactive-demo-signal-step';
 import { ContactStep } from './interactive-demo-contact-step';
 import { OutreachStep } from './interactive-demo-outreach-step';
@@ -24,7 +23,6 @@ const STREAM_SPEED = 6;
 const DEMO_CONTACTS = CONTACTS.slice(0, 4);
 
 export function InteractiveDemo() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [activeStep, setActiveStep] = useState(0);
   const [indicatorStep, setIndicatorStep] = useState(0);
   const [visibleCompanies, setVisibleCompanies] = useState(0);
@@ -173,13 +171,13 @@ export function InteractiveDemo() {
   return (
     <div
       ref={containerRef}
-      data-theme={theme}
+      data-theme="light"
       className="overflow-hidden rounded-xl border"
       style={{
         borderColor: 'var(--border)',
         boxShadow: 'var(--landing-shadow-card)',
         backgroundColor: 'var(--card)',
-        color: 'var(--card-foreground)'
+        color: 'var(--foreground)'
       }}
     >
       <div
@@ -214,14 +212,6 @@ export function InteractiveDemo() {
             );
           })}
         </div>
-
-        <ThemeToggleButton
-          theme={theme}
-          onToggle={() => {
-            setPaused(true);
-            setTheme(theme === 'dark' ? 'light' : 'dark');
-          }}
-        />
       </div>
 
       <div className="h-px w-full" style={{ backgroundColor: 'var(--border)' }}>

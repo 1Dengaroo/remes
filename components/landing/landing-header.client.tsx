@@ -23,7 +23,7 @@ function UserAvatar({ light }: { light: boolean }) {
         size="sm"
         className="hidden text-sm font-medium transition-colors duration-500 hover:bg-transparent md:inline-flex"
         style={{
-          color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--landing-fg)'
+          color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--foreground)'
         }}
         onClick={openAuthModal}
       >
@@ -48,7 +48,7 @@ function UserAvatar({ light }: { light: boolean }) {
           referrerPolicy="no-referrer"
         />
       ) : (
-        <div className="flex size-7 items-center justify-center rounded-full bg-(--landing-accent)/20 text-xs font-medium text-(--landing-accent-light)">
+        <div className="bg-primary/20 text-primary flex size-7 items-center justify-center rounded-full text-xs font-medium">
           {(user.email?.[0] ?? '?').toUpperCase()}
         </div>
       )}
@@ -66,7 +66,7 @@ function DesktopNav({ light }: { light: boolean }) {
           asChild
           className="hidden h-auto p-0 text-sm font-normal no-underline transition-colors duration-500 hover:no-underline md:inline-flex"
           style={{
-            color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--landing-fg)'
+            color: light ? 'var(--landing-hero-fg-secondary)' : 'var(--foreground)'
           }}
         >
           <a href={link.href}>{link.label}</a>
@@ -108,7 +108,7 @@ export function LandingHeader() {
           maxWidth: scrolled ? '90rem' : '100%',
           backgroundColor: scrolled ? 'var(--landing-header-bg)' : 'transparent',
           borderRadius: scrolled ? '9999px' : '0',
-          border: scrolled ? '1px solid var(--landing-border-card)' : '1px solid transparent',
+          border: scrolled ? '1px solid var(--border)' : '1px solid transparent',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
           boxShadow: scrolled ? 'var(--landing-shadow-header)' : 'none',
@@ -124,7 +124,7 @@ export function LandingHeader() {
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
               <span
                 className="text-sm font-semibold tracking-wide transition-colors duration-500"
-                style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--landing-fg)' }}
+                style={{ color: light ? 'var(--landing-hero-fg)' : 'var(--foreground)' }}
               >
                 Remes
               </span>
