@@ -6,6 +6,7 @@ import { SignalBadge } from './signal-badge';
 import { ContactCarousel } from './contact-carousel';
 import { MobileCompanyCard } from './mobile-company-card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { CompanyLogoWithFallback } from '@/components/shared/company-logo';
 import type {
   CompanyResult,
@@ -264,12 +265,9 @@ export function CompanyRow({
                     {signal.key_phrases.length > 0 && (
                       <div className="flex gap-1 overflow-hidden">
                         {signal.key_phrases.slice(0, 3).map((phrase, j) => (
-                          <span
-                            key={j}
-                            className="bg-muted text-muted-foreground shrink-0 rounded px-1.5 py-0.5 text-xs"
-                          >
+                          <Badge key={j} variant="muted" className="rounded">
                             {phrase}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     )}

@@ -38,7 +38,7 @@ export function ProfileModal() {
           {/* Sidebar */}
           <div className="border-border flex w-full shrink-0 flex-col border-b p-4 md:w-48 md:border-r md:border-b-0">
             <DialogHeader className="mb-4 px-1">
-              <DialogTitle className="text-sm">Settings</DialogTitle>
+              <DialogTitle className="text-md">Settings</DialogTitle>
               <DialogDescription className="sr-only">
                 Manage your account, connections, and preferences.
               </DialogDescription>

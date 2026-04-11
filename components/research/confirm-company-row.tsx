@@ -2,6 +2,7 @@
 
 import { ExternalLink, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { CompanyLogoWithFallback } from '@/components/shared/company-logo';
 import type { DiscoveredCompanyPreview } from '@/lib/types';
 
@@ -99,9 +100,9 @@ export function CompanyRow({
             </a>
           )}
           {previouslyResearched && (
-            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-medium">
+            <Badge variant="muted" size="sm" className="rounded">
               Previously Researched
-            </span>
+            </Badge>
           )}
         </div>
         {company.description && (

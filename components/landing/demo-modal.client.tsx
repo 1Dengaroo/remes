@@ -94,9 +94,7 @@ export function DemoModal() {
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="text-lg font-semibold text-(--landing-text)">
-                Book a demo
-              </DialogTitle>
+              <DialogTitle>Book a demo</DialogTitle>
               <DialogDescription className="text-sm leading-relaxed text-(--landing-text-muted)">
                 Get a personalized walkthrough of how Remes can build pipeline for your team.
               </DialogDescription>

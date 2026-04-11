@@ -209,10 +209,9 @@ export function ConfirmStep() {
                     </span>
                   </div>
                   <Button
-                    variant="ghost"
+                    variant="ghost-muted"
                     size="icon-xs"
                     onClick={() => setSelectedCompanies(selected.filter((n) => n !== name))}
-                    className="text-muted-foreground hover:text-foreground"
                   >
                     <X className="size-3.5" />
                   </Button>
@@ -244,11 +243,11 @@ export function ConfirmStep() {
                 </div>
               ) : (
                 <Button
-                  variant="ghost"
+                  variant="ghost-muted"
                   size="sm"
                   onClick={() => setAdding(true)}
                   disabled={atLimit}
-                  className="text-muted-foreground hover:text-foreground gap-2"
+                  className="gap-2"
                 >
                   <Plus className="size-3.5" />
                   Add a company

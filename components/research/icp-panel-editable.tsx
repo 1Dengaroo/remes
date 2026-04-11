@@ -69,10 +69,10 @@ function EditableTagGroup({
           >
             {tag}
             <Button
-              variant="ghost"
+              variant="ghost-destructive"
               size="icon-xs"
               onClick={() => handleRemove(tag)}
-              className="hover:text-destructive ml-0.5 size-auto p-0 opacity-60 hover:opacity-100"
+              className="ml-0.5 size-auto p-0 opacity-60 hover:opacity-100"
             >
               <X className="size-2.5" />
             </Button>
@@ -95,10 +95,10 @@ function EditableTagGroup({
           />
         ) : (
           <Button
-            variant="ghost"
+            variant="ghost-muted"
             size="icon-xs"
             onClick={() => setAdding(true)}
-            className="text-muted-foreground hover:text-foreground size-auto px-1.5 py-0.5"
+            className="size-auto px-1.5 py-0.5"
           >
             <Plus className="size-2.5" />
           </Button>

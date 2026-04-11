@@ -133,23 +133,16 @@ function ICPRow({
 
       <div className="flex items-center gap-1">
         <Button
-          variant="ghost"
+          variant="ghost-muted"
           size="icon-xs"
           label="Rename"
           onClick={() => setEditing(true)}
-          className="text-muted-foreground hover:text-foreground"
         >
           <Pencil className="size-3.5" />
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              label="Delete"
-              disabled={isDeleting}
-              className="text-muted-foreground hover:text-destructive"
-            >
+            <Button variant="ghost-destructive" size="icon-xs" label="Delete" disabled={isDeleting}>
               <Trash2 className="size-3.5" />
             </Button>
           </AlertDialogTrigger>

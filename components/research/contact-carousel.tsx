@@ -47,20 +47,18 @@ export function ContactCarousel({
           </span>
           <div className="flex items-center gap-0.5">
             <Button
-              variant="ghost"
+              variant="ghost-muted"
               size="icon-xs"
               onClick={() => setActiveIndex((i) => i - 1)}
               disabled={activeIndex === 0}
-              className="text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="size-3.5" />
             </Button>
             <Button
-              variant="ghost"
+              variant="ghost-muted"
               size="icon-xs"
               onClick={() => setActiveIndex((i) => i + 1)}
               disabled={activeIndex === sorted.length - 1}
-              className="text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="size-3.5" />
             </Button>

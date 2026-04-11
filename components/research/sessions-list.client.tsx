@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Trash2, Clock, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -98,17 +99,14 @@ export function SessionsList({
                   ) : (
                     <span className="truncate text-sm font-medium">{session.name}</span>
                   )}
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                      session.status === 'completed'
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-muted text-muted-foreground'
-                    }`}
+                  <Badge
+                    variant={session.status === 'completed' ? 'primary-subtle' : 'muted'}
+                    size="sm"
                   >
                     {session.status === 'completed'
                       ? 'Completed'
                       : STEP_LABELS[session.step] || session.step}
-                  </span>
+                  </Badge>
                 </div>
                 <div className="text-muted-foreground mt-1 flex items-center gap-3 text-xs">
                   {session.icp_description && (
@@ -126,26 +124,24 @@ export function SessionsList({
 
               <div className="flex items-center gap-1">
                 <Button
-                  variant="ghost"
+                  variant="ghost-muted"
                   size="icon-xs"
                   label="Rename session"
                   onClick={(e) => {
                     e.stopPropagation();
                     setEditingId(session.id);
                   }}
-                  className="text-muted-foreground hover:text-foreground"
                 >
                   <Pencil className="size-3.5" />
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
-                      variant="ghost"
+                      variant="ghost-destructive"
                       size="icon-xs"
                       label="Delete session"
                       onClick={(e) => e.stopPropagation()}
                       disabled={deletingId === session.id}
-                      className="text-muted-foreground hover:text-destructive"
                     >
                       <Trash2 className="size-3.5" />
                     </Button>

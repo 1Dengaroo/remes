@@ -369,11 +369,11 @@ export function EmailEditorInline({
               <div className="flex items-center gap-1">
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="ghost-muted"
                   size="icon-xs"
                   onClick={() => handleStepChange(activeStep - 1)}
                   disabled={activeStep === 0 || generating}
-                  className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+                  className="disabled:opacity-30"
                 >
                   <ChevronLeft className="size-4" />
                 </Button>
@@ -382,11 +382,11 @@ export function EmailEditorInline({
                 </span>
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="ghost-muted"
                   size="icon-xs"
                   onClick={() => handleStepChange(activeStep + 1)}
                   disabled={activeStep === 2 || generating}
-                  className="text-muted-foreground hover:text-foreground disabled:opacity-30"
+                  className="disabled:opacity-30"
                 >
                   <ChevronRight className="size-4" />
                 </Button>
@@ -394,10 +394,9 @@ export function EmailEditorInline({
               {gmailChecked && !gmailConnected && (
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant="ghost-muted"
                   size="xs"
                   onClick={() => useProfileStore.getState().openProfile('connections')}
-                  className="text-muted-foreground hover:text-foreground"
                 >
                   <Link2 className="size-3" />
                   Connect Gmail
@@ -456,10 +455,10 @@ export function EmailEditorInline({
             <p className="text-muted-foreground text-xs font-medium">Preview</p>
             <Button
               type="button"
-              variant="ghost"
+              variant="ghost-muted"
               size="xs"
               onClick={() => setShowPreview(false)}
-              className="text-muted-foreground hover:text-foreground md:hidden"
+              className="md:hidden"
             >
               Back to editor
             </Button>

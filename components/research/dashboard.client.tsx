@@ -9,6 +9,7 @@ import { Plus, Search, Mail, Settings, UserPlus, Clock } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { createSession } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
@@ -126,9 +127,9 @@ function ActivityFeed({ items }: { items: ActivityItem[] }) {
               <div className="flex items-center gap-2">
                 <span className="truncate text-sm font-medium">{item.title}</span>
                 {item.status === 'failed' && (
-                  <span className="bg-destructive/10 text-destructive shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+                  <Badge variant="destructive" size="sm">
                     Failed
-                  </span>
+                  </Badge>
                 )}
               </div>
               <p className="text-muted-foreground mt-0.5 truncate text-xs">{item.subtitle}</p>
@@ -281,9 +282,9 @@ export function Dashboard({
                               {email.contact_name}
                             </span>
                             {email.status === 'failed' && (
-                              <span className="bg-destructive/10 text-destructive shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
+                              <Badge variant="destructive" size="sm">
                                 Failed
-                              </span>
+                              </Badge>
                             )}
                           </div>
                           <p className="text-muted-foreground mt-0.5 truncate text-xs">
