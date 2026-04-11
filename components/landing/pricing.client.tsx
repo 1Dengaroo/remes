@@ -27,20 +27,18 @@ export function Pricing() {
     <div className="flex min-h-dvh flex-col">
       <div className={`mx-auto w-full ${MAX_WIDTH} flex-1 px-6 pt-32 pb-24`}>
         <div className="text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-(--landing-accent)/20 bg-(--landing-accent)/5 px-4 py-1.5">
-            <Sparkles className="size-3.5 text-(--landing-accent)" />
-            <span className="text-sm font-medium text-(--landing-accent-light)">
-              Free during beta
-            </span>
+          <div className="border-primary/20 bg-primary/5 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5">
+            <Sparkles className="text-primary size-3.5" />
+            <span className="text-primary text-sm font-medium">Free during beta</span>
           </div>
           <h1
-            className="text-landing-fg mx-auto max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl"
+            className="text-foreground mx-auto max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl"
             style={{ textWrap: 'balance' }}
           >
             We&apos;re building in public
           </h1>
           <p
-            className="text-landing-fg-secondary mx-auto mt-5 max-w-xl text-sm leading-relaxed sm:text-base sm:leading-relaxed"
+            className="text-muted-foreground mx-auto mt-5 max-w-xl text-sm leading-relaxed sm:text-base sm:leading-relaxed"
             style={{ textWrap: 'balance' }}
           >
             Remes is in beta while we refine the product with early users. Everything is free right
@@ -49,43 +47,43 @@ export function Pricing() {
         </div>
 
         <div className="mx-auto mt-16 max-w-3xl">
-          <div className="overflow-hidden rounded-2xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+          <div className="border-border bg-card overflow-hidden rounded-2xl border shadow-(--landing-shadow-card)">
             <div className="grid gap-0 md:grid-cols-2">
-              <div className="border-b border-(--landing-border-card) p-8 sm:p-10 md:border-r md:border-b-0">
+              <div className="border-border border-b p-8 sm:p-10 md:border-r md:border-b-0">
                 <div className="mb-1 flex items-baseline gap-3">
-                  <span className="text-landing-fg text-3xl font-bold tracking-tight">$0</span>
-                  <span className="text-landing-fg-muted text-sm">/month</span>
+                  <span className="text-foreground text-3xl font-bold tracking-tight">$0</span>
+                  <span className="text-muted-foreground text-sm">/month</span>
                 </div>
-                <p className="text-landing-fg-muted mb-6 text-xs">
+                <p className="text-muted-foreground mb-6 text-xs">
                   No credit card required. No usage limits during beta.
                 </p>
 
-                <p className="text-landing-fg mb-4 text-sm font-semibold">
+                <p className="text-foreground mb-4 text-sm font-semibold">
                   Everything included today
                 </p>
                 <ul className="space-y-3">
                   {BETA_FEATURES.map((feature) => (
                     <li key={feature} className="flex items-start gap-2.5">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-(--landing-accent)" />
-                      <span className="text-landing-fg-secondary text-sm">{feature}</span>
+                      <Check className="text-primary mt-0.5 size-3.5 shrink-0" />
+                      <span className="text-muted-foreground text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="p-8 sm:p-10">
-                <p className="text-landing-fg mb-4 text-sm font-semibold">On the roadmap</p>
+                <p className="text-foreground mb-4 text-sm font-semibold">On the roadmap</p>
                 <ul className="mb-8 space-y-3">
                   {ROADMAP.map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
-                      <div className="mt-1.5 size-1.5 shrink-0 rounded-full bg-(--landing-border-card)" />
-                      <span className="text-landing-fg-secondary text-sm">{item}</span>
+                      <div className="bg-border mt-1.5 size-1.5 shrink-0 rounded-full" />
+                      <span className="text-muted-foreground text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="rounded-xl border border-(--landing-border-card) bg-(--landing-bg) p-5">
-                  <p className="text-landing-fg-secondary text-sm leading-relaxed">
+                <div className="border-border bg-background rounded-xl border p-5">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     We talk to every beta user. Your feedback directly shapes what we build next.
                   </p>
                 </div>
@@ -103,7 +101,7 @@ export function Pricing() {
               (label) => (
                 <div key={label} className="flex items-center gap-2">
                   <div className="size-1.5 rounded-full bg-emerald-400" />
-                  <span className="text-landing-fg-muted text-xs">{label}</span>
+                  <span className="text-muted-foreground text-xs">{label}</span>
                 </div>
               )
             )}

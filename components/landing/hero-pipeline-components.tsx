@@ -17,7 +17,7 @@ export function ScoreBadge({ tier, value }: { tier: 'high' | 'mid' | 'low'; valu
 }
 
 const SIGNAL_COLORS: Record<string, string> = {
-  purple: 'bg-(--landing-signal-job)/20 text-(--landing-accent-light)',
+  purple: 'bg-(--landing-signal-job)/20 text-primary',
   emerald: 'bg-(--landing-signal-funding)/20 text-(--landing-signal-funding)',
   red: 'bg-(--landing-signal-news)/20 text-(--landing-signal-news)',
   amber: 'bg-(--landing-signal-jd)/20 text-(--landing-signal-jd)'
@@ -59,15 +59,15 @@ export function CompanyRow({
   return (
     <div className={`company-row rounded-lg px-4 py-3.5 ${className ?? ''}`}>
       <div className="flex items-center gap-3">
-        <div className="company-icon text-2xs text-landing-fg-muted flex size-8 shrink-0 items-center justify-center rounded-lg bg-(--landing-skel-base) font-semibold">
+        <div className="company-icon text-2xs text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-lg bg-(--landing-skel-base) font-semibold">
           {initials}
         </div>
         <div className="min-w-0 flex-1 space-y-1.5">
           <div className="relative flex items-center gap-2">
-            <span className="company-name text-landing-fg text-sm2 font-medium opacity-0">
+            <span className="company-name text-foreground text-sm2 font-medium opacity-0">
               {name}
             </span>
-            <span className="company-meta text-landing-fg-muted text-2xs opacity-0">{meta}</span>
+            <span className="company-meta text-muted-foreground text-2xs opacity-0">{meta}</span>
             <div className="company-name-skel pointer-events-none absolute inset-0 flex items-center gap-2">
               <Skel className="h-3.5 w-14" />
               <Skel className="h-2.5 w-28" />
@@ -98,14 +98,14 @@ export function ContactRow({
 }) {
   return (
     <div className="contact-row flex items-center gap-3 px-4 py-3">
-      <div className="contact-avatar text-2xs text-landing-fg-muted flex size-8 shrink-0 items-center justify-center rounded-full bg-(--landing-skel-base) font-medium">
+      <div className="contact-avatar text-2xs text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full bg-(--landing-skel-base) font-medium">
         {initials}
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex items-center gap-2">
-          <span className="contact-name text-landing-fg text-sm2 font-medium">{name}</span>
+          <span className="contact-name text-foreground text-sm2 font-medium">{name}</span>
           <svg
-            className="contact-linkedin text-landing-fg-muted size-3 opacity-0"
+            className="contact-linkedin text-muted-foreground size-3 opacity-0"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
@@ -121,7 +121,7 @@ export function ContactRow({
             Verified
           </span>
         </div>
-        <span className="text-landing-fg-muted text-xs2">{title}</span>
+        <span className="text-muted-foreground text-xs2">{title}</span>
       </div>
       <Skel className="contact-email h-2.5 w-25" />
     </div>
@@ -131,7 +131,7 @@ export function ContactRow({
 export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-(--landing-hero-badge-border) bg-(--landing-bg-card) shadow-(--landing-shadow-glow) ${className ?? ''}`}
+      className={`bg-card overflow-hidden rounded-xl border border-(--landing-hero-badge-border) shadow-(--landing-shadow-card) ${className ?? ''}`}
       style={{ visibility: 'hidden' }}
     >
       {children}
@@ -146,7 +146,7 @@ export function resolveTokens(el: HTMLElement) {
     statusActive: get('--landing-status-active'),
     statusActiveGlow: get('--landing-status-active-glow'),
     iconActiveBg: get('--landing-icon-active-bg'),
-    iconActiveText: get('--landing-icon-active-text'),
+    iconActiveText: get('--primary'),
     skelBright: get('--landing-skel-bright'),
     skelDim: get('--landing-skel-dim'),
     avatarEnrichedBg: get('--landing-avatar-enriched-bg'),

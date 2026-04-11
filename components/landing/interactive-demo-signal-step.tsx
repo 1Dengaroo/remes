@@ -55,9 +55,9 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
                 border: '1px solid var(--border)',
                 backgroundColor:
                   c.score >= 9
-                    ? 'rgba(16, 185, 129, 0.04)'
+                    ? 'var(--signal-funding-bg)'
                     : c.score >= 8
-                      ? 'rgba(59, 130, 246, 0.04)'
+                      ? 'var(--signal-news-bg)'
                       : 'var(--card)',
                 boxShadow: `inset 3px 0 0 var(--signal-${SIGNAL_TOKEN[c.signals[0].type]}-text)`
               }}
