@@ -97,18 +97,8 @@
   --color-landing-fg-secondary: var(--landing-fg-secondary);
   --color-landing-fg-muted: var(--landing-fg-muted);
 
-  /* Landing page text sizes */
-  --text-2xs: var(--landing-text-2xs);
-  --text-xs2: var(--landing-text-xs2);
-  --text-sm2: var(--landing-text-sm2);
-  --text-md: var(--landing-text-md);
-  --text-story: var(--landing-text-story);
-
-  /* Landing page line heights */
-  --leading-hero: var(--landing-leading-hero);
-  --leading-tight2: var(--landing-leading-tight);
-  --leading-snug2: var(--landing-leading-snug);
-  --leading-normal2: var(--landing-leading-normal);
+  /* Landing page text size */
+  --text-2xs: 0.625rem;
   --leading-relaxed2: var(--landing-leading-relaxed);
 }
 
@@ -205,21 +195,4 @@
 
 html:has(.marketing) {
   background-color: #fff;
-  color-scheme: light;
-}
-
-/* Force light semantic tokens on landing pages regardless of dark mode */
-.dark .marketing {
-  --background: #f6f5fc;
-  --foreground: #1c1a30;
-  --card: #ffffff;
-  --card-foreground: #1c1a30;
-  --muted: #e6e5f4;
-  --muted-foreground: #7e7c9a;
-  --border: #d4cee4;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-  --secondary: #ecedf8;
-  --secondary-foreground: #2d2c4a;
-  color-scheme: light;
 }

@@ -21,11 +21,13 @@ function SignalSourcePill({
   return (
     <button
       onClick={onClick}
-      className={`group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-300 ${
-        active
-          ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-          : 'bg-card text-muted-foreground border-border hover:border-primary/30 shadow-xs'
-      }`}
+      className="group relative flex shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-300"
+      style={{
+        backgroundColor: active ? 'var(--landing-accent)' : 'var(--landing-bg-card)',
+        color: active ? '#fff' : 'var(--landing-fg-muted)',
+        borderColor: active ? 'var(--landing-accent)' : 'var(--landing-border-card)',
+        boxShadow: 'var(--landing-shadow-card)'
+      }}
     >
       {isCustom && <Sparkles className="size-3" />}
       {label}
@@ -42,15 +44,18 @@ function CompanyMatch({
 }) {
   return (
     <div
-      className="border-border bg-card flex items-start gap-3 rounded-lg border px-4 py-3 shadow-xs"
+      className="flex items-start gap-3 rounded-lg border border-(--landing-border-card) bg-(--landing-bg-card) px-4 py-3 shadow-(--landing-shadow-card)"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="bg-primary/10 text-primary mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold">
+      <div
+        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md text-xs font-bold"
+        style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+      >
         {company.name[0]}
       </div>
       <div className="min-w-0 flex-1">
-        <span className="text-foreground text-sm font-medium">{company.name}</span>
-        <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">{company.reason}</p>
+        <span className="text-landing-fg text-sm font-medium">{company.name}</span>
+        <p className="text-landing-fg-muted mt-0.5 text-xs leading-relaxed">{company.reason}</p>
       </div>
     </div>
   );
@@ -82,16 +87,16 @@ export function SignalsSection() {
     >
       {/* Heading */}
       <div className="mb-14 max-w-2xl sm:mb-20">
-        <p className="text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase">
+        <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
           Signals
         </p>
         <h2
-          className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl"
+          className="text-landing-fg text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl"
           style={{ textWrap: 'balance' }}
         >
           Reach out the moment you spot <RotatingWord />
         </h2>
-        <p className="text-foreground/70 mt-4 max-w-lg text-sm leading-relaxed">
+        <p className="text-landing-fg-secondary mt-4 max-w-lg text-sm leading-relaxed">
           Remes monitors dozens of data sources in real time, from job boards and SEC filings to
           company websites and LinkedIn. Pick a signal to see what Remes finds.
         </p>
@@ -118,13 +123,22 @@ export function SignalsSection() {
       >
         {/* Left: Signal description + matched companies */}
         <div className="flex flex-col">
-          <p className="text-muted-foreground mb-2 px-1 text-xs font-medium tracking-wide uppercase">
+          <p className="text-landing-fg-muted mb-2 px-1 text-xs font-medium tracking-wide uppercase">
             Signal detected
           </p>
           {/* Signal description card */}
-          <div className="border-primary/20 bg-card mb-3 rounded-xl border p-5 shadow-xs">
+          <div
+            className="mb-3 rounded-xl border bg-(--landing-bg-card) p-5 shadow-(--landing-shadow-card)"
+            style={{ borderColor: 'rgba(86, 67, 204, 0.2)' }}
+          >
             <div className="flex items-center gap-2.5">
-              <div className="bg-primary/10 text-primary flex size-8 items-center justify-center rounded-lg">
+              <div
+                className="flex size-8 items-center justify-center rounded-lg"
+                style={{
+                  backgroundColor: 'rgba(86, 67, 204, 0.1)',
+                  color: 'var(--landing-accent)'
+                }}
+              >
                 {isCustom ? (
                   <Sparkles className="size-4" />
                 ) : (
@@ -132,13 +146,19 @@ export function SignalsSection() {
                 )}
               </div>
               <div>
-                <span className="text-foreground text-sm font-semibold">{activeSignal.source}</span>
-                <span className="bg-primary/10 text-primary ml-2 rounded-full px-2 py-0.5 text-xs font-medium">
+                <span className="text-landing-fg text-sm font-semibold">{activeSignal.source}</span>
+                <span
+                  className="ml-2 rounded-full px-2 py-0.5 text-xs font-medium"
+                  style={{
+                    backgroundColor: 'rgba(86, 67, 204, 0.1)',
+                    color: 'var(--landing-accent)'
+                  }}
+                >
                   Monitoring
                 </span>
               </div>
             </div>
-            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+            <p className="text-landing-fg-muted mt-3 text-sm leading-relaxed">
               {activeSignal.example}
             </p>
           </div>
@@ -146,7 +166,7 @@ export function SignalsSection() {
           {/* Matched companies */}
           {preview && (
             <div className="space-y-2">
-              <p className="text-muted-foreground px-1 text-xs font-medium tracking-wide uppercase">
+              <p className="text-landing-fg-muted px-1 text-xs font-medium tracking-wide uppercase">
                 Companies matched
               </p>
               {preview.companies.map((company, i) => (
@@ -159,41 +179,50 @@ export function SignalsSection() {
         {/* Right: Email preview */}
         {preview && (
           <div className="flex flex-col">
-            <p className="text-muted-foreground mb-2 px-1 text-xs font-medium tracking-wide uppercase">
+            <p className="text-landing-fg-muted mb-2 px-1 text-xs font-medium tracking-wide uppercase">
               Generated email
             </p>
-            <div className="border-border bg-card flex flex-col rounded-xl border shadow-xs">
+            <div className="flex flex-col rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
               {/* Email header */}
-              <div className="border-border border-b px-5 py-3">
+              <div className="border-b border-(--landing-border-card) px-5 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="bg-primary size-2 rounded-full shadow-sm" />
-                  <span className="text-muted-foreground text-xs">
+                  <span
+                    className="size-2 rounded-full"
+                    style={{ backgroundColor: 'var(--landing-accent)' }}
+                  />
+                  <span className="text-landing-fg-muted text-xs">
                     Draft from{' '}
-                    <span className="text-primary font-medium">{activeSignal.source}</span> signal
+                    <span className="font-medium" style={{ color: 'var(--landing-accent)' }}>
+                      {activeSignal.source}
+                    </span>{' '}
+                    signal
                   </span>
                 </div>
               </div>
 
               {/* Email body */}
               <div className="flex-1 px-5 py-4">
-                <p className="text-foreground text-sm leading-relaxed whitespace-pre-line">
+                <p className="text-landing-fg text-sm leading-relaxed whitespace-pre-line">
                   {preview.emailOpener}
                 </p>
               </div>
 
               {/* Email footer */}
-              <div className="border-border flex items-center justify-between border-t px-5 py-3">
+              <div className="flex items-center justify-between border-t border-(--landing-border-card) px-5 py-3">
                 <div className="flex gap-2">
                   {['Signal-led', 'Personalized', 'Under 80 words'].map((tag) => (
                     <span
                       key={tag}
-                      className="text-muted-foreground bg-muted rounded-md px-2 py-0.5 text-xs"
+                      className="text-landing-fg-muted rounded-md bg-(--landing-skel-base) px-2 py-0.5 text-xs"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="bg-primary text-primary-foreground rounded-md px-3 py-1.5 text-xs font-medium">
+                <div
+                  className="rounded-md px-3 py-1.5 text-xs font-medium"
+                  style={{ backgroundColor: 'var(--landing-accent)', color: '#fff' }}
+                >
                   Send
                 </div>
               </div>

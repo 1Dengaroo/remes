@@ -1,22 +1,32 @@
 function SignalMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
-      <div className="border-border flex items-center gap-2 border-b px-4 py-2.5">
-        <div className="bg-primary size-1.5 rounded-full" />
-        <span className="text-muted-foreground text-2xs">3 signals detected</span>
+    <div className="mt-6 overflow-hidden rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+      <div className="flex items-center gap-2 border-b border-(--landing-border-card) px-4 py-2.5">
+        <div className="size-1.5 rounded-full bg-(--landing-accent)" />
+        <span className="text-landing-fg-muted text-2xs">3 signals detected</span>
       </div>
-      <div className="divide-border divide-y">
+      <div className="divide-y divide-(--landing-border-card)">
         {[
           { label: 'Ramp: 6 BDR roles posted', score: 9 },
           { label: 'Lattice: EMEA expansion', score: 9 },
           { label: 'Ashby: Series C closed', score: 8 }
         ].map((s, i) => (
-          <div key={i} className="border-primary/40 flex items-center gap-3 border-l-2 px-4 py-2.5">
-            <div className="bg-primary/10 text-primary text-2xs flex size-6 shrink-0 items-center justify-center rounded-md font-semibold">
+          <div
+            key={i}
+            className="flex items-center gap-3 border-l-2 px-4 py-2.5"
+            style={{ borderLeftColor: 'var(--landing-accent)' }}
+          >
+            <div
+              className="text-2xs flex size-6 shrink-0 items-center justify-center rounded-md font-semibold"
+              style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+            >
               {s.label[0]}
             </div>
-            <span className="text-foreground/80 text-xs2 truncate">{s.label}</span>
-            <div className="bg-primary/10 text-primary text-2xs ml-auto shrink-0 rounded-md px-1.5 py-0.5 font-semibold">
+            <span className="text-landing-fg-secondary truncate text-xs">{s.label}</span>
+            <div
+              className="text-2xs ml-auto shrink-0 rounded-md px-1.5 py-0.5 font-semibold"
+              style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+            >
               {s.score}
             </div>
           </div>
@@ -28,28 +38,37 @@ function SignalMock() {
 
 function ContactMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
-      <div className="border-border flex items-center justify-between border-b px-4 py-2.5">
-        <span className="text-muted-foreground text-2xs">Contacts at Ramp</span>
-        <span className="bg-primary/10 text-primary text-2xs rounded-full px-1.5 py-0.5 font-medium">
+    <div className="mt-6 overflow-hidden rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+      <div className="flex items-center justify-between border-b border-(--landing-border-card) px-4 py-2.5">
+        <span className="text-landing-fg-muted text-2xs">Contacts at Ramp</span>
+        <span
+          className="text-2xs rounded-full px-1.5 py-0.5 font-medium"
+          style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+        >
           3 verified
         </span>
       </div>
-      <div className="divide-border divide-y">
+      <div className="divide-y divide-(--landing-border-card)">
         {[
           { name: 'James Park', title: 'VP of Sales', initials: 'JP' },
           { name: 'Sarah Chen', title: 'Head of Growth', initials: 'SC' },
           { name: 'David Kim', title: 'RevOps Director', initials: 'DK' }
         ].map((c) => (
           <div key={c.initials} className="flex items-center gap-3 px-4 py-2.5">
-            <div className="bg-primary/10 text-primary text-xs2 flex size-7 shrink-0 items-center justify-center rounded-full font-semibold">
+            <div
+              className="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+              style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+            >
               {c.initials}
             </div>
             <div className="min-w-0 flex-1">
-              <span className="text-foreground text-xs2 font-medium">{c.name}</span>
-              <span className="text-muted-foreground text-2xs ml-2">{c.title}</span>
+              <span className="text-landing-fg text-xs font-medium">{c.name}</span>
+              <span className="text-landing-fg-muted text-2xs ml-2">{c.title}</span>
             </div>
-            <span className="bg-primary/10 text-primary text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium">
+            <span
+              className="text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium"
+              style={{ backgroundColor: 'rgba(86, 67, 204, 0.1)', color: 'var(--landing-accent)' }}
+            >
               verified
             </span>
           </div>
@@ -61,34 +80,42 @@ function ContactMock() {
 
 function EmailMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
-      <div className="border-border border-b px-4 py-2.5">
-        <span className="text-muted-foreground text-2xs">Draft, Email 1 of 3</span>
+    <div className="mt-6 overflow-hidden rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+      <div className="border-b border-(--landing-border-card) px-4 py-2.5">
+        <span className="text-landing-fg-muted text-2xs">Draft, Email 1 of 3</span>
       </div>
-      <div className="divide-border text-xs2 divide-y">
-        <div className="text-muted-foreground flex gap-3 px-4 py-2">
+      <div className="divide-y divide-(--landing-border-card) text-xs">
+        <div className="text-landing-fg-muted flex gap-3 px-4 py-2">
           <span className="text-2xs shrink-0">To</span>
-          <span className="text-foreground/80">james.p@ramp.com</span>
+          <span className="text-landing-fg-secondary">james.p@ramp.com</span>
         </div>
-        <div className="text-muted-foreground flex gap-3 px-4 py-2">
+        <div className="text-landing-fg-muted flex gap-3 px-4 py-2">
           <span className="text-2xs shrink-0">Subject</span>
-          <span className="text-primary font-medium">ramp&apos;s bdr hiring spree</span>
+          <span className="font-medium" style={{ color: 'var(--landing-accent)' }}>
+            ramp&apos;s bdr hiring spree
+          </span>
         </div>
       </div>
       <div className="space-y-1.5 px-4 py-3">
         {[65, 100, 90, 55, 80, 40, 20].map((w, i) => (
           <div
             key={i}
-            className={`h-1.5 rounded-full ${i === 0 ? 'bg-primary/20' : 'bg-muted'}`}
-            style={{ width: `${w}%` }}
+            className="h-1.5 rounded-full"
+            style={{
+              width: `${w}%`,
+              backgroundColor: i === 0 ? 'rgba(86, 67, 204, 0.2)' : 'var(--landing-skel-base)'
+            }}
           />
         ))}
       </div>
-      <div className="border-border flex items-center justify-between border-t px-4 py-2.5">
-        <span className="text-muted-foreground text-2xs">
+      <div className="flex items-center justify-between border-t border-(--landing-border-card) px-4 py-2.5">
+        <span className="text-landing-fg-muted text-2xs">
           Plain text · Signal-led · Under 80 words
         </span>
-        <div className="bg-primary text-primary-foreground text-2xs cursor-pointer rounded-full px-2.5 py-1 font-semibold transition-opacity duration-150 hover:opacity-85">
+        <div
+          className="text-2xs cursor-pointer rounded-full px-2.5 py-1 font-semibold transition-opacity duration-150 hover:opacity-85"
+          style={{ backgroundColor: 'var(--landing-accent)', color: '#fff' }}
+        >
           Send
         </div>
       </div>
@@ -98,38 +125,40 @@ function EmailMock() {
 
 function SequenceMock() {
   return (
-    <div className="border-border bg-card mt-6 overflow-hidden rounded-xl border shadow-xs">
-      <div className="border-border border-b px-4 py-2.5">
-        <span className="text-muted-foreground text-2xs">3-touch sequence</span>
+    <div className="mt-6 overflow-hidden rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) shadow-(--landing-shadow-card)">
+      <div className="border-b border-(--landing-border-card) px-4 py-2.5">
+        <span className="text-landing-fg-muted text-2xs">3-touch sequence</span>
       </div>
       <div className="flex flex-col gap-2 p-3">
         {[
-          { label: 'Email 1', desc: 'Signal-led opener', status: 'sent' },
-          { label: 'Email 2', desc: 'Follow-up, different angle', status: 'scheduled' },
-          { label: 'Email 3', desc: 'Final touch, value prop', status: 'draft' }
+          { label: 'Email 1', desc: 'Signal-led opener', status: 'sent', opacity: 1 },
+          {
+            label: 'Email 2',
+            desc: 'Follow-up, different angle',
+            status: 'scheduled',
+            opacity: 0.5
+          },
+          { label: 'Email 3', desc: 'Final touch, value prop', status: 'draft', opacity: 0.2 }
         ].map((step) => (
-          <div key={step.label} className="bg-muted flex items-center gap-3 rounded-lg px-3 py-2.5">
+          <div
+            key={step.label}
+            className="flex items-center gap-3 rounded-lg bg-(--landing-skel-base) px-3 py-2.5"
+          >
             <div
-              className={`size-2 shrink-0 rounded-full ${
-                step.status === 'sent'
-                  ? 'bg-primary'
-                  : step.status === 'scheduled'
-                    ? 'bg-primary/50'
-                    : 'bg-primary/20'
-              }`}
+              className="size-2 shrink-0 rounded-full"
+              style={{ backgroundColor: 'var(--landing-accent)', opacity: step.opacity }}
             />
             <div className="min-w-0 flex-1">
-              <span className="text-foreground text-xs2 font-medium">{step.label}</span>
-              <span className="text-muted-foreground text-2xs ml-2">{step.desc}</span>
+              <span className="text-landing-fg text-xs font-medium">{step.label}</span>
+              <span className="text-landing-fg-muted text-2xs ml-2">{step.desc}</span>
             </div>
             <span
-              className={`text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium capitalize ${
-                step.status === 'sent'
-                  ? 'bg-primary/10 text-primary'
-                  : step.status === 'scheduled'
-                    ? 'bg-primary/10 text-primary/70'
-                    : 'bg-muted-foreground/10 text-muted-foreground'
-              }`}
+              className="text-2xs shrink-0 rounded-full px-2 py-0.5 font-medium capitalize"
+              style={{
+                backgroundColor:
+                  step.status === 'draft' ? 'var(--landing-skel-base)' : 'rgba(86, 67, 204, 0.1)',
+                color: step.status === 'draft' ? 'var(--landing-fg-muted)' : 'var(--landing-accent)'
+              }}
             >
               {step.status}
             </span>
@@ -175,16 +204,16 @@ export function BentoGrid() {
   return (
     <section className="py-20 sm:py-28">
       <div className="section-heading mb-12">
-        <p className="text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase">
+        <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
           Platform
         </p>
         <h2
-          className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl xl:text-[2.75rem]"
+          className="text-landing-fg text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl xl:text-[2.75rem]"
           style={{ textWrap: 'balance' }}
         >
           Everything you need for outbound
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-lg text-sm leading-relaxed sm:text-base">
+        <p className="text-landing-fg-secondary mt-4 max-w-lg text-sm leading-relaxed sm:text-base">
           From signal to sent. One platform handles research, prospecting, and personalized
           outreach.
         </p>
@@ -196,13 +225,13 @@ export function BentoGrid() {
           return (
             <div
               key={f.title}
-              className={`border-border bg-card overflow-hidden rounded-xl border p-6 shadow-xs transition-shadow duration-200 hover:shadow-sm sm:p-8 ${f.span}`}
+              className={`overflow-hidden rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) p-6 shadow-(--landing-shadow-card) transition-shadow duration-200 hover:shadow-(--landing-shadow-card-hover) sm:p-8 ${f.span}`}
             >
-              <p className="text-muted-foreground text-2xs font-medium tracking-widest uppercase">
+              <p className="text-landing-fg-muted text-2xs font-medium tracking-widest uppercase">
                 {f.eyebrow}
               </p>
-              <h3 className="text-foreground mt-2 text-lg font-bold">{f.title}</h3>
-              <p className="text-muted-foreground mt-1.5 max-w-md text-sm leading-relaxed">
+              <h3 className="text-landing-fg mt-2 text-lg font-bold">{f.title}</h3>
+              <p className="text-landing-fg-secondary mt-1.5 max-w-md text-sm leading-relaxed">
                 {f.description}
               </p>
               <Mock />
