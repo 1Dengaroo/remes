@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: 'website'
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Remes',
     description: 'AI-powered outbound sales that finds and converts high-intent leads'
   },
@@ -55,6 +55,37 @@ export default function RootLayout({
       className={cn(spaceGrotesk.variable, sourceSerif.variable, lexend.variable)}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Remes',
+              url: SITE_URL,
+              logo: `${SITE_URL}/remes-logo.png`,
+              description: 'AI-powered outbound sales that finds and converts high-intent leads',
+              email: 'support@remes.so',
+              sameAs: ['https://www.tiktok.com/@apollo.advice'],
+              founder: [
+                {
+                  '@type': 'Person',
+                  name: 'Kenny',
+                  jobTitle: 'Co-Founder & Product Lead',
+                  email: 'kenny@remes.so'
+                },
+                {
+                  '@type': 'Person',
+                  name: 'Andy',
+                  jobTitle: 'Co-Founder & Engineering',
+                  email: 'andy@remes.so'
+                }
+              ]
+            })
+          }}
+        />
+      </head>
       <body className="antialiased">
         <ThemeProvider defaultTheme="light">
           <FontProvider>
