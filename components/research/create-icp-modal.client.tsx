@@ -105,12 +105,7 @@ export function CreateICPModal({
                 <div className="bg-card border-border flex items-center justify-between border-b px-4 py-2.5">
                   <span className="text-muted-foreground section-label">Customer Profile</span>
                   {description.trim() && (
-                    <span className="text-muted-foreground/60 text-xs">
-                      <kbd className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
-                        Cmd+Enter
-                      </kbd>{' '}
-                      to continue
-                    </span>
+                    <span className="text-muted-foreground/60 text-xs">to continue</span>
                   )}
                 </div>
 
