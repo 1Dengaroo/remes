@@ -19,10 +19,17 @@ export function ICPSummary({
 
   return (
     <Card className={className}>
-      <Button
-        variant="ghost"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setExpanded(!expanded);
+          }
+        }}
+        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left"
       >
         <div className="min-w-0 flex-1">
           <p className="text-muted-foreground truncate text-sm">{icp.description}</p>
@@ -46,7 +53,7 @@ export function ICPSummary({
             className={`text-muted-foreground size-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
           />
         </div>
-      </Button>
+      </div>
       <div
         className={`overflow-hidden transition-all duration-200 ${expanded ? 'max-h-40' : 'max-h-0'}`}
       >
