@@ -1,18 +1,14 @@
 /*
  * Landing page design tokens.
- * Every color, shadow, glow, and size used on the landing page
- * lives here. Components reference these via var(--landing-*).
- *
- * Default = light.
+ * Only tokens with NO platform equivalent live here.
+ * The marketing layout forces data-theme="light", so platform tokens
+ * (--primary, --foreground, --muted-foreground, --muted, --card, --border,
+ *  --secondary, --destructive, --signal-*-bg/text, etc.)
+ * resolve to their light values and are used directly.
  */
 
 :root {
-  --landing-bg: #f8f7fc;
-  --landing-bg-card: #ffffff;
-  --landing-bg-card-hover: #efedf6;
-  --landing-bg-modal: #ffffff;
-  --landing-bg-footer: #ffffff;
-
+  /* ── Brand gradient ── */
   --landing-brand-1: #455eb5;
   --landing-brand-2: #5643cc;
   --landing-brand-3: #673fd7;
@@ -23,84 +19,36 @@
     var(--landing-brand-3) 64.72%
   );
 
-  --landing-accent: #4a38b5;
-  --landing-accent-light: #5643cc;
-
-  --landing-text: #1a1625;
-  --landing-text-muted: #5a5470;
-  --landing-fg: rgba(0, 0, 0, 0.88);
-  --landing-fg-secondary: rgba(0, 0, 0, 0.68);
-  --landing-fg-muted: rgba(0, 0, 0, 0.58);
-
-  /* ── Signal colors ── */
+  /* ── Signal colors (hero pipeline animations) ── */
   --landing-signal-job: #5643cc;
   --landing-signal-news: #e5484d;
-  --landing-signal-website: #46e3b7;
   --landing-signal-jd: #f7c12b;
-  --landing-signal-employee: #2f7ad0;
-  --landing-signal-10k: #673fd7;
   --landing-signal-funding: #46e3b7;
-  --landing-signal-linkedin: #455eb5;
 
   /* ── Score badges ── */
   --landing-score-high-bg: rgba(16, 185, 129, 0.18);
   --landing-score-high-text: #047857;
   --landing-score-mid-bg: rgba(59, 130, 246, 0.18);
   --landing-score-mid-text: #1d4ed8;
-  --landing-score-low-bg: rgba(0, 0, 0, 0.06);
-  --landing-score-low-text: rgba(0, 0, 0, 0.45);
 
-  /* ── Rainbow border ── */
-  --landing-rainbow-border: linear-gradient(
-    135deg,
-    rgba(86, 67, 204, 0.3),
-    rgba(229, 72, 77, 0.25),
-    rgba(247, 193, 43, 0.25),
-    rgba(70, 227, 183, 0.25),
-    rgba(47, 122, 208, 0.25),
-    rgba(103, 63, 215, 0.3)
-  );
-
+  /* ── Shadows (custom, differ from platform elevations) ── */
   --landing-shadow-card: 0 1px 4px rgba(80, 70, 180, 0.08), 0 8px 24px rgba(80, 70, 180, 0.06);
+  --landing-shadow-card-hover: 0 4px 20px rgba(80, 70, 180, 0.1);
   --landing-shadow-btn: 0 2px 16px rgba(86, 67, 204, 0.2);
   --landing-shadow-btn-hover: 0 4px 24px rgba(86, 67, 204, 0.3);
   --landing-shadow-header: 0 2px 20px rgba(80, 70, 180, 0.1);
-  --landing-shadow-glow: 0 1px 4px rgba(80, 70, 180, 0.08), 0 8px 24px rgba(80, 70, 180, 0.06);
-  --landing-shadow-dot: 0 0 8px rgba(16, 185, 129, 0.35);
-  --landing-shadow-card-hover: 0 4px 20px rgba(80, 70, 180, 0.1);
-
-  /* ── Ambient glows ── */
-  --landing-glow-white: rgba(86, 67, 204, 0.09);
-  --landing-glow-purple: rgba(86, 67, 204, 0.08);
-
-  --landing-btn-primary-bg: #4a38b5;
-  --landing-btn-primary-text: #ffffff;
-  --landing-btn-primary-hover: #3d2e9e;
-  --landing-btn-secondary-bg: #ffffff;
-  --landing-btn-secondary-text: rgba(0, 0, 0, 0.82);
-  --landing-btn-secondary-border: rgba(0, 0, 0, 0.22);
-  --landing-btn-secondary-hover: #f0eef8;
   --landing-btn-secondary-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(80, 70, 180, 0.08);
 
-  /* ── Bento card backgrounds ── */
-  --landing-bento-purple: rgba(86, 67, 204, 0.1);
-  --landing-bento-teal: rgba(70, 227, 183, 0.08);
-  --landing-bento-amber: rgba(250, 220, 50, 0.1);
-  --landing-bento-rose: rgba(229, 72, 77, 0.08);
-
+  /* ── Header ── */
   --landing-header-bg: rgba(255, 255, 255, 0.88);
-  --landing-header-border: #d4cee4;
-  --landing-header-border-bottom: rgba(212, 206, 228, 0.5);
 
   /* ── Typography scale ── */
   --landing-text-2xs: 0.625rem;
   --landing-text-xs2: 0.6875rem;
-  --landing-text-sm2: 0.8125rem;
   --landing-text-md: 0.9375rem;
   --landing-text-story: 2.5rem;
 
   /* ── Line heights ── */
-  --landing-leading-hero: 1.1;
   --landing-leading-tight: 1.1;
   --landing-leading-snug: 1.45;
   --landing-leading-normal: 1.5;
@@ -108,19 +56,16 @@
 
   /* ── Skeleton / surface overlays ── */
   --landing-skel-base: rgba(86, 67, 204, 0.07);
-  --landing-surface-hover: rgba(86, 67, 204, 0.04);
-  --landing-surface-active: rgba(86, 67, 204, 0.08);
-  --landing-border-card: #d4cee4;
+  --landing-skel-bright: rgba(86, 67, 204, 0.1);
+  --landing-skel-dim: rgba(86, 67, 204, 0.06);
 
   /* ── Hero pipeline animation states ── */
   --landing-status-active: rgba(16, 185, 129, 0.85);
   --landing-status-active-glow: 0 0 8px rgba(16, 185, 129, 0.35);
   --landing-badge-verified-bg: rgba(16, 185, 129, 0.15);
   --landing-badge-verified-text: #047857;
-  --landing-skel-bright: rgba(86, 67, 204, 0.1);
-  --landing-skel-dim: rgba(86, 67, 204, 0.06);
   --landing-icon-active-bg: rgba(86, 67, 204, 0.15);
-  --landing-icon-active-text: #4a38b5;
+  --landing-icon-active-text: rgba(86, 67, 204, 0.9);
   --landing-avatar-enriched-bg: rgba(86, 67, 204, 0.08);
   --landing-avatar-enriched-text: rgba(0, 0, 0, 0.55);
   --landing-row-active-bg: rgba(86, 67, 204, 0.06);
@@ -143,89 +88,3 @@
   --landing-hero-stroke: #2537b1;
   --landing-hero-stroke-light: rgba(37, 55, 177, 0.4);
 }
-
-/*
- * ════════════════════════════════════
- * Dark theme (archived — restore by uncommenting and
- * adding data-landing-theme="dark" to .marketing wrapper)
- * ════════════════════════════════════
- *
- * [data-landing-theme='dark'] {
- *   --landing-bg: #08090a;
- *   --landing-bg-card: #111318;
- *   --landing-bg-card-hover: #161820;
- *   --landing-bg-modal: #111214;
- *   --landing-accent: #5643cc;
- *   --landing-accent-light: #8a8fff;
- *   --landing-text: #e4e5e9;
- *   --landing-text-muted: #9c9da1;
- *   --landing-fg: rgba(255, 255, 255, 0.95);
- *   --landing-fg-secondary: rgba(255, 255, 255, 0.65);
- *   --landing-fg-muted: rgba(255, 255, 255, 0.4);
- *   --landing-score-high-bg: rgba(52, 211, 153, 0.2);
- *   --landing-score-high-text: rgba(52, 211, 153, 0.9);
- *   --landing-score-mid-bg: rgba(96, 165, 250, 0.2);
- *   --landing-score-mid-text: rgba(96, 165, 250, 0.9);
- *   --landing-score-low-bg: rgba(255, 255, 255, 0.08);
- *   --landing-score-low-text: rgba(255, 255, 255, 0.5);
- *   --landing-shadow-card: 0 0 30px rgba(255, 255, 255, 0.06), 0 0 60px rgba(255, 255, 255, 0.03);
- *   --landing-shadow-btn: 0 0 20px rgba(255, 255, 255, 0.15);
- *   --landing-shadow-btn-hover: 0 0 30px rgba(255, 255, 255, 0.25);
- *   --landing-shadow-header: 0 4px 30px rgba(0, 0, 0, 0.5);
- *   --landing-shadow-glow: inset 0 0 30px rgba(255, 255, 255, 0.05), 0 0 40px rgba(255, 255, 255, 0.05), 0 0 80px rgba(255, 255, 255, 0.03);
- *   --landing-shadow-dot: 0 0 6px rgba(74, 222, 128, 0.4);
- *   --landing-shadow-card-hover: 0 0 30px rgba(255, 255, 255, 0.03);
- *   --landing-glow-white-strong: rgba(255, 255, 255, 0.05);
- *   --landing-glow-white: rgba(255, 255, 255, 0.04);
- *   --landing-glow-white-soft: rgba(255, 255, 255, 0.035);
- *   --landing-glow-white-subtle: rgba(255, 255, 255, 0.03);
- *   --landing-glow-white-faint: rgba(255, 255, 255, 0.025);
- *   --landing-glow-white-edge: rgba(255, 255, 255, 0.02);
- *   --landing-glow-purple-strong: rgba(86, 67, 204, 0.12);
- *   --landing-glow-purple: rgba(86, 67, 204, 0.04);
- *   --landing-glow-purple-accent: rgba(86, 67, 204, 0.06);
- *   --landing-glow-white-accent-line: rgba(255, 255, 255, 0.3);
- *   --landing-btn-primary-bg: #ffffff;
- *   --landing-btn-primary-text: #08090a;
- *   --landing-btn-primary-hover: rgba(255, 255, 255, 0.85);
- *   --landing-btn-secondary-bg: transparent;
- *   --landing-btn-secondary-text: rgba(255, 255, 255, 0.7);
- *   --landing-btn-secondary-border: rgba(255, 255, 255, 0.15);
- *   --landing-btn-secondary-hover: rgba(255, 255, 255, 0.06);
- *   --landing-bento-purple: rgba(86, 67, 204, 0.15);
- *   --landing-bento-teal: rgba(70, 227, 183, 0.12);
- *   --landing-bento-amber: rgba(247, 193, 43, 0.12);
- *   --landing-bento-rose: rgba(229, 72, 77, 0.12);
- *   --landing-header-bg: rgba(8, 9, 10, 0.8);
- *   --landing-header-border: rgba(255, 255, 255, 0.04);
- *   --landing-header-border-bottom: rgba(255, 255, 255, 0.03);
- *   --landing-aurora-white: rgba(255, 255, 255, 0.06);
- *   --landing-aurora-white-edge: rgba(255, 255, 255, 0.02);
- *   --landing-aurora-purple-l: rgba(86, 67, 204, 0.18);
- *   --landing-aurora-purple-l-edge: rgba(86, 67, 204, 0.06);
- *   --landing-aurora-blue-r: rgba(69, 94, 181, 0.14);
- *   --landing-aurora-blue-r-edge: rgba(69, 94, 181, 0.04);
- *   --landing-aurora-white-soft: rgba(255, 255, 255, 0.04);
- *   --landing-aurora-white-soft-edge: rgba(255, 255, 255, 0.01);
- *   --landing-aurora-deep: rgba(103, 63, 215, 0.14);
- *   --landing-aurora-deep-edge: rgba(86, 67, 204, 0.05);
- *   --landing-aurora-accent: rgba(86, 67, 204, 0.1);
- *   --landing-skel-base: rgba(255, 255, 255, 0.06);
- *   --landing-surface-hover: rgba(255, 255, 255, 0.03);
- *   --landing-surface-active: rgba(255, 255, 255, 0.06);
- *   --landing-border-card: rgba(255, 255, 255, 0.08);
- *   --landing-status-active: rgba(74, 222, 128, 0.7);
- *   --landing-status-active-glow: 0 0 6px rgba(74, 222, 128, 0.4);
- *   --landing-badge-verified-bg: rgba(16, 185, 129, 0.15);
- *   --landing-badge-verified-text: rgba(52, 211, 153, 0.8);
- *   --landing-skel-bright: rgba(255, 255, 255, 0.1);
- *   --landing-skel-dim: rgba(255, 255, 255, 0.08);
- *   --landing-icon-active-bg: rgba(86, 67, 204, 0.2);
- *   --landing-icon-active-text: rgba(138, 143, 255, 0.9);
- *   --landing-avatar-enriched-bg: rgba(255, 255, 255, 0.12);
- *   --landing-avatar-enriched-text: rgba(255, 255, 255, 0.5);
- *   --landing-row-active-bg: rgba(255, 255, 255, 0.04);
- *   --landing-row-active-border: rgba(255, 255, 255, 0.06);
- *   --landing-rainbow-border: linear-gradient(135deg, rgba(86, 67, 204, 0.4), rgba(229, 72, 77, 0.3), rgba(247, 193, 43, 0.3), rgba(70, 227, 183, 0.3), rgba(47, 122, 208, 0.3), rgba(103, 63, 215, 0.4));
- * }
- */

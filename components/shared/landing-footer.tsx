@@ -47,16 +47,16 @@ export function LandingFooter() {
   const openDemo = useDemoStore((s) => s.openDemo);
 
   return (
-    <footer className="bg-(--landing-bg-footer) py-16">
+    <footer className="bg-card py-16">
       <div className={`mx-auto w-full ${MAX_WIDTH} px-6`}>
         <div className="flex flex-col gap-12 sm:flex-row sm:justify-between">
           {/* Brand column */}
           <div className="flex max-w-55 flex-col gap-4">
             <div className="flex items-center gap-2">
               <Image src="/remes-logo.png" alt="Remes" width={22} height={22} className="rounded" />
-              <span className="text-landing-fg text-sm font-semibold tracking-tight">Remes</span>
+              <span className="text-foreground text-sm font-semibold tracking-tight">Remes</span>
             </div>
-            <p className="text-landing-fg-muted text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               AI-powered outbound sales for SMBs. Monitor buying signals, find contacts, and send
               personalized outreach — automatically.
             </p>
@@ -66,7 +66,7 @@ export function LandingFooter() {
           <div className="grid grid-cols-3 gap-8 sm:flex sm:gap-16">
             {FOOTER_COLUMNS.map((col) => (
               <div key={col.title}>
-                <p className="text-landing-fg mb-4 text-sm font-semibold tracking-tight">
+                <p className="text-foreground mb-4 text-sm font-semibold tracking-tight">
                   {col.title}
                 </p>
                 <ul className="space-y-2.5">
@@ -75,7 +75,7 @@ export function LandingFooter() {
                       {'action' in link ? (
                         <Button
                           variant="link"
-                          className="text-landing-fg-secondary hover:text-landing-fg h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline"
+                          className="text-muted-foreground hover:text-foreground h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline"
                           onClick={openDemo}
                         >
                           {link.label}
@@ -84,7 +84,7 @@ export function LandingFooter() {
                         <Button
                           variant="link"
                           asChild
-                          className="text-landing-fg-secondary hover:text-landing-fg h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline"
+                          className="text-muted-foreground hover:text-foreground h-auto p-0 text-sm font-normal no-underline transition-colors duration-150 hover:no-underline"
                         >
                           <a href={link.href}>{link.label}</a>
                         </Button>
@@ -99,7 +99,7 @@ export function LandingFooter() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex items-center justify-between border-t border-black/8 pt-6">
-          <p className="text-landing-fg-muted text-xs">
+          <p className="text-muted-foreground text-xs">
             &copy; {new Date().getFullYear()} Remes. All rights reserved.
           </p>
           <div className="flex items-center gap-1">
@@ -110,7 +110,7 @@ export function LandingFooter() {
                     variant="ghost"
                     size="icon"
                     asChild
-                    className="text-landing-fg-secondary hover:text-landing-fg size-8 hover:bg-black/5"
+                    className="text-muted-foreground hover:text-foreground size-8 hover:bg-black/5"
                   >
                     <a href={social.href} aria-label={social.label}>
                       {social.icon}

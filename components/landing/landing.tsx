@@ -105,16 +105,16 @@ export function Landing() {
           <section id="faqs" className="scroll-mt-16 py-24 sm:py-36">
             <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
               <div className="lg:sticky lg:top-32 lg:self-start">
-                <p className="text-landing-fg-muted mb-3 text-xs font-medium tracking-widest uppercase">
+                <p className="text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase">
                   Support
                 </p>
                 <h2
-                  className="text-landing-fg text-2xl font-bold tracking-tight sm:text-3xl"
+                  className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl"
                   style={{ textWrap: 'balance' }}
                 >
                   Frequently asked questions
                 </h2>
-                <p className="text-landing-fg-secondary mt-3 max-w-sm text-sm leading-relaxed">
+                <p className="text-muted-foreground mt-3 max-w-sm text-sm leading-relaxed">
                   Everything you need to know about Remes and how it fits into your sales workflow.
                 </p>
               </div>
@@ -125,14 +125,14 @@ export function Landing() {
                     <AccordionItem
                       key={i}
                       value={`faq-${i}`}
-                      className="rounded-xl border border-(--landing-border-card) bg-(--landing-bg-card) px-5"
+                      className="border-border bg-card rounded-xl border px-5"
                       style={{ boxShadow: '0 1px 3px rgba(80, 70, 180, 0.04)' }}
                     >
-                      <AccordionTrigger className="text-landing-fg hover:text-landing-fg [&>svg]:text-landing-fg-muted py-5 text-left text-sm leading-snug font-medium no-underline transition-colors duration-150 hover:no-underline">
+                      <AccordionTrigger className="text-foreground hover:text-foreground [&>svg]:text-muted-foreground py-5 text-left text-sm leading-snug font-medium no-underline transition-colors duration-150 hover:no-underline">
                         {faq.q}
                       </AccordionTrigger>
                       <AccordionContent>
-                        <p className="text-landing-fg-secondary pb-4 text-sm leading-relaxed">
+                        <p className="text-muted-foreground pb-4 text-sm leading-relaxed">
                           {faq.a}
                         </p>
                       </AccordionContent>
