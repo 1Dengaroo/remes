@@ -22,20 +22,19 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
           <div
             className="size-2 rounded-full"
             style={{
-              backgroundColor:
-                visibleCount > 0 ? 'var(--signal-funding-text)' : 'var(--landing-border-card)',
+              backgroundColor: visibleCount > 0 ? 'var(--signal-funding-text)' : 'var(--border)',
               boxShadow: visibleCount > 0 ? '0 0 6px var(--signal-funding-bg)' : 'none'
             }}
           />
-          <span className="text-xs font-medium" style={{ color: 'var(--landing-fg-muted)' }}>
+          <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>
             {visibleCount > 0 ? `${visibleCount} companies matched` : 'Scanning...'}
           </span>
         </div>
         <span
           className="rounded-md px-2 py-0.5 text-xs"
           style={{
-            backgroundColor: 'var(--landing-skel-base)',
-            color: 'var(--landing-fg-muted)'
+            backgroundColor: 'var(--muted)',
+            color: 'var(--muted-foreground)'
           }}
         >
           B2B SaaS &middot; 50-500 employees
@@ -53,13 +52,13 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
                 opacity: visible ? 1 : 0,
                 transform: visible ? 'translateY(0)' : 'translateY(8px)',
                 transition: 'opacity 400ms ease-out, transform 400ms ease-out',
-                border: '1px solid var(--landing-border-card)',
+                border: '1px solid var(--border)',
                 backgroundColor:
                   c.score >= 9
                     ? 'rgba(16, 185, 129, 0.04)'
                     : c.score >= 8
                       ? 'rgba(59, 130, 246, 0.04)'
-                      : 'var(--landing-bg-card)',
+                      : 'var(--card)',
                 boxShadow: `inset 3px 0 0 var(--signal-${SIGNAL_TOKEN[c.signals[0].type]}-text)`
               }}
             >
@@ -67,8 +66,8 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
                 <div
                   className="flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold"
                   style={{
-                    backgroundColor: 'var(--landing-accent)',
-                    color: '#fff'
+                    backgroundColor: 'var(--primary)',
+                    color: 'var(--primary-foreground)'
                   }}
                 >
                   {c.name.slice(0, 2)}
@@ -76,22 +75,22 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium" style={{ color: 'var(--landing-fg)' }}>
+                    <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
                       {c.name}
                     </span>
-                    <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                       {c.industry}
                     </span>
-                    <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                       &middot;
                     </span>
-                    <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                       {c.funding}
                     </span>
                   </div>
                   <div
                     className="mt-0.5 text-xs leading-relaxed italic"
-                    style={{ color: 'var(--landing-fg-muted)' }}
+                    style={{ color: 'var(--muted-foreground)' }}
                   >
                     {c.matchReason}
                   </div>
@@ -121,7 +120,7 @@ export function SignalStep({ visibleCount }: { visibleCount: number }) {
                     >
                       {SIGNAL_LABELS[s.type]}
                     </span>
-                    <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                       {s.title}
                     </span>
                   </div>

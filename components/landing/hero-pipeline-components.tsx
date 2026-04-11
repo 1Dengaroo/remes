@@ -64,7 +64,7 @@ export function CompanyRow({
         </div>
         <div className="min-w-0 flex-1 space-y-1.5">
           <div className="relative flex items-center gap-2">
-            <span className="company-name text-landing-fg text-sm font-medium opacity-0">
+            <span className="company-name text-landing-fg text-sm2 font-medium opacity-0">
               {name}
             </span>
             <span className="company-meta text-landing-fg-muted text-2xs opacity-0">{meta}</span>
@@ -103,7 +103,7 @@ export function ContactRow({
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex items-center gap-2">
-          <span className="contact-name text-landing-fg text-sm font-medium">{name}</span>
+          <span className="contact-name text-landing-fg text-sm2 font-medium">{name}</span>
           <svg
             className="contact-linkedin text-landing-fg-muted size-3 opacity-0"
             viewBox="0 0 24 24"
@@ -121,7 +121,7 @@ export function ContactRow({
             Verified
           </span>
         </div>
-        <span className="text-landing-fg-muted text-xs">{title}</span>
+        <span className="text-landing-fg-muted text-xs2">{title}</span>
       </div>
       <Skel className="contact-email h-2.5 w-25" />
     </div>

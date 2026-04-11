@@ -209,7 +209,7 @@ export function HeroPipeline() {
         <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
           <div className="flex items-center gap-2.5">
             <div className="header-dot size-2 rounded-full bg-(--landing-skel-base)" />
-            <span className="status-text text-landing-fg-secondary text-xs font-medium">
+            <span className="status-text text-landing-fg-secondary text-xs2 font-medium">
               Scanning signals...
             </span>
           </div>
@@ -264,7 +264,7 @@ export function HeroPipeline() {
 
       <Card className="contact-card absolute top-12 left-1/2 w-210 -translate-x-1/2 xl:top-14 xl:w-250">
         <div className="contacts-header flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
-          <span className="text-landing-fg-secondary text-xs font-medium">Contacts at Remes</span>
+          <span className="text-landing-fg-secondary text-xs2 font-medium">Contacts at Remes</span>
           <span
             className="enriched-count text-2xs rounded-full px-2 py-0.5 font-medium opacity-0"
             style={{
@@ -303,7 +303,7 @@ export function HeroPipeline() {
 
       <Card className="email-card absolute top-24 left-1/2 w-210 -translate-x-1/2 xl:top-28 xl:w-250">
         <div className="flex items-center justify-between border-b border-(--landing-border-card) px-5 py-3">
-          <span className="email-status text-landing-fg-secondary text-xs font-medium">
+          <span className="email-status text-landing-fg-secondary text-xs2 font-medium">
             Generating outreach
           </span>
           <span className="email-label text-landing-fg-muted text-2xs">Email 1 of 3</span>
@@ -312,11 +312,11 @@ export function HeroPipeline() {
         <div className="mx-5 divide-y divide-(--landing-border-card)">
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-landing-fg-muted text-2xs">To</span>
-            <span className="email-label text-landing-fg-secondary text-xs">kenny@remes.so</span>
+            <span className="email-label text-landing-fg-secondary text-xs2">kenny@remes.so</span>
           </div>
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-landing-fg-muted text-2xs">Subject</span>
-            <span className="email-label text-landing-fg-secondary text-xs">
+            <span className="email-label text-landing-fg-secondary text-xs2">
               Congrats on the raise — idea for scaling outbound
             </span>
           </div>
@@ -324,7 +324,7 @@ export function HeroPipeline() {
 
         <div className="mx-5 border-t border-(--landing-border-card)" />
 
-        <div className="text-landing-fg-secondary space-y-2.5 px-5 pt-3.5 pb-4 text-xs leading-relaxed">
+        <div className="text-landing-fg-secondary text-xs2 space-y-2.5 px-5 pt-3.5 pb-4 leading-relaxed">
           <p className="eline-0">Hi Kenny,</p>
           <p className="eline-1">
             Saw Remes just closed a $2.5M seed round — congrats. Also noticed you&apos;re hiring
@@ -358,10 +358,7 @@ export function HeroPipeline() {
           <span className="email-footer-text text-landing-fg-muted text-2xs">
             Personalized from signal data
           </span>
-          <div
-            className="send-btn text-2xs flex h-6.5 items-center rounded-full px-3.5 font-medium opacity-0"
-            style={{ backgroundColor: 'var(--landing-accent)', color: '#fff' }}
-          >
+          <div className="send-btn text-2xs bg-primary text-primary-foreground flex h-6.5 items-center rounded-full px-3.5 font-medium opacity-0">
             Send
           </div>
         </div>

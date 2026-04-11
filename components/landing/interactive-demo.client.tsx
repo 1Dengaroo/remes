@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, Users, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { COMPANIES, CONTACTS, EMAILS } from './mock-dashboard-data';
+import { ThemeToggleButton } from './theme-toggle-button';
 import { SignalStep } from './interactive-demo-signal-step';
 import { ContactStep } from './interactive-demo-contact-step';
 import { OutreachStep } from './interactive-demo-outreach-step';
@@ -23,6 +24,7 @@ const STREAM_SPEED = 6;
 const DEMO_CONTACTS = CONTACTS.slice(0, 4);
 
 export function InteractiveDemo() {
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [activeStep, setActiveStep] = useState(0);
   const [indicatorStep, setIndicatorStep] = useState(0);
   const [visibleCompanies, setVisibleCompanies] = useState(0);
@@ -171,17 +173,18 @@ export function InteractiveDemo() {
   return (
     <div
       ref={containerRef}
+      data-theme={theme}
       className="overflow-hidden rounded-xl border"
       style={{
-        borderColor: 'var(--landing-border-card)',
+        borderColor: 'var(--border)',
         boxShadow: 'var(--landing-shadow-card)',
-        backgroundColor: 'var(--landing-bg-card)',
-        color: 'var(--landing-fg)'
+        backgroundColor: 'var(--card)',
+        color: 'var(--card-foreground)'
       }}
     >
       <div
         className="flex items-center justify-between px-5 py-3.5"
-        style={{ borderBottom: '1px solid var(--landing-border-card)' }}
+        style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-1">
           {STEPS.map((step, i) => {
@@ -196,12 +199,12 @@ export function InteractiveDemo() {
                 className="h-auto gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium"
                 style={{
                   transition: 'background-color 150ms, color 150ms',
-                  backgroundColor: isActive ? 'var(--landing-accent)' : 'transparent',
+                  backgroundColor: isActive ? 'var(--primary)' : 'transparent',
                   color: isActive
-                    ? '#fff'
+                    ? 'var(--primary-foreground)'
                     : isPast
-                      ? 'var(--landing-fg)'
-                      : 'var(--landing-fg-muted)'
+                      ? 'var(--foreground)'
+                      : 'var(--muted-foreground)'
                 }}
                 onClick={() => goToStep(i, true)}
               >
@@ -211,14 +214,22 @@ export function InteractiveDemo() {
             );
           })}
         </div>
+
+        <ThemeToggleButton
+          theme={theme}
+          onToggle={() => {
+            setPaused(true);
+            setTheme(theme === 'dark' ? 'light' : 'dark');
+          }}
+        />
       </div>
 
-      <div className="h-px w-full" style={{ backgroundColor: 'var(--landing-border-card)' }}>
+      <div className="h-px w-full" style={{ backgroundColor: 'var(--border)' }}>
         <div
           className="h-full"
           style={{
             width: `${((indicatorStep + 1) / 3) * 100}%`,
-            backgroundColor: 'var(--landing-accent)',
+            backgroundColor: 'var(--primary)',
             transition: 'width 400ms ease-out'
           }}
         />
@@ -226,7 +237,7 @@ export function InteractiveDemo() {
 
       <div
         className="relative h-135 overflow-hidden sm:h-115"
-        style={{ backgroundColor: 'var(--landing-bg)' }}
+        style={{ backgroundColor: 'var(--background)' }}
       >
         <div
           style={{
@@ -248,11 +259,11 @@ export function InteractiveDemo() {
       <div
         className="flex items-center justify-between px-5 py-3"
         style={{
-          borderTop: '1px solid var(--landing-border-card)',
-          backgroundColor: 'var(--landing-bg-card)'
+          borderTop: '1px solid var(--border)',
+          backgroundColor: 'var(--card)'
         }}
       >
-        <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
           {indicatorStep === 0 && `${visibleCompanies} of ${COMPANIES.length} companies detected`}
           {indicatorStep === 1 &&
             `${enrichedContacts} of ${DEMO_CONTACTS.length} contacts enriched`}
@@ -264,8 +275,7 @@ export function InteractiveDemo() {
               key={i}
               className="size-1.5 rounded-full"
               style={{
-                backgroundColor:
-                  i === indicatorStep ? 'var(--landing-accent)' : 'var(--landing-border-card)',
+                backgroundColor: i === indicatorStep ? 'var(--primary)' : 'var(--border)',
                 transition: 'background-color 150ms'
               }}
             />

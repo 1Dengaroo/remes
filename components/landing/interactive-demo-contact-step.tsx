@@ -12,10 +12,10 @@ export function ContactStep({
   return (
     <div className="p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-xs font-medium" style={{ color: 'var(--landing-fg-muted)' }}>
+        <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>
           Decision-makers
         </span>
-        <span className="text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
           {enrichedCount} of {contacts.length} enriched
         </span>
       </div>
@@ -30,8 +30,8 @@ export function ContactStep({
               key={c.name}
               className="flex items-center gap-3 rounded-lg px-4 py-3"
               style={{
-                border: '1px solid var(--landing-border-card)',
-                backgroundColor: 'var(--landing-bg-card)',
+                border: '1px solid var(--border)',
+                backgroundColor: 'var(--card)',
                 opacity: isEnriched ? 1 : 0.5,
                 transition: 'opacity 300ms ease-out'
               }}
@@ -39,8 +39,8 @@ export function ContactStep({
               <div
                 className="flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-medium"
                 style={{
-                  backgroundColor: 'var(--landing-skel-base)',
-                  color: 'var(--landing-fg-muted)'
+                  backgroundColor: 'var(--muted)',
+                  color: 'var(--muted-foreground)'
                 }}
               >
                 {c.name
@@ -54,9 +54,9 @@ export function ContactStep({
                   <span
                     className="text-sm font-medium"
                     style={{
-                      color: isEnriched ? 'var(--landing-fg)' : 'var(--landing-fg-muted)',
-                      filter: isEnriched ? 'none' : 'blur(2px)',
-                      transition: 'color 300ms, filter 300ms'
+                      color: isEnriched ? 'var(--foreground)' : 'var(--muted-foreground)',
+                      opacity: isEnriched ? 1 : 0.4,
+                      transition: 'color 300ms, opacity 300ms'
                     }}
                   >
                     {isEnriched ? c.name : c.name.replace(/(\s\w)\w+$/, '$1***')}
@@ -73,7 +73,7 @@ export function ContactStep({
                     </span>
                   )}
                 </div>
-                <span className="mt-0.5 block text-xs" style={{ color: 'var(--landing-fg-muted)' }}>
+                <span className="mt-0.5 block text-xs" style={{ color: 'var(--muted-foreground)' }}>
                   {c.title} at {c.company}
                 </span>
               </div>
@@ -81,7 +81,7 @@ export function ContactStep({
               <span
                 className="hidden shrink-0 text-xs sm:block"
                 style={{
-                  color: 'var(--landing-fg-muted)',
+                  color: 'var(--muted-foreground)',
                   opacity: isEnriched ? 1 : 0,
                   transition: 'opacity 0.3s'
                 }}
