@@ -17,9 +17,26 @@ import { UseCasesSection } from './use-cases-section';
 import { WorkflowComparison } from './workflow-comparison';
 import { CtaSection } from './cta-section';
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a
+    }
+  }))
+};
+
 export function Landing() {
   return (
     <div className="relative flex flex-col overflow-x-clip">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Hero */}
       <HeroBackdrop
         theme={HERO_THEME.hero}
