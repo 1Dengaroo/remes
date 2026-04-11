@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import type { ComposeEmailParams, GeneratedEmail } from '@/lib/types';
 import { toast } from 'sonner';
 import { streamEmailSequence, sendEmail as sendEmailApi, getGmailStatus } from '@/lib/api';
@@ -289,7 +290,9 @@ export function EmailEditorInline({
         >
           <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
             <div className="space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">To</label>
+              <Label className="text-xs" muted>
+                To
+              </Label>
               <Input
                 value={toEmail}
                 onChange={(e) => setToEmail(e.target.value)}
@@ -299,7 +302,9 @@ export function EmailEditorInline({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">Subject</label>
+              <Label className="text-xs" muted>
+                Subject
+              </Label>
               <Input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
@@ -309,7 +314,9 @@ export function EmailEditorInline({
             </div>
 
             <div className="flex flex-1 flex-col space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">Body</label>
+              <Label className="text-xs" muted>
+                Body
+              </Label>
               <Textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
@@ -320,7 +327,9 @@ export function EmailEditorInline({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">Signature</label>
+              <Label className="text-xs" muted>
+                Signature
+              </Label>
               <Select value={selectedSignatureId} onValueChange={setSelectedSignatureId}>
                 <SelectTrigger className="bg-card w-full text-xs">
                   <SelectValue placeholder="No signature" />

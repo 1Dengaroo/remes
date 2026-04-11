@@ -7,6 +7,7 @@ import { getErrorMessage } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
@@ -179,9 +180,9 @@ export function CreateICPModal({
 
             <div className="overflow-y-auto p-6">
               <div className="mb-4">
-                <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                <Label className="mb-1.5 block text-xs" muted>
                   Profile name
-                </label>
+                </Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Mail, CheckCircle } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
-import { CONTACT_EMAIL } from '@/lib/services/config';
+import { CONTACT_EMAILS } from '@/lib/services/config';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,10 +87,10 @@ export function ConnectionsTab() {
                     process to ensure the highest standards of data protection. During this review
                     period, email access is provisioned on a per-account basis. Contact{' '}
                     <a
-                      href={`mailto:${CONTACT_EMAIL}`}
+                      href={`mailto:${CONTACT_EMAILS.support}`}
                       className="text-primary underline underline-offset-2"
                     >
-                      {CONTACT_EMAIL}
+                      {CONTACT_EMAILS.support}
                     </a>{' '}
                     to request access.
                   </AlertDialogDescription>

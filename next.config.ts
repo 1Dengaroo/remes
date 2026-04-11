@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co https://api.anthropic.com https://api.apollo.io",
+              "connect-src 'self' https://*.supabase.co https://api.anthropic.com https://api.apollo.io https://formspree.io",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'"

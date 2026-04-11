@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useSignatureStore } from '@/lib/store/signature-store';
@@ -79,7 +80,9 @@ export function SignaturesTab() {
         {(adding || editingId) && (
           <div className="border-border mb-4 space-y-3 rounded-md border p-4">
             <div className="space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">Name</label>
+              <Label className="text-xs" muted>
+                Name
+              </Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -87,7 +90,9 @@ export function SignaturesTab() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-muted-foreground text-xs font-medium">Signature</label>
+              <Label className="text-xs" muted>
+                Signature
+              </Label>
               <Textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}

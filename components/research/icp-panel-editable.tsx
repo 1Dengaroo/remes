@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import type { ICPCriteria } from '@/lib/types';
@@ -51,7 +52,9 @@ function EditableTagGroup({
 
   return (
     <div>
-      <label className="text-muted-foreground mb-1.5 block text-xs font-medium">{label}</label>
+      <Label className="mb-1.5 block text-xs" muted>
+        {label}
+      </Label>
       <div className="flex flex-wrap items-center gap-1">
         {tags.map((tag) => (
           <span
@@ -129,9 +132,9 @@ export function IcpPanelEditable({
 
       <div className="space-y-4 p-4">
         <div>
-          <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+          <Label className="mb-1.5 block text-xs" muted>
             Description
-          </label>
+          </Label>
           <Textarea
             value={icp.description}
             onChange={(e) => onUpdate('description', e.target.value)}
@@ -176,9 +179,9 @@ export function IcpPanelEditable({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+            <Label className="mb-1.5 block text-xs" muted>
               Min Funding ($M)
-            </label>
+            </Label>
             <Input
               type="number"
               value={formatMoney(icp.min_funding_amount)}
@@ -194,9 +197,9 @@ export function IcpPanelEditable({
           </div>
 
           <div>
-            <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+            <Label className="mb-1.5 block text-xs" muted>
               Min Employees
-            </label>
+            </Label>
             <Input
               type="number"
               value={icp.min_employees ?? ''}
@@ -209,9 +212,9 @@ export function IcpPanelEditable({
           </div>
 
           <div>
-            <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+            <Label className="mb-1.5 block text-xs" muted>
               Max Employees
-            </label>
+            </Label>
             <Input
               type="number"
               value={icp.max_employees ?? ''}

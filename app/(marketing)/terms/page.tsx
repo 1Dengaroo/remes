@@ -1,5 +1,5 @@
 import { MAX_WIDTH } from '@/lib/layout';
-import { CONTACT_EMAIL } from '@/lib/services/config';
+import { CONTACT_EMAILS } from '@/lib/services/config';
 import { createMetadata } from '@/lib/metadata';
 
 export const metadata = createMetadata({
@@ -73,7 +73,7 @@ const SECTIONS = [
   },
   {
     title: 'Contact',
-    content: [`If you have questions about these terms, contact us at ${CONTACT_EMAIL}.`]
+    content: [`If you have questions about these terms, contact us at ${CONTACT_EMAILS.legal}.`]
   }
 ];
 

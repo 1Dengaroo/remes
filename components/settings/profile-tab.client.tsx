@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useProfileStore } from '@/lib/store/profile-store';
 import { toast } from 'sonner';
 
@@ -35,7 +36,9 @@ export function ProfileTab() {
   return (
     <div className="max-w-xs space-y-4">
       <div className="space-y-1.5">
-        <label className="text-muted-foreground text-xs font-medium">Full Name</label>
+        <Label className="text-xs" muted>
+          Full Name
+        </Label>
         <Input
           value={fullName ?? ''}
           onChange={(e) => setFullName(e.target.value)}
@@ -44,7 +47,9 @@ export function ProfileTab() {
         />
       </div>
       <div className="space-y-1.5">
-        <label className="text-muted-foreground text-xs font-medium">Company Name</label>
+        <Label className="text-xs" muted>
+          Company Name
+        </Label>
         <Input
           value={companyName ?? ''}
           onChange={(e) => setCompanyName(e.target.value)}
