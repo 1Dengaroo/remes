@@ -15,7 +15,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'light',
     name: 'Light',
-    description: 'Dreamy blue-violet — soft, hazy, gentle twilight',
+    description: 'Dreamy blue-violet - soft, hazy, gentle twilight',
     isDark: false,
     previewColors: {
       bg: '#f6f5fc',
@@ -27,7 +27,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'dark',
     name: 'Dark',
-    description: 'Neutral dark with periwinkle accents — clean, focused',
+    description: 'Neutral dark with periwinkle accents - clean, focused',
     isDark: true,
     previewColors: {
       bg: '#0e0e0e',
@@ -39,7 +39,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'daybreak',
     name: 'Daybreak',
-    description: 'Clean slate-blue with electric blue accents — crisp, professional',
+    description: 'Clean slate-blue with electric blue accents - crisp, professional',
     isDark: false,
     previewColors: {
       bg: '#f5f7fa',
@@ -51,7 +51,7 @@ export const themes: ThemeDefinition[] = [
   {
     id: 'midnight',
     name: 'Midnight',
-    description: 'Bold midnight navy with electric blue — sharp, data-driven',
+    description: 'Bold midnight navy with electric blue - sharp, data-driven',
     isDark: true,
     previewColors: {
       bg: '#0d1117',

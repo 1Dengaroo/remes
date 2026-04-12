@@ -106,7 +106,7 @@ export function DemoModal() {
               </DialogDescription>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex min-w-0 flex-col gap-3">
               <Controller
                 name="name"
                 control={control}

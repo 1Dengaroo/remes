@@ -214,7 +214,7 @@ export function CompanyRow({
           )}
         </div>
 
-        {/* Target Person — contact carousel */}
+        {/* Target Person - contact carousel */}
         <div className="border-border min-w-0 border-r">
           {showRetry ? (
             <div className="p-4" />

@@ -72,7 +72,7 @@ export function StrategyStep() {
           <StrategyChat />
         </div>
 
-        {/* ICP Panel — desktop only, drives the row height */}
+        {/* ICP Panel - desktop only, drives the row height */}
         {icp && (
           <div className="hidden min-w-0 flex-1 lg:block" style={{ marginLeft: '21rem' }}>
             <IcpPanel />

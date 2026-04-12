@@ -6,10 +6,9 @@
 
 ```
 /app                         Routing shell only (server-only)
-├── (marketing)/             Public pages (landing, about, pricing, legal)
+├── (marketing)/             Public pages (landing, about, legal)
 │   ├── page.tsx             Landing
 │   ├── about/               About page
-│   ├── pricing/             Pricing page
 │   ├── privacy/             Privacy policy
 │   └── terms/               Terms of service
 ├── (platform)/              Authenticated app (sidebar layout)

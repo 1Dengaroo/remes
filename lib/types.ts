@@ -21,7 +21,7 @@ export type {
 export type { StrategyMessage } from './services/strategy/types';
 
 // ---------------------------------------------------------------------------
-// Persistence — shared DB row shapes (not domain-specific)
+// Persistence - shared DB row shapes (not domain-specific)
 // ---------------------------------------------------------------------------
 
 import type { ICPCriteria } from './services/icp/types';

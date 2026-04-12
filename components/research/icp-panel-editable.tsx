@@ -206,7 +206,7 @@ export function IcpPanelEditable({
               onChange={(e) =>
                 onUpdate('min_employees', e.target.value ? Number(e.target.value) : null)
               }
-              placeholder="—"
+              placeholder="-"
               className="text-sm"
             />
           </div>
@@ -221,7 +221,7 @@ export function IcpPanelEditable({
               onChange={(e) =>
                 onUpdate('max_employees', e.target.value ? Number(e.target.value) : null)
               }
-              placeholder="—"
+              placeholder="-"
               className="text-sm"
             />
           </div>

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { requireAuth } from '@/lib/supabase/server';
 
-/** Wrap a route handler with auth — returns 401 if unauthenticated. */
+/** Wrap a route handler with auth - returns 401 if unauthenticated. */
 export async function withAuth(
   handler: (supabase: SupabaseClient, user: User) => Promise<Response>
 ): Promise<Response> {

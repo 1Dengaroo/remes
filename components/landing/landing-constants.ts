@@ -1,6 +1,5 @@
 export const NAV_LINKS = [
   { label: 'Features', href: '/#use-cases' },
-  { label: 'Pricing', href: '/pricing' },
   { label: 'FAQs', href: '/#faqs' },
   { label: 'About', href: '/about' }
 ];
@@ -170,8 +169,8 @@ export const FAQS = [
     a: 'Reply rates vary by industry and offer, but our signal-driven approach consistently outperforms generic outreach by 3\u20135x. Most customers see meaningful pipeline activity by week 6.'
   },
   {
-    q: 'How much does Remes cost compared to hiring?',
-    a: 'Plans start at $1,497/month. A fully loaded sales hire costs $90K\u2013$150K/year, takes 3\u20136 months to ramp, and turns over at 39% annually. Remes starts producing pipeline in 2 weeks and never quits. One closed deal typically pays for the entire annual subscription.'
+    q: 'How much does Remes cost?',
+    a: 'Book a demo and we\u2019ll walk through pricing based on your team size and outreach volume.'
   },
   {
     q: 'What are buying signals?',

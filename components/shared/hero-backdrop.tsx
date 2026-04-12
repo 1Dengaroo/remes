@@ -519,7 +519,7 @@ export function HeroBackdrop({
         />
       )}
 
-      {/* Noise texture — absolute (not fixed) to avoid scroll repaint */}
+      {/* Noise texture - absolute (not fixed) to avoid scroll repaint */}
       <div
         className="pointer-events-none absolute inset-0 z-1 opacity-[0.025]"
         aria-hidden="true"

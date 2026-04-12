@@ -219,7 +219,7 @@ export function ConfirmStep() {
               ))}
             </div>
 
-            {/* Add custom — pinned */}
+            {/* Add custom - pinned */}
             <div className="border-border shrink-0 border-t px-4 py-2.5">
               {adding ? (
                 <div className="flex flex-wrap gap-2">

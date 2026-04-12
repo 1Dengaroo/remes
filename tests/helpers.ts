@@ -1,5 +1,5 @@
 /**
- * Shared test utilities — mock factories for auth, supabase, and request helpers.
+ * Shared test utilities - mock factories for auth, supabase, and request helpers.
  */
 
 import type { SupabaseClient, User } from '@supabase/supabase-js';

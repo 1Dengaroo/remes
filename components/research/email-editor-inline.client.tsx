@@ -203,9 +203,9 @@ export function EmailEditorInline({
 
       const title = company.signals[0]?.title ?? 'Introduction';
       const fallback: EmailTriple = [
-        { subject: `${title} — ${company.company_name}`, body: '' },
-        { subject: `Re: ${title} — ${company.company_name}`, body: '' },
-        { subject: `Re: ${title} — ${company.company_name}`, body: '' }
+        { subject: `${title} at ${company.company_name}`, body: '' },
+        { subject: `Re: ${title} at ${company.company_name}`, body: '' },
+        { subject: `Re: ${title} at ${company.company_name}`, body: '' }
       ];
       setSteps(fallback);
       loadStep(0, fallback);
