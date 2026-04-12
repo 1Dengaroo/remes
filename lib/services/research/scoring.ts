@@ -7,7 +7,7 @@ function buildScoringPrompt(companies: DiscoveredCompany[], icp: ICPCriteria): s
   const companySummaries = companies
     .map((c, i) => {
       const context = c.match_context ? ` | metadata: ${c.match_context}` : '';
-      return `${i}: ${c.name} — ${c.description || 'no description'}${context}`;
+      return `${i}: ${c.name} - ${c.description || 'no description'}${context}`;
     })
     .join('\n');
 
@@ -77,7 +77,7 @@ async function scoreBatch(
     return companies.map((c) => ({
       company: c,
       score: serviceConfig.scoringMinScore,
-      reason: 'scoring failed — included by default'
+      reason: 'scoring failed - included by default'
     }));
   }
 
@@ -86,7 +86,7 @@ async function scoreBatch(
     return companies.map((c) => ({
       company: c,
       score: serviceConfig.scoringMinScore,
-      reason: 'scoring failed — included by default'
+      reason: 'scoring failed - included by default'
     }));
   }
 
@@ -126,8 +126,8 @@ export const claudeCompanyScorer: CompanyScorer = {
     return allScored.map((s) => ({
       ...s.company,
       description: s.company.description
-        ? `${s.company.description} (ICP score: ${s.score}/10 — ${s.reason})`
-        : `ICP score: ${s.score}/10 — ${s.reason}`
+        ? `${s.company.description} (ICP score: ${s.score}/10 - ${s.reason})`
+        : `ICP score: ${s.score}/10 - ${s.reason}`
     }));
   }
 };

@@ -41,7 +41,7 @@ function getServerSnapshot(): string {
 export function FontProvider({ children }: { children: React.ReactNode }) {
   const fontId = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  // Sync font to DOM (external system) — effect is the correct pattern here
+  // Sync font to DOM (external system) - effect is the correct pattern here
   useEffect(() => {
     applyFont(fontId);
   }, [fontId]);

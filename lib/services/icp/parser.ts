@@ -10,7 +10,7 @@ function buildParseICPPrompt(input: string): string {
 Think broadly about the BUYER, not the product being sold:
 - "sales automation for B2B SaaS" → industry_keywords should cover diverse SaaS verticals (fintech, HR tech, devtools, etc.)
 - industry_keywords = company's core business/sector
-- hiring_signals = job titles being hired (e.g. "SDR", "Account Executive") — NOT narrative phrases
+- hiring_signals = job titles being hired (e.g. "SDR", "Account Executive") - NOT narrative phrases
 - If input mentions "scaling SDR teams", extract role titles into hiring_signals, not industry_keywords
 - locations = geographic focus as country names (e.g. ["United States"]). Use [] if not specified.
 

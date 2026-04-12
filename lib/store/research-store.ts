@@ -363,7 +363,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       );
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
-      // Swallow stream errors — timeout or network drops are handled by auto-retry below
+      // Swallow stream errors - timeout or network drops are handled by auto-retry below
     } finally {
       set({ isResearching: false, researchingCompany: null, abortController: null });
       get().saveSession();
@@ -374,7 +374,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       const remaining = allSelected.filter((name) => !researched.has(name));
 
       if (remaining.length > 0) {
-        // Re-trigger seamlessly — research() checks for unresearched companies
+        // Re-trigger seamlessly - research() checks for unresearched companies
         get().research();
       } else {
         const { sessionId } = get();

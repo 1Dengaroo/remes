@@ -9,7 +9,7 @@ const STEPS = [
   {
     icon: Search,
     title: 'Describe your customer',
-    description: 'Tell us about your ideal buyer — industry, size, signals, tech stack.'
+    description: 'Tell us about your ideal buyer - industry, size, signals, tech stack.'
   },
   {
     icon: Target,

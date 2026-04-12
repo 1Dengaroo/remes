@@ -126,7 +126,7 @@ export async function researchConfirmedCompanies(
         clearTimeout(timer!);
       }
 
-      // Apollo people search handles contacts — skip Claude-inferred ones
+      // Apollo people search handles contacts - skip Claude-inferred ones
       const contacts: {
         name: string;
         title: string;

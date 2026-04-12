@@ -317,7 +317,7 @@ export function HeroPipeline() {
           <div className="flex items-center gap-3 py-2.5">
             <span className="email-label text-muted-foreground text-2xs">Subject</span>
             <span className="email-label text-muted-foreground text-xs2">
-              Congrats on the raise — idea for scaling outbound
+              Congrats on the raise, idea for scaling outbound
             </span>
           </div>
         </div>
@@ -327,18 +327,18 @@ export function HeroPipeline() {
         <div className="text-muted-foreground text-xs2 space-y-2.5 px-5 pt-3.5 pb-4 leading-relaxed">
           <p className="eline-0">Hi Kenny,</p>
           <p className="eline-1">
-            Saw Remes just closed a $2.5M seed round — congrats. Also noticed you&apos;re hiring
+            Saw Remes just closed a $2.5M seed round, congrats. Also noticed you&apos;re hiring
             SDRs, which usually means outbound is becoming a priority.
           </p>
           <p className="eline-2">
-            We help sales teams automate the research and personalization side of outbound — signal
+            We help sales teams automate the research and personalization side of outbound. Signal
             detection, contact mapping, and drafting emails that actually reference why you&apos;re
             reaching out.
           </p>
           <p className="eline-3">
             Would it make sense to show you how this could work for the new team?
           </p>
-          <p className="eline-4">— Andy</p>
+          <p className="eline-4">Andy</p>
         </div>
 
         <div className="border-border border-t px-5 py-2">

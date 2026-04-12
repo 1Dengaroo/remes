@@ -11,7 +11,6 @@ const FOOTER_COLUMNS = [
     title: 'Product',
     links: [
       { label: 'Features', href: '/#use-cases' },
-      { label: 'Pricing', href: '/pricing' },
       { label: 'FAQs', href: '/#faqs' }
     ]
   },
@@ -58,7 +57,7 @@ export function LandingFooter() {
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               AI-powered outbound sales for SMBs. Monitor buying signals, find contacts, and send
-              personalized outreach — automatically.
+              personalized outreach - automatically.
             </p>
           </div>
 

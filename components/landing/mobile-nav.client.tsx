@@ -53,7 +53,7 @@ export function MobileNav({ light }: { light: boolean }) {
         >
           <DialogPrimitive.Title className="sr-only">Navigation menu</DialogPrimitive.Title>
 
-          {/* Close button — top right, matches hamburger position */}
+          {/* Close button - top right, matches hamburger position */}
           <DialogPrimitive.Close asChild>
             <Button
               variant="ghost"
@@ -68,7 +68,7 @@ export function MobileNav({ light }: { light: boolean }) {
             </Button>
           </DialogPrimitive.Close>
 
-          {/* Nav links — stagger in from top */}
+          {/* Nav links - stagger in from top */}
           <nav className="flex flex-1 flex-col px-8 pt-24">
             {NAV_LINKS.map((link, i) => (
               <a

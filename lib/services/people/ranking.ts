@@ -10,7 +10,7 @@ function buildRankingPrompt(
   const peopleSummaries = people
     .map(
       (p, i) =>
-        `${i}: ${p.first_name} ${p.last_name_obfuscated} — ${p.title ?? 'Unknown title'} (has_email: ${p.has_email}, has_phone: ${p.has_direct_phone})`
+        `${i}: ${p.first_name} ${p.last_name_obfuscated} - ${p.title ?? 'Unknown title'} (has_email: ${p.has_email}, has_phone: ${p.has_direct_phone})`
     )
     .join('\n');
 

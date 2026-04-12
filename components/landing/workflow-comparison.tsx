@@ -14,7 +14,7 @@ const STEPS = [
     without: 'Manually check LinkedIn, job boards, and news sites every morning',
     withRemes: 'Signals auto-detected across dozens of sources in real time',
     timeBefore: '20 min',
-    timeAfter: '2 min'
+    timeAfter: '< 1 min'
   },
   {
     logos: [
@@ -26,7 +26,7 @@ const STEPS = [
     without: 'Google the company, read their blog, check Crunchbase for funding',
     withRemes: 'Company deep-researched instantly: funding, tech stack, headcount',
     timeBefore: '10 min',
-    timeAfter: '3 min'
+    timeAfter: '< 1 min'
   },
   {
     logos: [
@@ -38,7 +38,7 @@ const STEPS = [
     without: 'Search Apollo or LinkedIn for the right person, guess their email',
     withRemes: 'Decision makers mapped with verified emails automatically',
     timeBefore: '8 min',
-    timeAfter: '2 min'
+    timeAfter: '< 1 min'
   },
   {
     logos: [
@@ -50,7 +50,7 @@ const STEPS = [
     without: 'Copy a template, swap in the company name, hope it sounds personal',
     withRemes: 'Signal-led email drafted, referencing the exact trigger and person',
     timeBefore: '7 min',
-    timeAfter: '3 min'
+    timeAfter: '< 1 min'
   }
 ];
 
@@ -72,7 +72,7 @@ function LogoRow({ logos }: { logos: Logo[] }) {
 }
 
 const TOTAL_BEFORE = '45 min';
-const TOTAL_AFTER = '~10 min';
+const TOTAL_AFTER = '< 3 min';
 
 export function WorkflowComparison() {
   return (
@@ -88,7 +88,7 @@ export function WorkflowComparison() {
           45 minutes of grunt work, or 10 with Remes
         </h2>
         <p className="text-muted-foreground mt-4 max-w-lg text-sm leading-relaxed">
-          Every prospect takes the same four steps. The only question is whether you do them
+          Manual outbound goes through the same four steps. The only question is whether you do them
           manually or let Remes handle it.
         </p>
       </div>
@@ -173,7 +173,7 @@ export function WorkflowComparison() {
         {/* Total row */}
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr]">
           <div className="border-border bg-card flex items-center justify-between rounded-xl border px-5 py-4 shadow-(--landing-shadow-card)">
-            <span className="text-foreground text-sm font-semibold">Total per prospect</span>
+            <span className="text-foreground text-sm font-semibold">Total per company</span>
             <span className="text-muted-foreground text-sm font-semibold">{TOTAL_BEFORE}</span>
           </div>
           <div
@@ -184,19 +184,13 @@ export function WorkflowComparison() {
               boxShadow: 'var(--landing-shadow-card), 0 0 20px rgba(86, 67, 204, 0.08)'
             }}
           >
-            <span className="text-foreground text-sm font-semibold">Total per prospect</span>
+            <span className="text-foreground text-sm font-semibold">Total per company</span>
             <span className="text-sm font-semibold" style={{ color: 'var(--primary)' }}>
               {TOTAL_AFTER}
             </span>
           </div>
         </div>
       </div>
-
-      {/* Bottom line */}
-      <p className="text-muted-foreground mt-8 text-center text-sm">
-        At 50 prospects per week, that&apos;s{' '}
-        <span className="text-foreground font-medium">29 hours saved every week</span>.
-      </p>
     </section>
   );
 }

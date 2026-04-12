@@ -22,7 +22,7 @@ export function CompanyLogo({
 }: {
   name: string;
   website?: string | null;
-  /** Pre-built logo URL (e.g. from Apollo) — takes priority over domain lookup */
+  /** Pre-built logo URL (e.g. from Apollo) - takes priority over domain lookup */
   logoUrl?: string | null;
   size?: 'sm' | 'md' | 'lg';
   className?: string;

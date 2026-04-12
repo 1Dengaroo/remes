@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 interface EditableNameProps {
   value: string;
   onSave: (name: string) => void | Promise<void>;
-  /** Called after save or cancel completes — use to reset parent editing state */
+  /** Called after save or cancel completes - use to reset parent editing state */
   onDone?: () => void;
   /** Start in editing mode immediately (e.g. triggered by external button) */
   initialEditing?: boolean;

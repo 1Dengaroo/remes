@@ -30,7 +30,7 @@ interface TokenBucket {
 
 const buckets = new Map<string, TokenBucket>();
 
-// Periodic cleanup to prevent memory leaks — runs every 60s
+// Periodic cleanup to prevent memory leaks - runs every 60s
 let cleanupInterval: ReturnType<typeof setInterval> | null = null;
 
 function ensureCleanup() {
