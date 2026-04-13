@@ -108,7 +108,11 @@ export function HeroPipeline() {
       /* ── Layer 2: Contacts ── */
 
       tl.to('.contact-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
-      tl.to('.signal-card', { scale: 0.98, opacity: 0.7, duration: 0.4, ease: 'power2.out' }, '<');
+      tl.to(
+        '.signal-card',
+        { scale: 0.98, filter: 'brightness(0.7)', duration: 0.4, ease: 'power2.out' },
+        '<'
+      );
 
       tl.to('.contacts-header', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
 
@@ -148,8 +152,16 @@ export function HeroPipeline() {
       /* ── Layer 3: Email ── */
 
       tl.to('.email-card', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '+=1.3');
-      tl.to('.contact-card', { scale: 0.98, opacity: 0.7, duration: 0.4, ease: 'power2.out' }, '<');
-      tl.to('.signal-card', { scale: 0.96, opacity: 0.5, duration: 0.4, ease: 'power2.out' }, '<');
+      tl.to(
+        '.contact-card',
+        { scale: 0.98, filter: 'brightness(0.7)', duration: 0.4, ease: 'power2.out' },
+        '<'
+      );
+      tl.to(
+        '.signal-card',
+        { scale: 0.96, filter: 'brightness(0.5)', duration: 0.4, ease: 'power2.out' },
+        '<'
+      );
 
       tl.to('.email-status', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '-=0.2');
       tl.to('.email-label', { opacity: 1, duration: 0.3, ease: 'power2.out' }, '<0.05');

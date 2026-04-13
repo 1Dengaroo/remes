@@ -16,8 +16,10 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { disconnectGmail } from '@/lib/api';
+import { connectGmail, disconnectGmail } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
+
+const casaReview = process.env.NEXT_PUBLIC_GMAIL_CASA_REVIEW === 'true';
 
 export function ConnectionsTab() {
   const gmailConnected = useProfileStore((s) => s.gmailConnected);
@@ -74,7 +76,7 @@ export function ConnectionsTab() {
               {disconnecting && <Spinner />}
               Disconnect
             </Button>
-          ) : (
+          ) : casaReview ? (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button size="sm">Connect Gmail</Button>
@@ -100,6 +102,10 @@ export function ConnectionsTab() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          ) : (
+            <Button size="sm" onClick={() => connectGmail()}>
+              Connect Gmail
+            </Button>
           ))}
       </div>
     </div>
