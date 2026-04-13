@@ -41,10 +41,9 @@ const SECTIONS = [
   {
     title: 'Third-party services',
     content: [
-      'Supabase: Authentication and database hosting.',
+      'Cloud infrastructure providers for authentication, hosting, and data storage.',
       'Anthropic: AI-powered content generation. Your prompts and ICP data may be sent to Anthropic\u2019s API to generate outreach. Anthropic does not use API inputs for training.',
-      'Apollo: Contact and company data enrichment. Company names and domains may be sent to Apollo to retrieve publicly available business information.',
-      'Vercel: Application hosting and analytics.',
+      'Third-party data providers for publicly available business and contact information.',
       'Google: Gmail API for sending emails on your behalf (gmail.send scope only). See the Google user data section above for full details.'
     ]
   },
