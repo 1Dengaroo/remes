@@ -1,6 +1,6 @@
 import { MAX_WIDTH } from '@/lib/layout';
 import { HeroBackdrop, type HeroTheme } from '@/components/shared/hero-backdrop';
-import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
+import { DemoCta } from './cta-buttons.client';
 
 export function CtaSection({ theme }: { theme?: HeroTheme }) {
   return (
@@ -27,8 +27,7 @@ export function CtaSection({ theme }: { theme?: HeroTheme }) {
           Detect signals, find contacts, and send personalized outreach. All in one place.
         </p>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <PrimaryCta variant="hero">Get started free</PrimaryCta>
-          <SecondaryCta variant="hero" />
+          <DemoCta variant="hero" />
         </div>
       </div>
     </HeroBackdrop>

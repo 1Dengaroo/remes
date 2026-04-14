@@ -22,8 +22,8 @@ export function CookieConsentBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 p-4 sm:p-6">
-      <div className="border-border bg-card mx-auto flex max-w-lg flex-col items-center gap-3 rounded-xl border px-5 py-4 shadow-lg sm:flex-row sm:gap-4">
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 p-4 sm:p-6">
+      <div className="border-border bg-card pointer-events-auto mx-auto flex max-w-lg flex-col items-center gap-3 rounded-xl border px-5 py-4 shadow-lg sm:flex-row sm:gap-4">
         <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">
           We use cookies to improve your experience.{' '}
           <a

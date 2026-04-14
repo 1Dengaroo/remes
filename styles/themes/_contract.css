@@ -100,6 +100,14 @@
  * --destructive           Error/destructive color
  * --destructive-foreground Text on destructive
  *
+ * ALERTS
+ * --alert-info-bg          Info alert background
+ * --alert-info-foreground  Info alert text
+ * --alert-warning-bg       Warning alert background
+ * --alert-warning-foreground Warning alert text
+ * --alert-success-bg       Success alert background
+ * --alert-success-foreground Success alert text
+ *
  * UI ELEMENTS
  * --border                Default border color
  * --input                 Input border color

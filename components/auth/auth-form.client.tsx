@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Info, Mail } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useAuthStore } from '@/lib/store/auth-store';
+import { useDemoStore } from '@/components/landing/demo-store';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { EmailForm, Mode } from './email-form.client';
 
@@ -33,7 +36,21 @@ interface AuthFormProps {
   defaultMode?: Mode;
 }
 
+const ENV_SIGNUP_DISABLED = process.env.NEXT_PUBLIC_DISABLE_SIGNUP === 'true';
+
+function useBypassParam() {
+  const [bypassed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).has('enableLogin');
+  });
+  return bypassed;
+}
+
 export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
+  const bypassed = useBypassParam();
+  const signupDisabled = ENV_SIGNUP_DISABLED && !bypassed;
+  const closeAuthModal = useAuthStore((s) => s.closeAuthModal);
+  const openDemo = useDemoStore((s) => s.openDemo);
   const [mode, setMode] = useState<Mode>(defaultMode);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
@@ -102,9 +119,11 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
           {isSignUp ? 'Create your account' : 'Sign in to Remes'}
         </h1>
         <p className="text-muted-foreground mt-2 text-sm">
-          {isSignUp
-            ? 'Get started finding high-intent leads'
-            : 'Start finding high-intent leads in minutes'}
+          {signupDisabled
+            ? 'Access is currently invite-only. Book a demo to get started.'
+            : isSignUp
+              ? 'Get started finding high-intent leads'
+              : 'Start finding high-intent leads in minutes'}
         </p>
       </div>
 
@@ -113,7 +132,7 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
         size="lg"
         className="w-full gap-3"
         onClick={handleGoogleLogin}
-        disabled={oauthLoading}
+        disabled={signupDisabled || oauthLoading}
       >
         <GoogleIcon className="size-5" />
         {oauthLoading ? 'Redirecting...' : 'Continue with Google'}
@@ -136,17 +155,37 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
       <EmailForm
         key={mode}
         mode={mode}
-        onModeSwitch={switchMode}
+        disabled={signupDisabled}
         onServerMessage={setServerMessage}
         onSignUpSuccess={setConfirmationEmail}
       />
 
-      <p className="text-muted-foreground text-center text-sm">
-        {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-        <Button type="button" variant="link" className="h-auto p-0" onClick={switchMode}>
-          {isSignUp ? 'Sign in' : 'Sign up'}
-        </Button>
-      </p>
+      {signupDisabled ? (
+        <Alert variant="info">
+          <Info className="size-4" />
+          <AlertDescription>
+            We onboard new teams through a short demo so we can tailor Remes to your workflow.{' '}
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto p-0 text-inherit underline"
+              onClick={() => {
+                closeAuthModal();
+                openDemo();
+              }}
+            >
+              Book a demo
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <p className="text-muted-foreground text-center text-sm">
+          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <Button type="button" variant="link" className="h-auto p-0" onClick={switchMode}>
+            {isSignUp ? 'Sign in' : 'Sign up'}
+          </Button>
+        </p>
+      )}
     </div>
   );
 }

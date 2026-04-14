@@ -36,6 +36,12 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-alert-info-bg: var(--alert-info-bg);
+  --color-alert-info-foreground: var(--alert-info-foreground);
+  --color-alert-warning-bg: var(--alert-warning-bg);
+  --color-alert-warning-foreground: var(--alert-warning-foreground);
+  --color-alert-success-bg: var(--alert-success-bg);
+  --color-alert-success-foreground: var(--alert-success-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);

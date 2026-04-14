@@ -42,7 +42,8 @@ function PasswordInput({
   onChange,
   onBlur,
   name,
-  invalid
+  invalid,
+  hideToggle
 }: {
   id: string;
   placeholder: string;
@@ -51,6 +52,7 @@ function PasswordInput({
   onBlur: () => void;
   name: string;
   invalid: boolean;
+  hideToggle?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -65,34 +67,31 @@ function PasswordInput({
         onChange={onChange}
         onBlur={onBlur}
         aria-invalid={invalid}
-        className="pr-9"
+        className={hideToggle ? '' : 'pr-9'}
       />
-      <button
-        type="button"
-        tabIndex={-1}
-        onClick={() => setVisible((v) => !v)}
-        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
-        aria-label={visible ? 'Hide password' : 'Show password'}
-      >
-        {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-      </button>
+      {!hideToggle && (
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={() => setVisible((v) => !v)}
+          className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer transition-colors"
+          aria-label={visible ? 'Hide password' : 'Show password'}
+        >
+          {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
+      )}
     </div>
   );
 }
 
 interface EmailFormProps {
   mode: Mode;
-  onModeSwitch: () => void;
+  disabled?: boolean;
   onServerMessage: (msg: { type: 'error' | 'success'; text: string } | null) => void;
   onSignUpSuccess?: (email: string) => void;
 }
 
-export function EmailForm({
-  mode,
-  onModeSwitch,
-  onServerMessage,
-  onSignUpSuccess
-}: EmailFormProps) {
+export function EmailForm({ mode, disabled, onServerMessage, onSignUpSuccess }: EmailFormProps) {
   const router = useRouter();
   const closeAuthModal = useAuthStore((s) => s.closeAuthModal);
   const isSignUp = mode === Mode.SignUp;
@@ -136,63 +135,19 @@ export function EmailForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Controller
-        name="email"
-        control={control}
-        render={({ field, fieldState }) => (
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              {...field}
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              aria-invalid={fieldState.invalid}
-            />
-            {fieldState.error && (
-              <p className="text-destructive text-xs">{fieldState.error.message}</p>
-            )}
-          </div>
-        )}
-      />
-
-      <Controller
-        name="password"
-        control={control}
-        render={({ field, fieldState }) => (
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <PasswordInput
-              id="password"
-              name={field.name}
-              value={field.value}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              placeholder={isSignUp ? 'Create a password' : 'Your password'}
-              invalid={fieldState.invalid}
-            />
-            {fieldState.error && (
-              <p className="text-destructive text-xs">{fieldState.error.message}</p>
-            )}
-          </div>
-        )}
-      />
-
-      {isSignUp && (
+      <fieldset disabled={disabled} className="space-y-4">
         <Controller
-          name="confirmPassword"
+          name="email"
           control={control}
           render={({ field, fieldState }) => (
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm password</Label>
-              <PasswordInput
-                id="confirm-password"
-                name={field.name}
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="Confirm your password"
-                invalid={fieldState.invalid}
+              <Label htmlFor="email">Email</Label>
+              <Input
+                {...field}
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                aria-invalid={fieldState.invalid}
               />
               {fieldState.error && (
                 <p className="text-destructive text-xs">{fieldState.error.message}</p>
@@ -200,11 +155,59 @@ export function EmailForm({
             </div>
           )}
         />
-      )}
 
-      <Button type="submit" size="lg" className="w-full" disabled={formState.isSubmitting}>
-        {formState.isSubmitting ? 'Loading...' : isSignUp ? 'Create account' : 'Sign in'}
-      </Button>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <PasswordInput
+                id="password"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                placeholder={isSignUp ? 'Create a password' : 'Your password'}
+                invalid={fieldState.invalid}
+                hideToggle={disabled}
+              />
+              {fieldState.error && (
+                <p className="text-destructive text-xs">{fieldState.error.message}</p>
+              )}
+            </div>
+          )}
+        />
+
+        {isSignUp && (
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm password</Label>
+                <PasswordInput
+                  id="confirm-password"
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="Confirm your password"
+                  invalid={fieldState.invalid}
+                  hideToggle={disabled}
+                />
+                {fieldState.error && (
+                  <p className="text-destructive text-xs">{fieldState.error.message}</p>
+                )}
+              </div>
+            )}
+          />
+        )}
+
+        <Button type="submit" size="lg" className="w-full" disabled={formState.isSubmitting}>
+          {formState.isSubmitting ? 'Loading...' : isSignUp ? 'Create account' : 'Sign in'}
+        </Button>
+      </fieldset>
     </form>
   );
 }

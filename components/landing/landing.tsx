@@ -9,7 +9,7 @@ import {
 import { MAX_WIDTH, HERO_THEME } from '@/lib/layout';
 import { HeroBackdrop } from '@/components/shared/hero-backdrop';
 import { FAQS } from './landing-constants';
-import { PrimaryCta, SecondaryCta } from './cta-buttons.client';
+import { DemoCta } from './cta-buttons.client';
 import { HeroPipeline } from './hero-pipeline.client';
 import { BentoGrid } from './bento-grid';
 import { SignalsSection } from './signals-section.client';
@@ -62,8 +62,7 @@ export function Landing() {
             </p>
 
             <div className="mt-6 flex animate-[hero-fade-in_0.8s_ease-out_0.39s_both] flex-col items-center gap-4 sm:flex-row sm:gap-5">
-              <PrimaryCta variant="hero" />
-              <SecondaryCta variant="hero" />
+              <DemoCta variant="hero" />
             </div>
           </div>
 

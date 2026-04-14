@@ -98,7 +98,7 @@ export function MobileNav({ light }: { light: boolean }) {
                 transitionDelay: open ? `${100 + NAV_LINKS.length * 60}ms` : '0ms'
               }}
             >
-              Book a demo
+              See it in action
             </Button>
           </nav>
 

@@ -4,22 +4,9 @@ import { useState } from 'react';
 import { Mail, CheckCircle } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
-import { CONTACT_EMAILS } from '@/lib/services/config';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { connectGmail, disconnectGmail } from '@/lib/api';
 import { useProfileStore } from '@/lib/store/profile-store';
-
-const casaReview = process.env.NEXT_PUBLIC_GMAIL_CASA_REVIEW === 'true';
 
 export function ConnectionsTab() {
   const gmailConnected = useProfileStore((s) => s.gmailConnected);
@@ -76,32 +63,6 @@ export function ConnectionsTab() {
               {disconnecting && <Spinner />}
               Disconnect
             </Button>
-          ) : casaReview ? (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size="sm">Connect Gmail</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Request email sending access</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Our Gmail integration is undergoing Google&apos;s CASA security verification
-                    process to ensure the highest standards of data protection. During this review
-                    period, email access is provisioned on a per-account basis. Contact{' '}
-                    <a
-                      href={`mailto:${CONTACT_EMAILS.support}`}
-                      className="text-primary underline underline-offset-2"
-                    >
-                      {CONTACT_EMAILS.support}
-                    </a>{' '}
-                    to request access.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction size="sm">Got it</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           ) : (
             <Button size="sm" onClick={() => connectGmail()}>
               Connect Gmail
