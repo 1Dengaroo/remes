@@ -7,6 +7,8 @@ import { useAuthStore } from '@/lib/store/auth-store';
 import { useDemoStore } from '@/components/landing/demo-store';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { EmailForm, Mode } from './email-form.client';
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -58,6 +60,10 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
     type: 'error' | 'success';
     text: string;
   } | null>(null);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetEmailSent, setResetEmailSent] = useState<string | null>(null);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const isSignUp = mode === Mode.SignUp;
 
@@ -65,6 +71,22 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
     setMode(isSignUp ? Mode.SignIn : Mode.SignUp);
     setServerMessage(null);
     setConfirmationEmail(null);
+  }
+
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setServerMessage(null);
+    setResetLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`
+    });
+    setResetLoading(false);
+    if (error) {
+      setServerMessage({ type: 'error', text: error.message });
+      return;
+    }
+    setResetEmailSent(resetEmail);
   }
 
   async function handleGoogleLogin() {
@@ -81,6 +103,37 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
       setServerMessage({ type: 'error', text: error.message });
       setOauthLoading(false);
     }
+  }
+
+  if (resetEmailSent) {
+    return (
+      <div className="w-full max-w-md space-y-6 text-center">
+        <div className="bg-muted/50 mx-auto flex size-12 items-center justify-center rounded-full">
+          <Mail className="text-muted-foreground size-5" />
+        </div>
+        <div>
+          <h1 className="text-foreground text-2xl font-bold tracking-tight">Check your email</h1>
+          <p className="text-muted-foreground mt-2 text-sm">
+            We sent a password reset link to{' '}
+            <span className="text-foreground font-medium">{resetEmailSent}</span>. Click the link to
+            set a new password.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full"
+          onClick={() => {
+            setResetEmailSent(null);
+            setForgotPassword(false);
+            setResetEmail('');
+            setServerMessage(null);
+          }}
+        >
+          Back to sign in
+        </Button>
+      </div>
+    );
   }
 
   if (confirmationEmail) {
@@ -108,6 +161,59 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
         >
           Back to sign in
         </Button>
+      </div>
+    );
+  }
+
+  if (forgotPassword) {
+    return (
+      <div className="w-full max-w-md space-y-6">
+        <div className="text-center">
+          <h1 className="text-foreground text-2xl font-bold tracking-tight">Reset your password</h1>
+          <p className="text-muted-foreground mt-2 text-sm">
+            Enter your email and we&apos;ll send you a link to reset your password.
+          </p>
+        </div>
+
+        {serverMessage && (
+          <p
+            className={`text-sm ${serverMessage.type === 'success' ? 'text-accent-tertiary' : 'text-destructive'}`}
+          >
+            {serverMessage.text}
+          </p>
+        )}
+
+        <form onSubmit={handleResetPassword} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="reset-email">Email</Label>
+            <Input
+              id="reset-email"
+              type="email"
+              placeholder="you@example.com"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" size="lg" className="w-full" disabled={resetLoading}>
+            {resetLoading ? 'Sending...' : 'Send reset link'}
+          </Button>
+        </form>
+
+        <p className="text-muted-foreground text-center text-sm">
+          Remember your password?{' '}
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto p-0"
+            onClick={() => {
+              setForgotPassword(false);
+              setServerMessage(null);
+            }}
+          >
+            Back to sign in
+          </Button>
+        </p>
       </div>
     );
   }
@@ -158,6 +264,10 @@ export function AuthForm({ defaultMode = Mode.SignIn }: AuthFormProps) {
         disabled={signupDisabled}
         onServerMessage={setServerMessage}
         onSignUpSuccess={setConfirmationEmail}
+        onForgotPassword={() => {
+          setForgotPassword(true);
+          setServerMessage(null);
+        }}
       />
 
       {signupDisabled ? (

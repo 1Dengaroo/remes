@@ -35,7 +35,7 @@ type AuthFormFields = z.infer<typeof baseSchema>;
 export const Mode = { SignIn: 'sign-in', SignUp: 'sign-up' } as const;
 export type Mode = (typeof Mode)[keyof typeof Mode];
 
-function PasswordInput({
+export function PasswordInput({
   id,
   placeholder,
   value,
@@ -89,9 +89,16 @@ interface EmailFormProps {
   disabled?: boolean;
   onServerMessage: (msg: { type: 'error' | 'success'; text: string } | null) => void;
   onSignUpSuccess?: (email: string) => void;
+  onForgotPassword?: () => void;
 }
 
-export function EmailForm({ mode, disabled, onServerMessage, onSignUpSuccess }: EmailFormProps) {
+export function EmailForm({
+  mode,
+  disabled,
+  onServerMessage,
+  onSignUpSuccess,
+  onForgotPassword
+}: EmailFormProps) {
   const router = useRouter();
   const closeAuthModal = useAuthStore((s) => s.closeAuthModal);
   const isSignUp = mode === Mode.SignUp;
@@ -174,6 +181,16 @@ export function EmailForm({ mode, disabled, onServerMessage, onSignUpSuccess }: 
               />
               {fieldState.error && (
                 <p className="text-destructive text-xs">{fieldState.error.message}</p>
+              )}
+              {!isSignUp && onForgotPassword && (
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-muted-foreground h-auto p-0 text-xs"
+                  onClick={onForgotPassword}
+                >
+                  Forgot password?
+                </Button>
               )}
             </div>
           )}
