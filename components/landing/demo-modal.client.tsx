@@ -14,17 +14,31 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useDemoStore } from './demo-store';
 
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? '';
 
+const BUDGET_OPTIONS = [
+  '$0–1,500 / month',
+  '$1,500–2,500 / month',
+  '$2,500–3,500 / month',
+  '> $3,500 / month'
+] as const;
+
 const demoSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Please enter a valid email'),
-  message: z.string().min(1, 'Message is required')
+  email: z.string().email('Please enter a valid work email'),
+  phone: z.string().min(1, 'Phone number is required'),
+  budget: z.string().min(1, 'Please select a budget range')
 });
 
 type DemoFormFields = z.infer<typeof demoSchema>;
@@ -45,7 +59,7 @@ export function DemoModal() {
 
   const { control, handleSubmit, formState, reset } = useForm<DemoFormFields>({
     resolver: zodResolver(demoSchema),
-    defaultValues: { name: '', email: '', message: '' }
+    defaultValues: { name: '', email: '', phone: '', budget: '' }
   });
 
   function handleClose() {
@@ -131,7 +145,7 @@ export function DemoModal() {
                 control={control}
                 render={({ field, fieldState }) => (
                   <div className="space-y-1.5">
-                    <Label htmlFor="demo-email">Email</Label>
+                    <Label htmlFor="demo-email">Work Email</Label>
                     <Input
                       {...field}
                       id="demo-email"
@@ -147,18 +161,53 @@ export function DemoModal() {
               />
 
               <Controller
-                name="message"
+                name="phone"
                 control={control}
                 render={({ field, fieldState }) => (
                   <div className="space-y-1.5">
-                    <Label htmlFor="demo-message">Message</Label>
-                    <Textarea
+                    <Label htmlFor="demo-phone">Phone Number</Label>
+                    <Input
                       {...field}
-                      id="demo-message"
-                      placeholder="Tell us about your team and what you're looking for..."
-                      rows={3}
+                      id="demo-phone"
+                      type="tel"
+                      placeholder="(555) 123-4567"
                       aria-invalid={fieldState.invalid}
                     />
+                    <p className="text-muted-foreground/60 text-xs">
+                      No, we won&apos;t call you at 1am
+                    </p>
+                    {fieldState.error && (
+                      <p className="text-destructive text-xs">{fieldState.error.message}</p>
+                    )}
+                  </div>
+                )}
+              />
+
+              <Controller
+                name="budget"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="demo-budget">
+                      If Remes meets your needs perfectly, how much funding would you be willing to
+                      invest in this?
+                    </Label>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="demo-budget"
+                        aria-invalid={fieldState.invalid}
+                        className="w-full"
+                      >
+                        <SelectValue placeholder="Select a range" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {BUDGET_OPTIONS.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {fieldState.error && (
                       <p className="text-destructive text-xs">{fieldState.error.message}</p>
                     )}

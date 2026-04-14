@@ -123,6 +123,12 @@
   --accent-foreground: #1c1a30;
   --destructive: hsl(0 65% 50%);
   --destructive-foreground: #ffffff;
+  --alert-info-bg: hsl(220 60% 55% / 0.08);
+  --alert-info-foreground: hsl(220 55% 40%);
+  --alert-warning-bg: hsl(40 70% 52% / 0.1);
+  --alert-warning-foreground: hsl(32 60% 34%);
+  --alert-success-bg: hsl(150 40% 46% / 0.08);
+  --alert-success-foreground: hsl(150 35% 32%);
   --border: #d4cee4;
   --input: #cec8de;
   --ring: #0066ff;
