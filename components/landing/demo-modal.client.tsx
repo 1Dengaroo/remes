@@ -173,7 +173,7 @@ export function DemoModal() {
                       placeholder="(555) 123-4567"
                       aria-invalid={fieldState.invalid}
                     />
-                    <p className="text-muted-foreground/60 text-xs">
+                    <p className="text-muted-foreground text-xs">
                       No, we won&apos;t call you at 1am
                     </p>
                     {fieldState.error && (
@@ -237,7 +237,7 @@ export function DemoModal() {
               <Label className="my-1.5 text-xs" muted>
                 Or reach out directly (opens email client)
               </Label>
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <a
                   href="mailto:kenny@remes.so?subject=Demo%20request"
                   className="hover:border-primary/30 hover:bg-primary/4 flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150"
@@ -247,9 +247,7 @@ export function DemoModal() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-foreground text-sm font-medium">kenny@remes.so</span>
-                    <span className="text-muted-foreground/60 text-xs">
-                      Co-Founder &amp; Product
-                    </span>
+                    <span className="text-muted-foreground text-xs">Co-Founder &amp; Product</span>
                   </div>
                 </a>
                 <a
@@ -261,7 +259,7 @@ export function DemoModal() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-foreground text-sm font-medium">andy@remes.so</span>
-                    <span className="text-muted-foreground/60 text-xs">Co-Founder &amp; SWE</span>
+                    <span className="text-muted-foreground text-xs">Co-Founder &amp; SWE</span>
                   </div>
                 </a>
               </div>
