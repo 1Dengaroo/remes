@@ -28,7 +28,6 @@ import { useDemoStore } from './demo-store';
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? '';
 
 const BUDGET_OPTIONS = [
-  '$0–1,500 / month',
   '$1,500–2,500 / month',
   '$2,500–3,500 / month',
   '> $3,500 / month'
