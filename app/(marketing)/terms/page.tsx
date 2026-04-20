@@ -1,6 +1,7 @@
 import { MAX_WIDTH } from '@/lib/layout';
 import { CONTACT_EMAILS } from '@/lib/services/config';
 import { createMetadata } from '@/lib/metadata';
+import { Link } from '@/components/shared/link';
 
 export const metadata = createMetadata({
   title: 'Terms of Service',
@@ -73,7 +74,12 @@ const SECTIONS = [
   },
   {
     title: 'Contact',
-    content: [`If you have questions about these terms, contact us at ${CONTACT_EMAILS.legal}.`]
+    content: [
+      <>
+        If you have questions about these terms, contact us at{' '}
+        <Link href={`mailto:${CONTACT_EMAILS.legal}`}>{CONTACT_EMAILS.legal}</Link>.
+      </>
+    ]
   }
 ];
 

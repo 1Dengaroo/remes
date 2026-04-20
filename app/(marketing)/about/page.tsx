@@ -1,6 +1,7 @@
 import { MAX_WIDTH } from '@/lib/layout';
 import { createMetadata } from '@/lib/metadata';
 import { CONTACT_EMAILS } from '@/lib/services/config';
+import { Link } from '@/components/shared/link';
 
 export const metadata = createMetadata({
   title: 'About',
@@ -42,13 +43,7 @@ export default function AboutPage() {
           <p>
             We&apos;re a small team. We ship fast and talk to every customer. If you want to see
             what we&apos;re building,{' '}
-            <a
-              href={`mailto:${CONTACT_EMAILS.support}`}
-              className="text-landing-fg-secondary hover:text-landing-fg underline underline-offset-3 transition-colors duration-150"
-            >
-              reach out
-            </a>
-            .
+            <Link href={`mailto:${CONTACT_EMAILS.support}`}>reach out</Link>.
           </p>
         </div>
 
