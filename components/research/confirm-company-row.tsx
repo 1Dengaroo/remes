@@ -4,6 +4,7 @@ import { ExternalLink, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CompanyLogoWithFallback } from '@/components/shared/company-logo';
+import { ShowMore } from '@/components/shared/show-more.client';
 import type { DiscoveredCompanyPreview } from '@/lib/types';
 
 export function Checkbox({ checked, className }: { checked: boolean; className?: string }) {
@@ -39,14 +40,12 @@ function LinkedInIcon() {
 export function CompanyRow({
   company,
   selected,
-  disabled,
   previouslyResearched,
   index,
   onToggle
 }: {
   company: DiscoveredCompanyPreview;
   selected: boolean;
-  disabled: boolean;
   previouslyResearched: boolean;
   index: number;
   onToggle: () => void;
@@ -55,32 +54,27 @@ export function CompanyRow({
     <Button
       variant="ghost"
       onClick={onToggle}
-      disabled={disabled}
-      className={`animate-in fade-in slide-in-from-bottom-2 fill-mode-both border-border flex h-auto w-full items-start gap-4 rounded-none border-b px-4 py-3 text-left duration-300 last:border-b-0 ${
-        selected
-          ? 'bg-card hover:bg-muted/30'
-          : disabled
-            ? 'bg-card opacity-30'
-            : 'bg-card opacity-50 hover:opacity-70'
+      className={`animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex h-auto w-full items-start gap-4 rounded-none px-4 py-3 text-left whitespace-normal duration-300 ${
+        selected ? 'bg-card hover:bg-muted/30' : 'bg-card opacity-50 hover:opacity-70'
       }`}
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <Checkbox checked={selected} className="mt-0.5" />
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <CompanyLogoWithFallback
             name={company.name}
             website={company.website}
             logoUrl={company.logo_url}
             size="sm"
           />
-          <span className="text-sm font-medium">{company.name}</span>
+          <span className="truncate text-sm font-medium">{company.name}</span>
           {company.website && (
             <a
               href={company.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary shrink-0 transition-colors"
               onClick={(e) => e.stopPropagation()}
               title="Website"
             >
@@ -92,7 +86,7 @@ export function CompanyRow({
               href={company.linkedin_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary shrink-0 transition-colors"
               onClick={(e) => e.stopPropagation()}
               title="LinkedIn"
             >
@@ -100,15 +94,19 @@ export function CompanyRow({
             </a>
           )}
           {previouslyResearched && (
-            <Badge variant="muted" size="sm" className="rounded">
+            <Badge variant="muted" size="sm" className="shrink-0 rounded">
               Previously Researched
             </Badge>
           )}
         </div>
         {company.description && (
-          <p className="text-muted-foreground mt-0.5 text-xs leading-relaxed">
+          <ShowMore
+            lines={2}
+            className="mt-0.5"
+            contentClassName="text-muted-foreground text-xs leading-relaxed"
+          >
             {company.description}
-          </p>
+          </ShowMore>
         )}
         {company.location && (
           <p className="text-muted-foreground mt-0.5 text-[11px]">

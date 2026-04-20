@@ -99,6 +99,7 @@
  * --accent-foreground     Text on accent surface
  * --destructive           Error/destructive color
  * --destructive-foreground Text on destructive
+ * --link                  Inline link / interactive text color
  *
  * ALERTS
  * --alert-info-bg          Info alert background

@@ -16,6 +16,7 @@ import { useProfileStore } from '@/lib/store/profile-store';
 import { formatRelativeDate } from '@/lib/utils';
 import { PageBanner } from '@/components/shared/page-banner';
 import { GettingStarted } from '@/components/research/getting-started';
+import { ShowMore } from '@/components/shared/show-more.client';
 import { MAX_WIDTH } from '@/lib/layout';
 import type { ResearchSessionSummary, SentEmail, ContactedCompany, SavedICP } from '@/lib/types';
 
@@ -109,12 +110,11 @@ function ActivityFeed({ items }: { items: ActivityItem[] }) {
   }
 
   return (
-    <div>
+    <div className="divide-border divide-y">
       {items.map((item) => {
         const Icon = ACTIVITY_ICONS[item.type];
         const colorClass = ACTIVITY_COLORS[item.type];
-        const rowClass =
-          'hover:bg-muted/50 group flex items-start gap-4 rounded-lg py-3 pr-3 pl-0 transition-colors';
+        const rowClass = 'hover:bg-muted/50 group flex items-start gap-4 p-3 transition-colors';
 
         const content = (
           <>
@@ -227,7 +227,7 @@ export function Dashboard({
                   </span>
                 )}
               </div>
-              <Card className="p-4">
+              <Card>
                 <ActivityFeed items={activityPagination.page} />
               </Card>
               <Pagination
@@ -257,7 +257,7 @@ export function Dashboard({
                     </Link>
                   )}
                 </div>
-                <Card className="p-2">
+                <Card className="divide-border divide-y">
                   {recentEmails.length === 0 ? (
                     <div className="py-10 text-center">
                       <p className="text-muted-foreground text-sm">No emails sent yet</p>
@@ -267,7 +267,7 @@ export function Dashboard({
                       <Link
                         key={email.id}
                         href={`/emails?email=${email.id}`}
-                        className="hover:bg-muted/50 flex items-center gap-3 rounded-md px-3 py-3 transition-colors"
+                        className="hover:bg-muted/50 flex items-center gap-3 px-3 py-3 transition-colors"
                       >
                         <div className="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
                           {email.contact_name
@@ -309,9 +309,13 @@ export function Dashboard({
                       <div key={icp.id} className="px-4 py-3">
                         <span className="text-sm font-medium">{icp.name}</span>
                         {icp.icp.description && (
-                          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                          <ShowMore
+                            lines={1}
+                            className="mt-0.5"
+                            contentClassName="text-muted-foreground text-xs"
+                          >
                             {icp.icp.description}
-                          </p>
+                          </ShowMore>
                         )}
                       </div>
                     ))}

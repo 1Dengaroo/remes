@@ -67,13 +67,13 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
         ) : (
           <div className="flex gap-4">
             {/* Email list */}
-            <Card className="w-full shrink-0 md:w-3/5">
+            <Card className="w-full shrink-0 p-4 md:w-3/5">
               {emails.map((email) => (
                 <Button
                   key={email.id}
                   variant="ghost"
                   onClick={() => setSelectedId(email.id)}
-                  className={`border-border h-auto w-full justify-start gap-3 rounded-none border-b px-4 py-3 text-left last:border-b-0 ${
+                  className={`border-b-border h-auto w-full justify-start gap-3 rounded-none px-4 py-3 text-left last:border-none ${
                     selectedId === email.id ? 'bg-muted/70' : 'hover:bg-muted/40'
                   }`}
                 >

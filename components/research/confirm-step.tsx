@@ -36,7 +36,7 @@ function FilterChip({
 function SkeletonRow({ index }: { index: number }) {
   return (
     <div
-      className="border-border flex items-center gap-4 border-b px-4 py-3 last:border-b-0"
+      className="flex items-center gap-4 px-4 py-3"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="border-border size-4 rounded border" />
@@ -160,9 +160,9 @@ export function ConfirmStep() {
             </div>
 
             {/* Scrollable rows */}
-            <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="[&>:not(:first-child)]:border-t-border min-h-0 flex-1 overflow-x-hidden overflow-y-auto [&>:not(:first-child)]:border-t">
               {uniqueLocations.length > 1 && (
-                <div className="border-border bg-card sticky top-0 z-10 flex flex-wrap items-center gap-1.5 border-b px-4 py-2">
+                <div className="bg-card sticky top-0 z-10 flex flex-wrap items-center gap-1.5 px-4 py-2">
                   <MapPin className="text-muted-foreground size-3" />
                   <FilterChip
                     label="All"
@@ -188,7 +188,6 @@ export function ConfirmStep() {
                   key={company.name}
                   company={company}
                   selected={selectedSet.has(company.name)}
-                  disabled={!selectedSet.has(company.name) && atLimit}
                   previouslyResearched={previouslyResearched.has(company.name)}
                   index={i}
                   onToggle={() => toggle(company.name)}
@@ -196,10 +195,7 @@ export function ConfirmStep() {
               ))}
 
               {customNames.map((name) => (
-                <div
-                  key={name}
-                  className="border-border flex items-center gap-4 border-b px-4 py-3 last:border-b-0"
-                >
+                <div key={name} className="flex items-center gap-4 px-4 py-3">
                   <Checkbox checked />
                   <div className="flex min-w-0 flex-1 items-center gap-1.5">
                     <Building2 className="text-muted-foreground size-3.5 shrink-0" />

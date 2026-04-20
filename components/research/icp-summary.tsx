@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ChevronDown, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ShowMore } from '@/components/shared/show-more.client';
 import type { ICPCriteria } from '@/lib/types';
 
 export function ICPSummary({
@@ -32,7 +33,9 @@ export function ICPSummary({
         className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left"
       >
         <div className="min-w-0 flex-1">
-          <p className="text-muted-foreground truncate text-sm">{icp.description}</p>
+          <ShowMore lines={1} contentClassName="text-muted-foreground text-sm">
+            {icp.description}
+          </ShowMore>
         </div>
         <div className="flex items-center gap-2">
           {onEditCriteria && (

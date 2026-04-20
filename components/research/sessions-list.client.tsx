@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { ShowMore } from '@/components/shared/show-more.client';
 import { deleteSession, updateSession } from '@/lib/api';
 import { formatRelativeDate } from '@/lib/utils';
 import { EditableName } from '@/components/shared/editable-name.client';
@@ -110,7 +111,9 @@ export function SessionsList({
                 </div>
                 <div className="text-muted-foreground mt-1 flex items-center gap-3 text-xs">
                   {session.icp_description && (
-                    <span className="truncate">{session.icp_description}</span>
+                    <ShowMore lines={1} className="min-w-0 flex-1">
+                      {session.icp_description}
+                    </ShowMore>
                   )}
                   {session.company_count > 0 && (
                     <span className="shrink-0">{session.company_count} companies</span>

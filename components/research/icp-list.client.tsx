@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Card } from '@/components/ui/card';
+import { ShowMore } from '@/components/shared/show-more.client';
 import { toast } from 'sonner';
 import { CreateICPModal } from './create-icp-modal.client';
 import { createSession, deleteICP, updateICP } from '@/lib/api';
@@ -107,7 +108,9 @@ function ICPRow({
             <span className="truncate text-sm font-medium">{icp.name}</span>
           )}
         </div>
-        <p className="text-muted-foreground mt-1 line-clamp-1 text-xs">{icp.icp.description}</p>
+        <ShowMore lines={1} className="mt-1" contentClassName="text-muted-foreground text-xs">
+          {icp.icp.description}
+        </ShowMore>
         {tags.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-1">
             {tags.map((tag) => (
@@ -159,13 +162,12 @@ function ICPRow({
         </AlertDialog>
         <Button
           size="xs"
-          variant="outline"
           onClick={onUse}
           disabled={isUsing}
           title="Create a new session with this profile"
         >
           {isUsing ? <Spinner size="xs" /> : <ArrowRight className="size-3" />}
-          <span className="hidden md:inline">Start Research</span>
+          <span className="hidden md:inline">Research</span>
         </Button>
       </div>
     </div>
