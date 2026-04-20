@@ -36,6 +36,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-link: var(--link);
   --color-alert-info-bg: var(--alert-info-bg);
   --color-alert-info-foreground: var(--alert-info-foreground);
   --color-alert-warning-bg: var(--alert-warning-bg);

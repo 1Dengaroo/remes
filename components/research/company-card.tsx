@@ -8,6 +8,7 @@ import { MobileCompanyCard } from './mobile-company-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CompanyLogoWithFallback } from '@/components/shared/company-logo';
+import { ShowMore } from '@/components/shared/show-more.client';
 import type {
   CompanyResult,
   SourceLink,
@@ -175,9 +176,9 @@ export function CompanyRow({
             ) : (
               <div className="mt-1.5 space-y-1">
                 {preview.description && (
-                  <p className="text-muted-foreground line-clamp-2 text-xs">
+                  <ShowMore lines={2} contentClassName="text-muted-foreground text-xs">
                     {preview.description}
-                  </p>
+                  </ShowMore>
                 )}
                 {!isComplete && !showRetry && (
                   <div className="space-y-1">
@@ -274,7 +275,9 @@ export function CompanyRow({
                   </div>
                 ))}
               </div>
-              <p className="text-muted-foreground text-xs leading-relaxed">{result.match_reason}</p>
+              <ShowMore lines={3} contentClassName="text-muted-foreground text-xs leading-relaxed">
+                {result.match_reason}
+              </ShowMore>
             </div>
           ) : (
             <PendingColumn isResearching={isResearching} />

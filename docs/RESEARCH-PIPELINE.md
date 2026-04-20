@@ -365,4 +365,3 @@ type ResearchStreamEvent =
 - **No `'use client'` in /app** — All interactivity in `components/research/*.client.tsx`
 - **SSE streaming** — Client gets real-time status + partial results
 - **Abort support** — Research can be cancelled via AbortController
-- **Keyboard shortcuts** — Cmd+Enter / Ctrl+Enter advances steps

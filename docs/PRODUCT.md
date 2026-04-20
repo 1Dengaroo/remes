@@ -13,8 +13,6 @@ Step 4: Deep Research       Claude researches each company (web search), streams
                             → "Get Contact" for full details (1 Apollo credit)
 ```
 
-Navigation: Cmd+Enter advances steps. Bottom nav. "New Research" navigates to sessions list. Cancel mid-stream.
-
 Sessions live at `/research` (list) and `/research/[id]` (individual). Sessions are created upfront, state is auto-saved, and loaded server-side on revisit (no loading flash).
 
 Saved ICP profiles are managed at `/profiles` and can also be created inline during the research flow via the Create ICP modal.

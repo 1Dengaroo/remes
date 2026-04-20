@@ -130,6 +130,7 @@
   --accent-foreground: #e4e4e4;
   --destructive: hsl(0 65% 55%);
   --destructive-foreground: #ffffff;
+  --link: #93c5fd;
   --alert-info-bg: hsl(220 60% 55% / 0.12);
   --alert-info-foreground: hsl(220 55% 75%);
   --alert-warning-bg: hsl(40 70% 52% / 0.12);
