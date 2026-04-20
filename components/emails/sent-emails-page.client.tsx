@@ -66,8 +66,7 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
           </Card>
         ) : (
           <div className="flex gap-4">
-            {/* Email list */}
-            <Card className="w-full shrink-0 p-4 md:w-3/5">
+            <Card className="w-full shrink-0 md:w-3/5">
               {emails.map((email) => (
                 <Button
                   key={email.id}
@@ -114,7 +113,6 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
               ))}
             </Card>
 
-            {/* Desktop email preview */}
             <Card className="hidden min-h-100 flex-1 flex-col md:flex">
               {selected ? (
                 <EmailDetailContent email={selected} />
@@ -125,7 +123,6 @@ export function SentEmailsPage({ emails }: { emails: SentEmail[] }) {
               )}
             </Card>
 
-            {/* Mobile email detail sheet */}
             <MobileEmailSheet email={selected} onClose={() => setSelectedId(null)} />
           </div>
         )}

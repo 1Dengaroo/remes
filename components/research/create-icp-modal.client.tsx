@@ -114,7 +114,7 @@ export function CreateICPModal({
                     placeholder="Who is your ideal customer? Describe the industries, company size, job titles, technologies, buying signals, or anything else that defines a good fit..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="min-h-52 resize-y border-none bg-transparent p-0 shadow-none focus-visible:ring-0"
+                    className="min-h-52 resize-y bg-transparent p-2 shadow-none"
                     disabled={isExtracting}
                     autoFocus
                     onKeyDown={(e) => {
