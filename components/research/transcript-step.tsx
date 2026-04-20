@@ -96,7 +96,7 @@ export function TranscriptStep() {
             placeholder="Who is your ideal customer? Describe the industries, company size, job titles, technologies, buying signals, or anything else that defines a good fit..."
             value={transcript}
             onChange={(e) => setTranscript(e.target.value)}
-            className="min-h-52 resize-y border-none bg-transparent p-0 shadow-none focus-visible:ring-0"
+            className="min-h-52 resize-y bg-transparent shadow-none"
             disabled={isExtracting}
           />
         </div>
