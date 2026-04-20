@@ -1,6 +1,7 @@
 import { MAX_WIDTH } from '@/lib/layout';
 import { CONTACT_EMAILS } from '@/lib/services/config';
 import { createMetadata } from '@/lib/metadata';
+import { Link } from '@/components/shared/link';
 
 export const metadata = createMetadata({
   title: 'Privacy Policy',
@@ -72,7 +73,10 @@ const SECTIONS = [
   {
     title: 'Contact',
     content: [
-      `If you have questions about this privacy policy or your data, contact us at ${CONTACT_EMAILS.privacy}.`
+      <>
+        If you have questions about this privacy policy or your data, contact us at{' '}
+        <Link href={`mailto:${CONTACT_EMAILS.privacy}`}>{CONTACT_EMAILS.privacy}</Link>.
+      </>
     ]
   }
 ];
